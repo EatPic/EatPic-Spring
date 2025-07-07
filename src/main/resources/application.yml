@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: backend
+  jpa:
+    show-sql: false
+    generate-ddl: true
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+        format_sql: false
+        use_sql_comments: true
+        default_batch_fetch_size: 1000
+        dialect: org.hibernate.dialect.MySQLDialect
+    database: mysql
+  datasource:
+    url: jdbc:mysql://localhost:3306/eatpic_db
+    username: root
+    password: 871006kiann*
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    include:
+      - database
+      - swagger
