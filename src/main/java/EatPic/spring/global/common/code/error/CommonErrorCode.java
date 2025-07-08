@@ -22,6 +22,9 @@ public enum CommonErrorCode implements BaseErrorCode {
     INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, "COMMON_004", "요청한 날짜/시간 형식이 올바르지 않습니다. 형식을 확인해주세요."),
     DUPLICATE_UNIQUE_KEY(HttpStatus.CONFLICT, "COMMON_005", "이미 처리된 요청입니다.");
 
+    // 추가 에러 코드
+
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
