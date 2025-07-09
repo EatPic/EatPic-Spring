@@ -22,3 +22,5 @@ spring:
     include:
       - database
       - swagger
+      - jwt
+      - s3
