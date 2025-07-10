@@ -38,7 +38,7 @@ public class SwaggerConfig {
 
     @Bean
     public GroupedOpenApi user() {
-        String[] pathsToMatch = {"/api/v1/**"};
+        String[] pathsToMatch = {"/api/**"};
 
         return GroupedOpenApi.builder()
                 .group("user")
