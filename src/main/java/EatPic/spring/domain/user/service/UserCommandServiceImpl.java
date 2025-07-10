@@ -1,11 +1,13 @@
-package EatPic.spring.domain.community.service;
+package EatPic.spring.domain.user.service;
 
-import EatPic.spring.domain.community.UserFollow;
-import EatPic.spring.domain.community.repository.UserFollowRepository;
-import EatPic.spring.domain.community.repository.UserRepository;
-import EatPic.spring.domain.user.User;
+import EatPic.spring.domain.user.mapping.UserFollow;
+import EatPic.spring.domain.user.repository.UserFollowRepository;
+import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.domain.user.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +16,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserCommandServiceImpl implements UserCommandService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserFollowRepository userFollowRepository;
+    private final UserRepository userRepository;
+    private final UserFollowRepository userFollowRepository;
 
     @Override
     public List<User> followingUser(Long userId) {
