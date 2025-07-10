@@ -1,12 +1,11 @@
 package EatPic.spring.domain.user.service;
 
 import EatPic.spring.domain.user.User;
-
 import EatPic.spring.domain.user.dto.request.SignupRequest;
 import EatPic.spring.domain.user.enums.UserStatus;
 import EatPic.spring.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,9 +13,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-
-    public void signup(SignupRequest request) {
+    private final PasswordEncoder passwordEncoder;
+    
+    public User signup(SignupRequest request) {
         // 이메일 중복 검사
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
@@ -42,6 +41,6 @@ public class UserService {
                 .userStatus(UserStatus.ACTIVE)
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 }
