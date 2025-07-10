@@ -61,4 +61,7 @@ public class Card extends BaseEntity {
     @OneToMany(mappedBy = "card")
     private List<CardHashtag> cardHashtags = new ArrayList<>();
 
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CardImage> cardImages = new ArrayList<>();
+
 }
