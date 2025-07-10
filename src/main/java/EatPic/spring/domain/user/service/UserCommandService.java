@@ -1,6 +1,6 @@
-package EatPic.spring.domain.community.service;
+package EatPic.spring.domain.user.service;
 
-import EatPic.spring.domain.user.User;
+import EatPic.spring.domain.user.entity.User;
 
 import java.util.List;
 
