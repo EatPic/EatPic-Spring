@@ -1,4 +1,4 @@
-package EatPic.spring.domain.user.dto.request;
+package EatPic.spring.domain.user.dto;
 
 
 import jakarta.validation.constraints.Email;
@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SignupRequest {
+public class SignupRequestDTO {
 
     @NotBlank
     @Email

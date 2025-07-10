@@ -1,4 +1,4 @@
-package EatPic.spring.domain.user.dto.request;
+package EatPic.spring.domain.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class SignupResponse {
+public class SignupResponseDTO {
     private Long userId;            // DB에 저장된 유저 ID
     private String email;           // 회원가입 시 입력한 이메일
     private String nameId;          // 사용자 ID

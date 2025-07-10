@@ -1,8 +1,8 @@
 package EatPic.spring.domain.user.controller;
 
 import EatPic.spring.domain.user.User;
-import EatPic.spring.domain.user.dto.request.SignupRequest;
-import EatPic.spring.domain.user.dto.request.SignupResponse;
+import EatPic.spring.domain.user.dto.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.SignupResponseDTO;
 import EatPic.spring.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +17,11 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signup(@Valid @RequestBody SignupRequest request) {
+    public ResponseEntity<SignupResponseDTO> signup(@Valid @RequestBody SignupRequestDTO request) {
 
         User savedUser = userService.signup(request);
 
-        SignupResponse response = SignupResponse.builder()
+        SignupResponseDTO response = SignupResponseDTO.builder()
                 .userId(savedUser.getId())
                 .email(savedUser.getEmail())
                 .nameId(savedUser.getNameId())
