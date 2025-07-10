@@ -2,11 +2,14 @@ package EatPic.spring.domain.user.service;
 
 import EatPic.spring.domain.user.User;
 
-import EatPic.spring.domain.user.dto.request.SignupRequest;
+import EatPic.spring.domain.user.dto.LoginRequestDTO;
+import EatPic.spring.domain.user.dto.LoginResponseDTO;
+import EatPic.spring.domain.user.dto.SignupRequestDTO;
 import EatPic.spring.domain.user.enums.UserStatus;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.global.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,9 +17,10 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public void signup(SignupRequest request) {
+    public User signup(SignupRequestDTO request) {
         // 이메일 중복 검사
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
@@ -42,6 +46,19 @@ public class UserService {
                 .userStatus(UserStatus.ACTIVE)
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user);
+    }
+
+    public LoginResponseDTO login(LoginRequestDTO request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        String accessToken = jwtTokenProvider.generateToken(user.getEmail());
+        String refreshToken = jwtTokenProvider.generateToken(user.getEmail());
+        return new LoginResponseDTO(accessToken, refreshToken);
     }
 }

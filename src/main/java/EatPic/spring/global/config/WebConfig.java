@@ -24,9 +24,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .exposedHeaders("Set-Cookie")
                 .allowCredentials(true)
                 .maxAge(3600);}
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }
