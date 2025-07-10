@@ -30,7 +30,7 @@ public class SecurityConfig {
         // CORS 설정 활성화(보통은 CORS 설정 활성화 하지 않음. 서버에서 NginX로 CORS 검증)
         //.cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
         // HTTP Basic 인증 기본 설정
-        .httpBasic(Customizer.withDefaults())
+        //.httpBasic(Customizer.withDefaults())
         // 세션을 생성하지 않음 (JWT 사용으로 인한 Stateless 설정)
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

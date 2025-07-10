@@ -1,4 +1,4 @@
-package EatPic.spring.domain.card.entity;
+package EatPic.spring.domain.greetingMessage.entity;
 
 public enum TimeType {
     MORNING, AFTERNOON, EVENING;
