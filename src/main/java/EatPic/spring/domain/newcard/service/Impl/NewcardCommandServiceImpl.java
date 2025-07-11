@@ -1,16 +1,16 @@
 package EatPic.spring.domain.newcard.service.Impl;
 
-import EatPic.spring.domain.newcard.Card;
+import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.newcard.dto.NewcardRequest;
 import EatPic.spring.domain.newcard.dto.NewcardResponse;
 import EatPic.spring.domain.newcard.repository.NewcardRepository;
-import EatPic.spring.domain.newcard.service.NewcardService;
+import EatPic.spring.domain.newcard.service.NewcardCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class NewcardServiceImpl implements NewcardService {
+public class NewcardCommandServiceImpl implements NewcardCommandService {
     private final NewcardRepository newcardRepository;
 
     @Override
