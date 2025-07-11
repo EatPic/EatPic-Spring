@@ -28,10 +28,9 @@ public class Card extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // 픽카드 이미지 FK
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_image_id", nullable = false)
-    private CardImage cardImage;
+    // 픽카드 이미지
+    @Column(name = "card_image_url", length = 500, nullable = false)
+    private String cardImageUrl;
 
     // 식사 종류
     @Enumerated(EnumType.STRING)
@@ -60,8 +59,5 @@ public class Card extends BaseEntity {
 
     @OneToMany(mappedBy = "card")
     private List<CardHashtag> cardHashtags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CardImage> cardImages = new ArrayList<>();
 
 }
