@@ -2,7 +2,7 @@ package EatPic.spring.domain.newcard.controller;
 
 import EatPic.spring.domain.newcard.dto.NewcardRequest;
 import EatPic.spring.domain.newcard.dto.NewcardResponse;
-import EatPic.spring.domain.newcard.service.NewcardService;
+import EatPic.spring.domain.newcard.service.NewcardCommandService;
 import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "새로운 픽카드 API")
 public class NewcardController {
 
-    private final NewcardService newcardService;
+    private final NewcardCommandService newcardCommandService;
 
     @PostMapping("")
     @Operation(summary = "픽카드 기록 작성하기", description = "")
@@ -35,7 +35,7 @@ public class NewcardController {
             @Valid @RequestBody NewcardRequest.CreateNewcardRequest request,
             @RequestParam(name = "userId") Long userId) {
 
-        return BaseResponse.onSuccess(newcardService.createNewcard(request));
+        return BaseResponse.onSuccess(newcardCommandService.createNewcard(request));
     }
 }
 

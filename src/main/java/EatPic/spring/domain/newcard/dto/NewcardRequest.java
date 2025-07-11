@@ -1,6 +1,7 @@
 package EatPic.spring.domain.newcard.dto;
 
-import EatPic.spring.domain.newcard.enums.Meal;
+
+import EatPic.spring.domain.card.entity.Meal;
 import lombok.Getter;
 
 import java.math.BigDecimal;
