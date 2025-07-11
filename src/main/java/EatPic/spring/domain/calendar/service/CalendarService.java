@@ -2,7 +2,6 @@ package EatPic.spring.domain.calendar.service;
 
 import EatPic.spring.domain.calendar.dto.CalendarDayResponse;
 import EatPic.spring.domain.card.entity.Card;
-import EatPic.spring.domain.card.entity.CardImage;
 import EatPic.spring.domain.card.entity.Meal;
 import EatPic.spring.domain.card.repository.CardRepository;
 import java.time.LocalDate;
@@ -50,9 +49,8 @@ public class CalendarService {
 
       // 대표 이미지 가져오기
       String imageUrl = firstMealCard
-          .flatMap(card -> card.getCardImages().stream().findFirst())
-          .map(CardImage::getCardImageUrl)
-          .orElse(null);
+              .map(Card::getCardImageUrl)
+              .orElse(null);
 
       result.add(CalendarDayResponse.builder()
           .date(date)
