@@ -24,12 +24,13 @@ public class UserRestController {
     @Operation(
             summary = "커뮤니티 상단 나+팔로잉 유저 아이콘",
             description = "페이지는 1부터 시작하며, 1페이지의 첫 번째 데이터는 본인(사용자)입니다.")
-    @PostMapping("/users")
-    public ApiResponse<UserResponseDTO.UserIconListResponseDto> followingUsers(@RequestBody Long userId,
+    @GetMapping("/users")
+    public ApiResponse<UserResponseDTO.UserIconListResponseDto> followingUsers(
                                       @RequestParam(defaultValue = "1") int page,
                                       @RequestParam(defaultValue = "15") int size) {
+        Long userId = 1L;
         User me = userRepository.findUserById(userId);
-        // 커뮤니티 상단 프로필 맨 처음은 자신 -> 로그인 구현 후 수정 필요
+        //todo: 커뮤니티 상단 프로필 맨 처음은 자신 -> 로그인 구현 후 수정 필요
         List<User> userList = new ArrayList<>();
         userList.add(me);
         // 이후 팔로잉한 유저
