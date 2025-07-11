@@ -23,9 +23,6 @@ public class UserCommandServiceImpl implements UserCommandService {
     public List<User> followingUser(Long userId) {
         User user = userRepository.findUserById(userId);
         List<UserFollow> followingList = userFollowRepository.findByUser(user);
-        for(UserFollow userFollow : followingList){
-            System.out.println(userFollow.getUser().getId());
-        }
         return followingList.stream().map(UserFollow::getTargetUser).collect(Collectors.toList());
     }
 }
