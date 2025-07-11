@@ -1,6 +1,6 @@
 package EatPic.spring.domain.newcard.service.Impl;
 
-import EatPic.spring.domain.newcard.Card;
+import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.newcard.dto.NewcardRequest;
 import EatPic.spring.domain.newcard.dto.NewcardResponse;
 import EatPic.spring.domain.newcard.repository.NewcardRepository;
