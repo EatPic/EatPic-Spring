@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1/newcard")
+@RequestMapping("/api/newcard")
 @Tag(name = "새로운 픽카드 API")
 public class NewcardController {
 
