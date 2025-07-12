@@ -12,7 +12,6 @@ public class CommentRequestDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class WriteCommentDto{
-        long cardId;
         long parentCommentId;
         String content;
     }

@@ -25,7 +25,7 @@ public class CommentRestController {
     @PostMapping("/cards/{cardId}/comments")
     public ApiResponse<CommentResponseDTO.WriteCommentResponseDTO> writeComment(@PathVariable("cardId") Long cardId,
                                                                              @RequestBody CommentRequestDTO.WriteCommentDto requestDto) {
-        Comment comment = commentService.writeComment(requestDto);
+        Comment comment = commentService.writeComment(requestDto,cardId);
 
         return ApiResponse.<CommentResponseDTO.WriteCommentResponseDTO>builder()
                 .reason(SuccessCode._CREATED.getReasonHttpStatus())
