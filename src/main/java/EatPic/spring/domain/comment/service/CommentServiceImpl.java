@@ -22,11 +22,11 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     @Override
-    public final Comment writeComment(CommentRequestDTO.WriteCommentDto writeCommentDto) {
+    public final Comment writeComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Long cardId) {
         // 작성자
         User user = userRepository.findUserById(1L); //todo: 로그인한 사용자로 수정
         // 카드(피드)
-        Card card = cardRepository.findCardById(writeCommentDto.getCardId());
+        Card card = cardRepository.findCardById(cardId);
 
         Comment comment = CommentConverter.WriteCommentDtoToComment(writeCommentDto,card,user);
         commentRepository.save(comment);
