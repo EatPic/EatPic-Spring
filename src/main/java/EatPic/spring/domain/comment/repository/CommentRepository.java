@@ -9,4 +9,5 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Comment findCommentById(Long cardId);
     List<Comment> findAllByCard(Card card);
+    List<Comment> findAllByParentComment(Comment comment);
 }

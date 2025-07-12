@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,4 +43,21 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAllByCard(card);
     }
 
+    @Override
+    public List<Long> deleteComments(Long commentId) {
+
+        Comment comment = commentRepository.findCommentById(commentId);
+        List<Comment> childComments = commentRepository.findAllByParentComment(comment);
+
+        List<Long> deletedCommentIds = new ArrayList<>();
+        deletedCommentIds.add(comment.getId());
+        for(Comment childComment : childComments){
+            deletedCommentIds.add(childComment.getId());
+        }
+
+        commentRepository.delete(comment);
+        commentRepository.deleteAll(childComments);
+
+        return deletedCommentIds;
+    }
 }

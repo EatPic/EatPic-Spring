@@ -44,4 +44,13 @@ public class CommentResponseDTO {
         private Long cardId;
         private List<CommentDTO> commentList;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DeleteCommentResponseDTO{
+        private int total;
+        private List<Long> deletedCommentIds;
+    }
 }
