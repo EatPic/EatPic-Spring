@@ -29,8 +29,6 @@ public class CommentConverter {
     }
 
     public static CommentResponseDTO.CommentDTO CommentToCommentDTO(Comment comment){
-        System.out.println(comment.getContent());
-        System.out.println(comment.getCreatedAt());
         return CommentResponseDTO.CommentDTO.builder()
                 .parentCommentId(comment.getParentComment()==null?null:comment.getParentComment().getId())
                 .commentId(comment.getId())

@@ -5,8 +5,7 @@ import EatPic.spring.domain.user.dto.UserResponseDTO;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserCommandServiceImpl;
 import EatPic.spring.domain.user.entity.User;
-import EatPic.spring.global.common.code.success.SuccessCode;
-import EatPic.spring.global.common.response.ApiResponse;
+import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class UserRestController {
             summary = "커뮤니티 상단 나+팔로잉 유저 아이콘",
             description = "페이지는 1부터 시작하며, 1페이지의 첫 번째 데이터는 본인(사용자)입니다.")
     @GetMapping("/users")
-    public ApiResponse<UserResponseDTO.UserIconListResponseDto> followingUsers(
+    public BaseResponse<UserResponseDTO.UserIconListResponseDto> followingUsers(
                                       @RequestParam(defaultValue = "1") int page,
                                       @RequestParam(defaultValue = "15") int size) {
         Long userId = 1L;
@@ -45,9 +44,6 @@ public class UserRestController {
         List<UserResponseDTO.ProfileIconDto> pagedUserList = userList.subList(fromIndex,toIndex).stream().map(UserConverter::toProfileIconDto).toList();
         UserResponseDTO.UserIconListResponseDto result = UserConverter.toUserIconListResponseDto(total,page,size,pagedUserList);
 
-        return ApiResponse.<UserResponseDTO.UserIconListResponseDto>builder()
-                .reason(SuccessCode._OK.getReasonHttpStatus())
-                .result(result)
-                .build();
+        return BaseResponse.onSuccess(result);
     }
 }
