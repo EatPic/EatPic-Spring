@@ -4,13 +4,14 @@ import EatPic.spring.domain.comment.converter.CommentConverter;
 import EatPic.spring.domain.comment.dto.CommentRequestDTO;
 import EatPic.spring.domain.comment.dto.CommentResponseDTO;
 import EatPic.spring.domain.comment.entity.Comment;
+import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.comment.service.CommentServiceImpl;
-import EatPic.spring.global.common.code.success.SuccessCode;
-import EatPic.spring.global.common.response.ApiResponse;
+import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,26 +19,24 @@ import java.util.List;
 @RequestMapping("/api/community")
 public class CommentRestController {
     private final CommentServiceImpl commentService;
+    private final CommentRepository commentRepository;
 
     @Operation(
             summary = "카드 댓글 작성",
             description = "parent_comment_id가 null이면 댓글, non-null이면 답글 입니다.")
     @PostMapping("/cards/{cardId}/comments")
-    public ApiResponse<CommentResponseDTO.WriteCommentResponseDTO> writeComment(@PathVariable("cardId") Long cardId,
+    public BaseResponse<CommentResponseDTO.WriteCommentResponseDTO> writeComment(@PathVariable("cardId") Long cardId,
                                                                              @RequestBody CommentRequestDTO.WriteCommentDto requestDto) {
-        Comment comment = commentService.writeComment(requestDto);
+        Comment comment = commentService.writeComment(requestDto,cardId);
 
-        return ApiResponse.<CommentResponseDTO.WriteCommentResponseDTO>builder()
-                .reason(SuccessCode._CREATED.getReasonHttpStatus())
-                .result(CommentConverter.CommentToWriteCommentResponseDTO(comment))
-                .build();
+        return BaseResponse.onSuccess(CommentConverter.CommentToWriteCommentResponseDTO(comment));
     }
 
     @Operation(
             summary = "카드 댓글 조회",
             description = "parent_comment_id가 null이면 댓글, non-null이면 답글 입니다."+"\n"+ "페이지는 1부터 시작합니다.")
     @GetMapping("/cards/{cardId}/comments")
-    public ApiResponse<CommentResponseDTO.commentListDTO> writeComment(@PathVariable("cardId") Long cardId,
+    public BaseResponse<CommentResponseDTO.commentListDTO> writeComment(@PathVariable("cardId") Long cardId,
                                                                        @RequestParam(defaultValue = "1") int page,
                                                                        @RequestParam(defaultValue = "15") int size) {
 
@@ -51,9 +50,24 @@ public class CommentRestController {
         List<CommentResponseDTO.CommentDTO> pagedCommentDTOList = commentDTOList.subList(fromIndex,toIndex);
 
         CommentResponseDTO.commentListDTO result = CommentConverter.CommentDTOListToCommentListResponseDTO(pagedCommentDTOList,cardId,total,page,size);
-        return ApiResponse.<CommentResponseDTO.commentListDTO>builder()
-                .reason(SuccessCode._OK.getReasonHttpStatus())
-                .result(result)
-                .build();
+        return BaseResponse.onSuccess(result);
+    }
+
+    @Operation(
+            summary = "카드 댓글 삭제",
+            description = "댓글이면 답글까지 전체 삭제, 답글이면 해당 답글만 삭제합니다.")
+    @DeleteMapping("/cards/{cardId}/comments/{commentId}")
+    public BaseResponse<CommentResponseDTO.DeleteCommentResponseDTO> deleteComment(@PathVariable("cardId") Long cardId,
+                                                                        @PathVariable("commentId") Long commentId) {
+
+        List<Long> deletedList = commentService.deleteComments(commentId);
+
+        CommentResponseDTO.DeleteCommentResponseDTO result =
+                CommentResponseDTO.DeleteCommentResponseDTO.builder()
+                        .total(deletedList.size())
+                        .deletedCommentIds(deletedList)
+                        .build();
+
+        return BaseResponse.onSuccess(result);
     }
 }

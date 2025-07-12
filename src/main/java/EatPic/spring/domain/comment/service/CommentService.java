@@ -6,6 +6,7 @@ import EatPic.spring.domain.comment.entity.Comment;
 import java.util.List;
 
 public interface CommentService {
-    Comment writeComment(CommentRequestDTO.WriteCommentDto commentDto);
+    Comment writeComment(CommentRequestDTO.WriteCommentDto commentDto, Long cardId);
     List<Comment> getCommentList(Long cardId);
+    List<Long> deleteComments(Long commentId);
 }

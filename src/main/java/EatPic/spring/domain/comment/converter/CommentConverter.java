@@ -22,7 +22,7 @@ public class CommentConverter {
     public static CommentResponseDTO.WriteCommentResponseDTO CommentToWriteCommentResponseDTO(Comment comment){
         return CommentResponseDTO.WriteCommentResponseDTO.builder()
                 .commentId(comment.getId())
-                .parentCommentId(comment.getParentComment().getId())
+                .parentCommentId(comment.getParentComment()==null?null:comment.getParentComment().getId())
                 .cardId(comment.getCard().getId())
                 .content(comment.getContent())
                 .build();
@@ -30,7 +30,7 @@ public class CommentConverter {
 
     public static CommentResponseDTO.CommentDTO CommentToCommentDTO(Comment comment){
         return CommentResponseDTO.CommentDTO.builder()
-                .parentCommentId(comment.getParentComment().getId())
+                .parentCommentId(comment.getParentComment()==null?null:comment.getParentComment().getId())
                 .commentId(comment.getId())
                 .nickname(comment.getUser().getNickname())
                 .nameId(comment.getUser().getNameId())
