@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,7 +18,6 @@ import java.util.List;
 @RequestMapping("/api/community")
 public class CommentRestController {
     private final CommentServiceImpl commentService;
-    private final CommentRepository commentRepository;
 
     @Operation(
             summary = "카드 댓글 작성",
