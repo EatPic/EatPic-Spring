@@ -11,4 +11,5 @@ public class ReactionConverter {
                 .reactionType(reaction.getReactionType())
                 .build();
     }
+
 }

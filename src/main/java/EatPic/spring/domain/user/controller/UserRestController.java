@@ -33,7 +33,7 @@ public class UserRestController {
         List<User> userList = new ArrayList<>();
         userList.add(me);
         // 이후 팔로잉한 유저
-        List<User> followingList = userCommandService.followingUser(userId);
+        List<User> followingList = userCommandService.followingUserList(userId);
         userList.addAll(followingList);
 
         int total = userList.size();
@@ -41,7 +41,7 @@ public class UserRestController {
         //페이징
         int fromIndex = Math.max(0, (page - 1) * size);
         int toIndex = Math.min(fromIndex + size, total);
-        List<UserResponseDTO.ProfileIconDto> pagedUserList = userList.subList(fromIndex,toIndex).stream().map(UserConverter::toProfileIconDto).toList();
+        List<UserResponseDTO.ProfileDto> pagedUserList = userList.subList(fromIndex,toIndex).stream().map(UserConverter::toProfileIconDto).toList();
         UserResponseDTO.UserIconListResponseDto result = UserConverter.toUserIconListResponseDto(total,page,size,pagedUserList);
 
         return BaseResponse.onSuccess(result);

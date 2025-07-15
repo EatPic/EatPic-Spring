@@ -1,9 +1,11 @@
 package EatPic.spring.domain.user.dto;
 
+import EatPic.spring.domain.reaction.entity.ReactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -13,10 +15,12 @@ public class UserResponseDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ProfileIconDto{
+    public static class ProfileDto {
         private Long userId;
         private String profileImageUrl;
         private String nameId;
+        private String nickname;
+        private Boolean isFollowing;
     }
 
     @Getter
@@ -27,6 +31,8 @@ public class UserResponseDTO {
         private int page;
         private int size;
         private int total;
-        private List<ProfileIconDto> userIconList;
+        private List<ProfileDto> userIconList;
     }
+
+
 }

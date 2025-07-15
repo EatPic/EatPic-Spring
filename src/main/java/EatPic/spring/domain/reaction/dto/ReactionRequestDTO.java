@@ -13,7 +13,7 @@ public class ReactionRequestDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ReactionAddRequestDto{
-        private ReactionType reactionType;
+    public static class  ReactionHandleRequestDto{
+        ReactionType reactionType;
     }
 }

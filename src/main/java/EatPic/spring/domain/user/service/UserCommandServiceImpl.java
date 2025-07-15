@@ -1,5 +1,7 @@
 package EatPic.spring.domain.user.service;
 
+import EatPic.spring.domain.user.converter.UserConverter;
+import EatPic.spring.domain.user.dto.UserResponseDTO;
 import EatPic.spring.domain.user.mapping.UserFollow;
 import EatPic.spring.domain.user.repository.UserFollowRepository;
 import EatPic.spring.domain.user.repository.UserRepository;
@@ -20,9 +22,16 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final UserFollowRepository userFollowRepository;
 
     @Override
-    public List<User> followingUser(Long userId) {
+    public List<User> followingUserList(Long userId) {
         User user = userRepository.findUserById(userId);
         List<UserFollow> followingList = userFollowRepository.findByUser(user);
         return followingList.stream().map(UserFollow::getTargetUser).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponseDTO.ProfileDto profile(User user) {
+        User me = userRepository.findUserById(1L);
+        Boolean isFollowing = userFollowRepository.existsByUserAndTargetUser(me,user);
+        return UserConverter.toProfileDto(user,isFollowing);
     }
 }
