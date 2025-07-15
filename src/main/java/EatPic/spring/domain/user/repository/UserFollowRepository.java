@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface UserFollowRepository extends JpaRepository<UserFollow,Long> {
     List<UserFollow> findByUser(User user);
+    Boolean existsByUserAndTargetUser(User user, User targetUser);
 }
