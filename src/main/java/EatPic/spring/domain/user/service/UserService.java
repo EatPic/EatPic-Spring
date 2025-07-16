@@ -1,11 +1,10 @@
 package EatPic.spring.domain.user.service;
 
-import EatPic.spring.domain.user.User;
-
 import EatPic.spring.domain.user.dto.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.LoginResponseDTO;
+import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.dto.SignupRequestDTO;
-import EatPic.spring.domain.user.enums.UserStatus;
+import EatPic.spring.domain.user.entity.UserStatus;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.global.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nameId(request.getNameId())
                 .nickname(request.getNickname())
-                .marketingAgree(request.getMarketingAgree() != null && request.getMarketingAgree())
+                .marketingAgreed(request.getMarketingAgreed() != null && request.getMarketingAgreed())
                 .userStatus(UserStatus.ACTIVE)
                 .build();
 
@@ -59,6 +58,7 @@ public class UserService {
 
         String accessToken = jwtTokenProvider.generateToken(user.getEmail());
         String refreshToken = jwtTokenProvider.generateToken(user.getEmail());
-        return new LoginResponseDTO(accessToken, refreshToken);
+
+        return new LoginResponseDTO(user.getId(), user.getEmail(), user.getNickname(), accessToken, refreshToken);
     }
 }
