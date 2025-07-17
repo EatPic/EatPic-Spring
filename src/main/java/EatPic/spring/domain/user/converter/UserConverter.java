@@ -5,29 +5,35 @@ import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.user.dto.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
+import EatPic.spring.domain.user.mapping.UserFollow;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserConverter {
+
+    public static UserResponseDTO.UserIconListResponseDto toUserIconListResponseDto(Page<UserFollow> followingPage){
+        return UserResponseDTO.UserIconListResponseDto.builder()
+                .total((int)followingPage.getTotalElements())
+                .page(followingPage.getNumber()+1)
+                .size(followingPage.getSize())
+                .userIconList(followingPage.stream()
+                        .map(UserFollow::getTargetUser)
+                        .map(UserConverter::toProfileIconDto)
+                        .toList())
+                .build();
+    }
 
     public static UserResponseDTO.ProfileDto toProfileIconDto(User user){
         return UserResponseDTO.ProfileDto.builder()
                 .userId(user.getId())
                 .profileImageUrl(user.getProfileImageUrl())
                 .nameId(user.getNameId())
+                .isFollowing(true)
                 .build();
     }
-
-    public static UserResponseDTO.UserIconListResponseDto toUserIconListResponseDto(int total, int page, int size, List<UserResponseDTO.ProfileDto> pagedUserList){
-        return UserResponseDTO.UserIconListResponseDto.builder()
-                .total(total)
-                .page(page)
-                .size(size)
-                .userIconList(pagedUserList)
-                .build();
-    }
-
+    // todo: 두개 비슷함 -> 합치기
     public static UserResponseDTO.ProfileDto toProfileDto(User user, Boolean isFollowing){
         return UserResponseDTO.ProfileDto.builder()
                 .userId(user.getId())

@@ -29,6 +29,11 @@ public class ReactionServiceImpl implements ReactionService {
     private final ReactionRepository reactionRepository;
     private final UserFollowRepository userFollowRepository;
 
+    // findBy~ 자주 사용 -> 하나의 메서드로
+    private User getUser(Long userId){
+        return userRepository.findUserById(userId);
+    }
+
     @Override
     public Reaction handleReaction(Long cardId, ReactionType reactionType) {
         User user = userRepository.findUserById(1L); //todo: 로그인한 사용자로 수정

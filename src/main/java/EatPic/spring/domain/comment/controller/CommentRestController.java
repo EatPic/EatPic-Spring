@@ -4,10 +4,10 @@ import EatPic.spring.domain.comment.converter.CommentConverter;
 import EatPic.spring.domain.comment.dto.CommentRequestDTO;
 import EatPic.spring.domain.comment.dto.CommentResponseDTO;
 import EatPic.spring.domain.comment.entity.Comment;
-import EatPic.spring.domain.comment.repository.CommentRepository;
-import EatPic.spring.domain.comment.service.CommentServiceImpl;
+import EatPic.spring.domain.comment.service.CommentService;
 import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +16,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
+@Tag(name = "Comment", description = "댓글 관련 API")
 public class CommentRestController {
-    private final CommentServiceImpl commentService;
+    private final CommentService commentService;
 
     @Operation(
             summary = "카드 댓글 작성",
@@ -38,17 +39,7 @@ public class CommentRestController {
                                                                        @RequestParam(defaultValue = "1") int page,
                                                                        @RequestParam(defaultValue = "15") int size) {
 
-        List<Comment> commentList = commentService.getCommentList(cardId);
-        List<CommentResponseDTO.CommentDTO> commentDTOList = commentList.stream().map(CommentConverter::CommentToCommentDTO).toList();
-        int total = commentDTOList.size();
-
-        //페이징
-        int fromIndex = Math.max(0, (page - 1) * size);
-        int toIndex = Math.min(fromIndex + size, total);
-        List<CommentResponseDTO.CommentDTO> pagedCommentDTOList = commentDTOList.subList(fromIndex,toIndex);
-
-        CommentResponseDTO.commentListDTO result = CommentConverter.CommentDTOListToCommentListResponseDTO(pagedCommentDTOList,cardId,total,page,size);
-        return BaseResponse.onSuccess(result);
+        return BaseResponse.onSuccess(commentService.getCommentList(cardId, page-1, size));
     }
 
     @Operation(
