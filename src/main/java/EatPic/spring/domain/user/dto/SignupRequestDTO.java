@@ -17,6 +17,14 @@ public class SignupRequestDTO {
     @Size(min = 6, message = "6자리 이상의 비밀번호")
     private String password;
 
+    @NotBlank(message = "다시 한 번 입력해 주세요.")
+    private String passwordConfirm;
+
+    @AssertTrue(message = "비밀번호가 일치하지 않습니다.")
+    public boolean isPasswordMatching() {
+        return password != null && password.equals(passwordConfirm); // password : Not Null
+    }
+
     @NotBlank
     @Size(min = 5)
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "5자 이상(영문, 숫자 사용 가능)")
