@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,16 +24,16 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final UserFollowRepository userFollowRepository;
 
     @Override
-    public List<User> followingUserList(Long userId) {
+    public UserResponseDTO.UserIconListResponseDto followingUserIconList(Long userId, int page, int size) {
         User user = userRepository.findUserById(userId);
-        List<UserFollow> followingList = userFollowRepository.findByUser(user);
-        return followingList.stream().map(UserFollow::getTargetUser).collect(Collectors.toList());
+        Page<UserFollow> followingPage = userFollowRepository.findByUser(user, PageRequest.of(page, size));
+
+        return UserConverter.toUserIconListResponseDto(followingPage);
     }
 
     @Override
-    public UserResponseDTO.ProfileDto profile(User user) {
+    public UserResponseDTO.ProfileDto getMyIcon() {
         User me = userRepository.findUserById(1L);
-        Boolean isFollowing = userFollowRepository.existsByUserAndTargetUser(me,user);
-        return UserConverter.toProfileDto(user,isFollowing);
+        return UserConverter.toProfileDto(me,true);
     }
 }

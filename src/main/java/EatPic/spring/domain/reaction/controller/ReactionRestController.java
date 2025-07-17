@@ -6,34 +6,28 @@ import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.reaction.service.ReactionService;
-import EatPic.spring.domain.reaction.service.ReactionServiceImpl;
-import EatPic.spring.domain.user.converter.UserConverter;
-import EatPic.spring.domain.user.dto.UserResponseDTO;
 import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import lombok.Getter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
+@Tag(name = "Reaction", description = "반응 관련 API")
 public class ReactionRestController {
 
-    private final ReactionServiceImpl reactionService;
+    private final ReactionService reactionService;
 
     @Operation(
             summary = "카드 반응 작성/수정/삭제",
-            description = "카드에 반응을 작성합니다. 기존에 작성한 반응이 존재하고 같은 반응을 요청하면 해당 반응이 삭제됩니다"+
-    "<br> ReactionType : \"THUMB_UP\", \"HEART\", \"YUMMY\", \"POWER\", \"LAUGH\"")
-    @PostMapping("/cards/{cardId}/reactions")
+            description = "카드에 반응을 작성합니다. 기존에 작성한 반응이 존재하고 같은 반응을 요청하면 해당 반응이 삭제됩니다")
+    @PostMapping("/cards/{cardId}/reactions/{reactionType}")
     public BaseResponse<ReactionResponseDTO.ReactionHandleResponseDto> handleReaction(@PathVariable("cardId") Long cardId,
-                                               @RequestBody ReactionRequestDTO.ReactionHandleRequestDto reactionHandleRequestDto) {
-        Reaction reaction = reactionService.handleReaction(cardId, reactionHandleRequestDto.getReactionType());
-
+                                                                                      @PathVariable("reactionType") ReactionType reactionType) {
+        Reaction reaction = reactionService.handleReaction(cardId,reactionType);
         return BaseResponse.onSuccess(ReactionConverter.reactionToReactionHandleResponseDTO(reaction));
     }
 
