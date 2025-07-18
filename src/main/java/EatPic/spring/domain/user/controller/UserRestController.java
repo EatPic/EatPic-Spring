@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/community")
 public class UserRestController {
     private final UserCommandService userCommandService;
-    private final GroupedOpenApi user;
 
     @Operation(
             summary = "커뮤니티 상단 팔로잉 유저 아이콘",
