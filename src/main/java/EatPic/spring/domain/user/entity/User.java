@@ -65,4 +65,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<UserBadge> userBadges = new ArrayList<>();
 
+    @Column(name = "marketing_agreed", nullable = false)
+    private Boolean marketingAgreed;
 }
