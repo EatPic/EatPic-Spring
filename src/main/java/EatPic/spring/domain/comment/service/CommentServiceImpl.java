@@ -10,6 +10,8 @@ import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +40,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentList(Long cardId) {
+    public CommentResponseDTO.commentListDTO getCommentList(Long cardId,int page, int size) {
         Card card = cardRepository.findCardById(cardId);
-        return commentRepository.findAllByCard(card);
+
+        Page<Comment> commentPage = commentRepository.findAllByCard(card,PageRequest.of(page,size));
+
+        return CommentConverter.CommentPageToCommentListResponseDTO(cardId,commentPage);
     }
 
     @Override
