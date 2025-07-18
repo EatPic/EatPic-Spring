@@ -1,14 +1,13 @@
 package EatPic.spring.domain.comment.converter;
 
 import EatPic.spring.domain.card.entity.Card;
-import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.comment.dto.CommentRequestDTO;
 import EatPic.spring.domain.comment.dto.CommentResponseDTO;
 import EatPic.spring.domain.comment.entity.Comment;
-import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.user.entity.User;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommentConverter {
     public static Comment WriteCommentDtoToComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Card card, User user) {
@@ -39,13 +38,13 @@ public class CommentConverter {
                 .build();
     }
 
-    public static CommentResponseDTO.commentListDTO CommentDTOListToCommentListResponseDTO(List<CommentResponseDTO.CommentDTO> commentList, Long cardId, int total, int page, int size){
+    public static CommentResponseDTO.commentListDTO CommentPageToCommentListResponseDTO(Long cardId, Page<Comment> commentList){
         return CommentResponseDTO.commentListDTO.builder()
-                .total(total)
-                .page(page)
-                .size(size)
+                .total((int)commentList.getTotalElements())
+                .page(commentList.getNumber() + 1)
+                .size(commentList.getSize())
                 .cardId(cardId)
-                .commentList(commentList)
+                .commentList(commentList.getContent().stream().map(CommentConverter::CommentToCommentDTO).collect(Collectors.toList()))
                 .build();
     }
 }
