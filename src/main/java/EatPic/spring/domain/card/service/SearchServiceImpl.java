@@ -5,7 +5,7 @@ import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.SearchRepository;
 import EatPic.spring.domain.comment.repository.CommentRepository;
-// import EatPic.spring.domain.reaction.Repository.ReactionRepository;
+import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import lombok.RequiredArgsConstructor;      // 자동으로 생성자 주입
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +19,7 @@ import java.util.List;
 public class SearchServiceImpl extends SearchService {
     private final SearchRepository searchRepository;
     private final CommentRepository commentRepository;
-    // private final ReactionRepository reactionRepository;
+    private final ReactionRepository reactionRepository;
 
     @Override
     public SearchResponseDTO.GetCardListResponseDto getAllCards(int limit, Long cursor) {
@@ -37,9 +37,7 @@ public class SearchServiceImpl extends SearchService {
                 .map(card -> CardConverter.toGetCardResponseDto(
                         card,
                         commentRepository.countAllCommentByCard(card),
-                        // 반응 개수 세기 추가해야돼
-                        // reactionRepository.countAllReactionByCard(card)
-                        0L // <--- 만약 reactionCount 미구현시 임시 0L로 해둔다고 합니다..
+                        reactionRepository.countAllReactionByCard(card)
                 ))
                 .toList();
 
