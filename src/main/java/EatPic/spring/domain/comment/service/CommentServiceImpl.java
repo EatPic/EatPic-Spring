@@ -29,9 +29,9 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     @Override
-    public final Comment writeComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Long cardId) {
+    public Comment writeComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Long cardId) {
         // 작성자
-        User user = userRepository.findUserById(1L); //todo: 아니 왜 갑자기 userRepository가 null인데 시발
+        User user = userRepository.findUserById(1L);
         // 카드(피드)
         Card card = cardRepository.findCardById(cardId);
 
