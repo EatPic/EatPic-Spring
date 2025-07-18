@@ -36,17 +36,13 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // HTTP 요청에 대한 권한 설정
                 .authorizeHttpRequests(
-                        request ->
-                                request
+                        request -> request
                                         // Swagger 경로 인증 필요
-                                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
-                                        .permitAll()
+                                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                         // 인증 없이 허용할 경로
-                                        .requestMatchers("/api/**")
-                                        .permitAll()
+                                        .requestMatchers("/api/**").permitAll()
                                         // 그 외 모든 요청은 모두 인증 필요
-                                        .anyRequest()
-                                        .authenticated());
+                                        .anyRequest().authenticated());
         //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
