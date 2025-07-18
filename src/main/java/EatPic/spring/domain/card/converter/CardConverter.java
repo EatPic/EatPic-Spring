@@ -13,4 +13,5 @@ public class CardConverter {
                 .reactionCount(reactionCount)
                 .build();
     }
+
 }
