@@ -1,9 +1,9 @@
 package EatPic.spring.domain.user.service;
 
+import EatPic.spring.domain.user.dto.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 
-import java.util.List;
-
 public interface UserCommandService {
-    List<User> followingUser(Long userId);
+    UserResponseDTO.UserIconListResponseDto followingUserIconList(Long userId, int page, int size);
+    UserResponseDTO.ProfileDto getMyIcon();
 }
