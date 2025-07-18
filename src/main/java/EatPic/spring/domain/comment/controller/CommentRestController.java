@@ -33,13 +33,24 @@ public class CommentRestController {
 
     @Operation(
             summary = "카드 댓글 조회",
-            description = "parent_comment_id가 null이면 댓글, non-null이면 답글 입니다."+"\n"+ "페이지는 1부터 시작합니다.")
+            description = "hasNext가 null이면 마지막 페이지 입니다.")
     @GetMapping("/cards/{cardId}/comments")
-    public BaseResponse<CommentResponseDTO.commentListDTO> writeComment(@PathVariable("cardId") Long cardId,
-                                                                       @RequestParam(defaultValue = "1") int page,
+    public BaseResponse<CommentResponseDTO.commentListDTO> getComment(@PathVariable("cardId") Long cardId,
+                                                                       @RequestParam(required = false) Long cursor,
                                                                        @RequestParam(defaultValue = "15") int size) {
 
-        return BaseResponse.onSuccess(commentService.getCommentList(cardId, page-1, size));
+        return BaseResponse.onSuccess(commentService.getComments(cardId, size, cursor));
+    }
+
+    @Operation(
+            summary = "답글 조회",
+            description = "해당 댓글의 답글을 조회합니다. hasNext가 null이면 마지막 페이지 입니다.")
+    @GetMapping("/cards/{cardId}/comments/{commentId}/replies")
+    public BaseResponse<CommentResponseDTO.commentListDTO> getReplies(@PathVariable("commentId") Long commentId,
+                                                                        @RequestParam(required = false) Long cursor,
+                                                                        @RequestParam(defaultValue = "15") int size) {
+
+        return BaseResponse.onSuccess(commentService.getReplies(commentId, size, cursor));
     }
 
     @Operation(

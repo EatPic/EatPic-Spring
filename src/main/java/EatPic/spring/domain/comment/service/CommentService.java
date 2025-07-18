@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface CommentService {
     Comment writeComment(CommentRequestDTO.WriteCommentDto commentDto, Long cardId);
-    CommentResponseDTO.commentListDTO getCommentList(Long cardId, int page, int size);
+    CommentResponseDTO.commentListDTO getComments(Long cardId, int size, Long cursor);
+    CommentResponseDTO.commentListDTO getReplies(Long commentId, int size, Long cursor);
     List<Long> deleteComments(Long commentId);
 }

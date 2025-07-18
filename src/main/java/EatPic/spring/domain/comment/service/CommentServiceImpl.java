@@ -10,8 +10,10 @@ import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public final Comment writeComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Long cardId) {
         // 작성자
-        User user = userRepository.findUserById(1L); //todo: 로그인한 사용자로 수정
+        User user = userRepository.findUserById(1L); //todo: 아니 왜 갑자기 userRepository가 null인데 시발
         // 카드(피드)
         Card card = cardRepository.findCardById(cardId);
 
@@ -40,12 +42,30 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponseDTO.commentListDTO getCommentList(Long cardId,int page, int size) {
+    public CommentResponseDTO.commentListDTO getComments(Long cardId, int size, Long cursor) {
         Card card = cardRepository.findCardById(cardId);
 
-        Page<Comment> commentPage = commentRepository.findAllByCard(card,PageRequest.of(page,size));
+        Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").ascending());
+        Slice<Comment> commentSlice;
+        if(cursor==null){
+            commentSlice = commentRepository.findAllByCardAndParentCommentIsNull(card,pageable);
+        }else{
+            commentSlice = commentRepository.findAllByCardAndParentCommentIsNullAndIdGreaterThanOrderByIdAsc(card, cursor, pageable);
+        }
+        return CommentConverter.CommentSliceToCommentListResponseDTO(commentSlice);
+    }
 
-        return CommentConverter.CommentPageToCommentListResponseDTO(cardId,commentPage);
+    @Override
+    public CommentResponseDTO.commentListDTO getReplies(Long commentId, int size, Long cursor) {
+        Comment comment = commentRepository.findCommentById(commentId);
+        Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").ascending());
+        Slice<Comment> commentSlice;
+        if(cursor==null){
+            commentSlice = commentRepository.findAllByParentComment(comment,pageable);
+        }else{
+            commentSlice = commentRepository.findAllByParentCommentAndIdGreaterThanOrderByIdAsc(comment,cursor, pageable);
+        }
+        return CommentConverter.CommentSliceToCommentListResponseDTO(commentSlice);
     }
 
     @Override
