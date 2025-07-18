@@ -20,7 +20,6 @@ import java.util.List;
 public class CommentRestController {
     private final CommentServiceImpl commentService;
     private final CommentRepository commentRepository;
-
     @Operation(
             summary = "카드 댓글 작성",
             description = "parent_comment_id가 null이면 댓글, non-null이면 답글 입니다.")

@@ -1,6 +1,7 @@
 package EatPic.spring.domain.card.service;
 
-import EatPic.spring.domain.card.dto.response.CardResponse;
+import EatPic.spring.domain.card.converter.CardConverter;
+import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.SearchRepository;
 import EatPic.spring.domain.comment.repository.CommentRepository;
@@ -21,7 +22,7 @@ public class SearchServiceImpl extends SearchService {
     // private final ReactionRepository reactionRepository;
 
     @Override
-    public CardResponse.GetCardListResponseDto getAllCards(int limit, Long cursor) {
+    public SearchResponseDTO.GetCardListResponseDto getAllCards(int limit, Long cursor) {
         // 유저 관련 처리는 이후에..
         // 페이징 처리 하기
         Pageable pageable = PageRequest.of(0, limit, Sort.by("id").ascending());
@@ -32,19 +33,19 @@ public class SearchServiceImpl extends SearchService {
             cards = searchRepository.findByCursor(cursor, pageable);
         }
 
-        List<CardResponse.GetCardResponseDto> result = cards.stream()
-                .map(card -> CardResponse.GetCardResponseDto.builder()
-                        .id(card.getId())
-                        .cardImageUrl(card.getCardImageUrl())
-                        // 댓글 개수 & 반응 개수 세기
-                        .commentCount(commentRepository.countAllCommentByCard(card))
-                        // .reactionCount(reactionRepository.countAllReactionByCard(card))
-                        .build())
+        List<SearchResponseDTO.GetCardResponseDto> result = cards.stream()
+                .map(card -> CardConverter.toGetCardResponseDto(
+                        card,
+                        commentRepository.countAllCommentByCard(card),
+                        // 반응 개수 세기 추가해야돼
+                        // reactionRepository.countAllReactionByCard(card)
+                        0L // <--- 만약 reactionCount 미구현시 임시 0L로 해둔다고 합니다..
+                ))
                 .toList();
 
         Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getId();
         boolean hasNext = result.size() == limit;
 
-        return new CardResponse.GetCardListResponseDto(result, nextCursor, result.size(), hasNext);
+        return new SearchResponseDTO.GetCardListResponseDto(result, nextCursor, result.size(), hasNext);
     }
 }
