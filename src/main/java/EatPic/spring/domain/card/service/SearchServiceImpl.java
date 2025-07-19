@@ -3,7 +3,7 @@ package EatPic.spring.domain.card.service;
 import EatPic.spring.domain.card.converter.CardConverter;
 import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.entity.Card;
-import EatPic.spring.domain.card.repository.SearchRepository;
+import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import lombok.RequiredArgsConstructor;      // 자동으로 생성자 주입
@@ -16,8 +16,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class SearchServiceImpl extends SearchService {
-    private final SearchRepository searchRepository;
+public class SearchServiceImpl implements SearchService {
+    private final CardRepository cardRepository;
     private final CommentRepository commentRepository;
     private final ReactionRepository reactionRepository;
 
@@ -28,9 +28,9 @@ public class SearchServiceImpl extends SearchService {
         Pageable pageable = PageRequest.of(0, limit, Sort.by("id").ascending());
         List<Card> cards;
         if (cursor == null || cursor == 0) {
-            cards = searchRepository.findAll(pageable).getContent();
+            cards = cardRepository.findAll(pageable).getContent();
         } else {
-            cards = searchRepository.findByCursor(cursor, pageable);
+            cards = cardRepository.findByCursor(cursor, pageable);
         }
 
         List<SearchResponseDTO.GetCardResponseDto> result = cards.stream()
