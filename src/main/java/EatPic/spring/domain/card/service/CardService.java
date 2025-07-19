@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CardService {
+public interface CardService {
 
   private final CardRepository cardRepository;
   private final UserRepository userRepository;
@@ -22,6 +22,7 @@ public class CardService {
   @Transactional
   public CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, Long userId) {
 
+    // 아직 유저 관련 처리 안했음
     User user = userRepository.findUserById(userId);
 
     Card newcard = Card.builder()
