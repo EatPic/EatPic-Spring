@@ -2,17 +2,14 @@ package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
-import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
-import EatPic.spring.domain.card.service.CardService;
+import EatPic.spring.domain.card.service.CardServiceImpl;
 import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
 
   private final CardRepository cardRepository;
-  private final CardService cardService;
+  private final CardServiceImpl cardService;
 
   @Operation(summary = "해당 카드 메모 보기", description = "특정 카드의 메모 내용을 반환합니다.")
   @GetMapping("/{cardId}/memo")
