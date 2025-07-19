@@ -1,7 +1,7 @@
 package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
-import EatPic.spring.domain.card.repository.SearchRepository;
+import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.SearchServiceImpl;
 import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +18,7 @@ import java.util.List;
 public class SearchController {
 
     private final SearchServiceImpl searchService;
-    private final SearchRepository searchRepository;
+    private final CardRepository cardRepository;
 
     @Operation(summary = "탐색 탭에서 모든 유저 리스트 조회",
             description = "기본 탐색 탭 조회 시 호출되는 api")
