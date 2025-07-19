@@ -19,4 +19,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, ReactionId> 
     Page<User> findUsersByCardAndReactionType(@Param("cardId") Long cardId,
                                               @Param("reactionType") ReactionType reactionType,
                                               Pageable pageable);
+
+    // 반응 개수 세기
+    Long countAllReactionByCard(Card card);
 }

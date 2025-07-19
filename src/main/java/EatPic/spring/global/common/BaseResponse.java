@@ -22,6 +22,7 @@ public class BaseResponse<T> {
         return new BaseResponse<>(true, SuccessCode._OK.getCode() , SuccessCode._OK.getMessage(), result);
     }
 
+
     public static <T> BaseResponse<T> of(BaseCode code, T result){
         return new BaseResponse<>(true, code.getReasonHttpStatus().getCode() , code.getReasonHttpStatus().getMessage(), result);
     }

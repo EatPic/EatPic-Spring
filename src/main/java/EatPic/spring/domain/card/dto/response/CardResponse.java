@@ -1,6 +1,5 @@
 package EatPic.spring.domain.card.dto.response;
 
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +18,4 @@ public class CardResponse {
   public static class CreateCardResponse {
     private Long newcardId;
   }
-
 }

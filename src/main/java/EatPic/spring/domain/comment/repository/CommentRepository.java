@@ -12,4 +12,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Comment findCommentById(Long cardId);
     List<Comment> findAllByParentComment(Comment comment);
     Page<Comment> findAllByCard(Card card, Pageable pageable);
+
+    // 댓글 개수 세기
+    Long countAllCommentByCard(Card card);
 }
