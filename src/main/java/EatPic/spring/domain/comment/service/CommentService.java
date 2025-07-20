@@ -10,5 +10,5 @@ public interface CommentService {
     Comment writeComment(CommentRequestDTO.WriteCommentDto commentDto, Long cardId);
     CommentResponseDTO.commentListDTO getComments(Long cardId, int size, Long cursor);
     CommentResponseDTO.commentListDTO getReplies(Long commentId, int size, Long cursor);
-    List<Long> deleteComments(Long commentId);
+    CommentResponseDTO.DeleteCommentResponseDTO deleteComments(Long commentId);
 }

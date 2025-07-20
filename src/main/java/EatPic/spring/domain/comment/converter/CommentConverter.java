@@ -46,4 +46,12 @@ public class CommentConverter {
                 .commentList(commentDTOList)
                 .build();
     }
+
+    public static CommentResponseDTO.DeleteCommentResponseDTO CommentIdListToDeleteCommentResponseDTO(List<Long> commentIds){
+        return CommentResponseDTO.DeleteCommentResponseDTO.builder()
+                .deletedCommentIds(commentIds)
+                .total(commentIds.size())
+                .build();
+
+    }
 }

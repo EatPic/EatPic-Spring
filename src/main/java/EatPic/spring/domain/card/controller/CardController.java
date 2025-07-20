@@ -5,9 +5,8 @@ import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.CardService;
-import EatPic.spring.global.common.BaseResponse;
+import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,15 +51,15 @@ public class CardController {
   @PostMapping("")
   @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "COMMON201", description = "픽카드가 기록되었습니다.")
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON201", description = "픽카드가 기록되었습니다.")
   })
-  public BaseResponse<CreateCardResponse> createCard(
+  public ApiResponse<CreateCardResponse> createCard(
       HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse,
       @Valid @RequestBody CardCreateRequest.CreateCardRequest request) {
     Long userId = 1L;
 
-    return BaseResponse.onSuccess(cardService.createNewCard(request, userId));
+    return ApiResponse.onSuccess(cardService.createNewCard(request, userId));
   }
 
 }
