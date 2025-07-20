@@ -1,11 +1,20 @@
 package EatPic.spring.domain.user.converter;
 
+import EatPic.spring.domain.user.dto.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 
 import java.util.List;
 
 public class UserConverter {
+
+    public static LoginResponseDTO toLoginResultDTO(Long userId, String accessToken, String refreshToken) {
+        return LoginResponseDTO.builder()
+                .userId(userId)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
 
     public static UserResponseDTO.ProfileIconDto toProfileIconDto(User user){
         return UserResponseDTO.ProfileIconDto.builder()
@@ -23,6 +32,4 @@ public class UserConverter {
                 .userIconList(pagedUserList)
                 .build();
     }
-
-
 }

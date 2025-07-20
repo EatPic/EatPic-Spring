@@ -1,12 +1,15 @@
 package EatPic.spring.domain.user.controller;
 
 import EatPic.spring.domain.user.converter.UserConverter;
+import EatPic.spring.domain.user.dto.LoginRequestDTO;
+import EatPic.spring.domain.user.dto.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.UserResponseDTO;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserCommandServiceImpl;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,4 +49,6 @@ public class UserRestController {
 
         return BaseResponse.onSuccess(result);
     }
+
+
 }

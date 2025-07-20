@@ -5,7 +5,9 @@ import EatPic.spring.domain.user.dto.LoginResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.dto.SignupRequestDTO;
 import EatPic.spring.domain.user.dto.SignupResponseDTO;
+import EatPic.spring.domain.user.service.UserCommandServiceImpl;
 import EatPic.spring.domain.user.service.UserService;
+import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,9 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+
+    private final UserCommandServiceImpl userCommandService;
+
 
     // 회원 가입 요청
     @PostMapping("/signup")
@@ -57,11 +62,17 @@ public class UserController {
         }
     }
 
+//    @PostMapping("/login/email")
+//    @Operation(summary = "이메일 로그인 요청")
+//    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
+//        LoginResponseDTO response = userService.loginuser(request);
+//        return ResponseEntity.ok(response);
+//    }
+
     @PostMapping("/login/email")
-    @Operation(summary = "이메일 로그인 요청")
-    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
-        LoginResponseDTO response = userService.login(request);
-        return ResponseEntity.ok(response);
+    @Operation(summary = "유저 로그인 API",description = "유저가 로그인하는 API입니다.")
+    public BaseResponse<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
+        return BaseResponse.onSuccess(userCommandService.loginUser(request));
     }
 
 }
