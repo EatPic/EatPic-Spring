@@ -1,8 +1,9 @@
 package EatPic.spring.domain.comment.service;
 
+import EatPic.spring.domain.card.CardErrorCode;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
-import EatPic.spring.domain.card.service.CardService;
+import EatPic.spring.domain.comment.CommentErrorCode;
 import EatPic.spring.domain.comment.converter.CommentConverter;
 import EatPic.spring.domain.comment.dto.CommentRequestDTO;
 import EatPic.spring.domain.comment.dto.CommentResponseDTO;
@@ -10,8 +11,7 @@ import EatPic.spring.domain.comment.entity.Comment;
 import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
-import EatPic.spring.global.common.code.error.ErrorStatus;
-import EatPic.spring.global.common.exception.handler.TempHandler;
+import EatPic.spring.global.common.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +36,8 @@ public class CommentServiceImpl implements CommentService {
         // 작성자
         User user = userRepository.findUserById(1L);
         // 카드(피드)
-        Card card = cardRepository.findById(cardId).orElseThrow(() -> new TempHandler(ErrorStatus.CARD_NOT_FOUND));
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new GeneralException(CardErrorCode.CARD_NOT_FOUND));
 
         Comment comment = CommentConverter.WriteCommentDtoToComment(writeCommentDto,card,user);
         commentRepository.save(comment);
@@ -46,9 +47,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponseDTO.commentListDTO getComments(Long cardId, int size, Long cursor) {
-        Card card = cardRepository.findCardById(cardId);
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(()-> new GeneralException(CardErrorCode.CARD_NOT_FOUND));
+
+        validateCursorExists(cursor);
 
         Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").ascending());
+
         Slice<Comment> commentSlice;
         if(cursor==null){
             commentSlice = commentRepository.findAllByCardAndParentCommentIsNull(card,pageable);
@@ -60,7 +65,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponseDTO.commentListDTO getReplies(Long commentId, int size, Long cursor) {
-        Comment comment = commentRepository.findCommentById(commentId);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()->new GeneralException(CommentErrorCode.COMMENT_NOT_FOUND));
+
+        validateCursorExists(cursor);
+
         Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").ascending());
         Slice<Comment> commentSlice;
         if(cursor==null){
@@ -74,7 +83,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentResponseDTO.DeleteCommentResponseDTO deleteComments(Long commentId) {
 
-        Comment comment = commentRepository.findCommentById(commentId);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()->new GeneralException(CommentErrorCode.COMMENT_NOT_FOUND));
+
         List<Comment> childComments = commentRepository.findAllByParentComment(comment);
 
         List<Long> deletedCommentIds = new ArrayList<>();
@@ -88,4 +99,11 @@ public class CommentServiceImpl implements CommentService {
 
         return CommentConverter.CommentIdListToDeleteCommentResponseDTO(deletedCommentIds);
     }
+
+    private void validateCursorExists(Long cursor) {
+        if (commentRepository.findById(cursor).isEmpty()) {
+            throw new GeneralException(CommentErrorCode.CURSOR_NOT_FOUND);
+        }
+    }
+
 }
