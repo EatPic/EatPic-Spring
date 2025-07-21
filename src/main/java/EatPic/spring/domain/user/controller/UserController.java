@@ -27,7 +27,6 @@ public class UserController {
 
     private final UserCommandServiceImpl userCommandService;
 
-
     // 회원 가입 요청
     @PostMapping("/signup")
     @Operation(summary = "이메일 회원가입 요청")
@@ -62,17 +61,9 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/login/email")
-//    @Operation(summary = "이메일 로그인 요청")
-//    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
-//        LoginResponseDTO response = userService.loginuser(request);
-//        return ResponseEntity.ok(response);
-//    }
-
     @PostMapping("/login/email")
-    @Operation(summary = "이메일 로그인")
+    @Operation(summary = "이메일 로그인 요청")
     public BaseResponse<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
         return BaseResponse.onSuccess(userCommandService.loginUser(request));
     }
-
 }
