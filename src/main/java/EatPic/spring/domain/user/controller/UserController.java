@@ -70,7 +70,7 @@ public class UserController {
 //    }
 
     @PostMapping("/login/email")
-    @Operation(summary = "유저 로그인 API",description = "유저가 로그인하는 API입니다.")
+    @Operation(summary = "이메일 로그인")
     public BaseResponse<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
         return BaseResponse.onSuccess(userCommandService.loginUser(request));
     }

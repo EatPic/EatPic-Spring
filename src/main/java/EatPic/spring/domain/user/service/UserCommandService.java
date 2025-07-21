@@ -1,13 +1,12 @@
 package EatPic.spring.domain.user.service;
 
-import EatPic.spring.domain.user.dto.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.LoginResponseDTO;
-import EatPic.spring.domain.user.entity.User;
+import EatPic.spring.domain.user.dto.LoginRequestDTO;
+import EatPic.spring.domain.user.dto.UserResponseDTO;
 
-import java.util.List;
 
 public interface UserCommandService {
-    List<User> followingUser(Long userId);
     LoginResponseDTO loginUser(LoginRequestDTO request);
-
+    UserResponseDTO.UserIconListResponseDto followingUserIconList(Long userId, int page, int size);
+    UserResponseDTO.ProfileDto getMyIcon();
 }
