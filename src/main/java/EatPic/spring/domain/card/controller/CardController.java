@@ -5,7 +5,7 @@ import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.CardService;
-import EatPic.spring.global.common.ApiResponse;
+import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,13 +53,13 @@ public class CardController {
   @ApiResponses(value = {
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON201", description = "픽카드가 기록되었습니다.")
   })
-  public ApiResponse<CreateCardResponse> createCard(
+  public BaseResponse<CreateCardResponse> createCard(
       HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse,
       @Valid @RequestBody CardCreateRequest.CreateCardRequest request) {
     Long userId = 1L;
 
-    return ApiResponse.onSuccess(cardService.createNewCard(request, userId));
+    return BaseResponse.onSuccess(cardService.createNewCard(request, userId));
   }
 
 }
