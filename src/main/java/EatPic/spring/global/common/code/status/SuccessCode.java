@@ -1,7 +1,7 @@
-package EatPic.spring.global.common.code.success;
+package EatPic.spring.global.common.code.status;
 
-import EatPic.spring.global.common.BaseCode;
-import EatPic.spring.global.common.ReasonDTO;
+import EatPic.spring.global.common.code.BaseCode;
+import EatPic.spring.global.common.code.ReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -11,7 +11,7 @@ import EatPic.spring.domain.comment.entity.Comment;
 import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
-import EatPic.spring.global.common.exception.GeneralException;
+import EatPic.spring.global.common.exception.handler.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
