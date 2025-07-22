@@ -2,7 +2,7 @@ package EatPic.spring.domain.card.entity;
 
 import EatPic.spring.domain.card.mapping.CardHashtag;
 import EatPic.spring.domain.user.entity.User;
-import EatPic.spring.global.common.BaseEntity;
+import EatPic.spring.global.common.code.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -32,7 +32,7 @@ public class SearchServiceImpl implements SearchService {
         List<SearchResponseDTO.GetCardResponseDto> result = cards.getContent().stream()
                 .map(card -> CardConverter.toGetCardResponseDto(
                         card,
-                        commentRepository.countAllCommentByCard(card),
+                        commentRepository.countAllByCard(card),
                         reactionRepository.countAllReactionByCard(card)
                 ))
                 .toList();
