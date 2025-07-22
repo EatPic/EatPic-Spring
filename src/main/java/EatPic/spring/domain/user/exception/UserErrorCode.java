@@ -1,7 +1,7 @@
 package EatPic.spring.domain.user.exception;
 
-import EatPic.spring.global.common.BaseErrorCode;
-import EatPic.spring.global.common.ErrorReasonDTO;
+import EatPic.spring.global.common.code.BaseErrorCode;
+import EatPic.spring.global.common.code.ErrorReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

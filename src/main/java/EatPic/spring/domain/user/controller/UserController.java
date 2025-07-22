@@ -24,7 +24,6 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-
     private final UserCommandServiceImpl userCommandService;
 
     // 회원 가입 요청
@@ -67,3 +66,4 @@ public class UserController {
         return BaseResponse.onSuccess(userCommandService.loginUser(request));
     }
 }
+

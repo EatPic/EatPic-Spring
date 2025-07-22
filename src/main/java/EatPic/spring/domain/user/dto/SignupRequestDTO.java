@@ -28,7 +28,6 @@ public class SignupRequestDTO {
     @NotBlank
     @Size(min = 5, max = 8)
     @Pattern(regexp = "^[a-z0-9]+$", message = "5~8자 사이의 소문자 및 숫자 입력")
-
     private String nameId;
 
     @NotBlank

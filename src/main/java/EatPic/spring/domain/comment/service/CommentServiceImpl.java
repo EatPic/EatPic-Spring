@@ -9,14 +9,21 @@ import EatPic.spring.domain.comment.entity.Comment;
 import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.global.common.code.status.ErrorStatus;
+import EatPic.spring.global.common.exception.GeneralException;
+import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +34,12 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     @Override
-    public final Comment writeComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Long cardId) {
+    public Comment writeComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Long cardId) {
         // 작성자
-        User user = userRepository.findUserById(1L); //todo: 로그인한 사용자로 수정
+        User user = userRepository.findUserById(1L);
         // 카드(피드)
-        Card card = cardRepository.findCardById(cardId);
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new ExceptionHandler(CARD_NOT_FOUND));
 
         Comment comment = CommentConverter.WriteCommentDtoToComment(writeCommentDto,card,user);
         commentRepository.save(comment);
@@ -40,29 +48,64 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponseDTO.commentListDTO getCommentList(Long cardId,int page, int size) {
-        Card card = cardRepository.findCardById(cardId);
+    public CommentResponseDTO.commentListDTO getComments(Long cardId, int size, Long cursor) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(()-> new ExceptionHandler(CARD_NOT_FOUND));
 
-        Page<Comment> commentPage = commentRepository.findAllByCard(card,PageRequest.of(page,size));
+        validateCursorExists(cursor);
 
-        return CommentConverter.CommentPageToCommentListResponseDTO(cardId,commentPage);
+        Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").ascending());
+
+        Slice<Comment> commentSlice;
+        if(cursor==null){
+            commentSlice = commentRepository.findAllByCardAndParentCommentIsNull(card,pageable);
+        }else{
+            commentSlice = commentRepository.findAllByCardAndParentCommentIsNullAndIdGreaterThanOrderByIdAsc(card, cursor, pageable);
+        }
+        return CommentConverter.CommentSliceToCommentListResponseDTO(commentSlice);
     }
 
     @Override
-    public List<Long> deleteComments(Long commentId) {
+    public CommentResponseDTO.commentListDTO getReplies(Long commentId, int size, Long cursor) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()->new GeneralException(COMMENT_NOT_FOUND));
 
-        Comment comment = commentRepository.findCommentById(commentId);
+        validateCursorExists(cursor);
+
+        Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").ascending());
+        Slice<Comment> commentSlice;
+        if(cursor==null){
+            commentSlice = commentRepository.findAllByParentComment(comment,pageable);
+        }else{
+            commentSlice = commentRepository.findAllByParentCommentAndIdGreaterThanOrderByIdAsc(comment,cursor, pageable);
+        }
+        return CommentConverter.CommentSliceToCommentListResponseDTO(commentSlice);
+    }
+
+    @Override
+    public CommentResponseDTO.DeleteCommentResponseDTO deleteComments(Long commentId) {
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()->new GeneralException(COMMENT_NOT_FOUND));
+
         List<Comment> childComments = commentRepository.findAllByParentComment(comment);
 
         List<Long> deletedCommentIds = new ArrayList<>();
         deletedCommentIds.add(comment.getId());
-        for(Comment childComment : childComments){
+        for (Comment childComment : childComments) {
             deletedCommentIds.add(childComment.getId());
         }
 
         commentRepository.delete(comment);
         commentRepository.deleteAll(childComments);
 
-        return deletedCommentIds;
+        return CommentConverter.CommentIdListToDeleteCommentResponseDTO(deletedCommentIds);
     }
+
+    private void validateCursorExists(Long cursor) {
+        if (cursor!=null && commentRepository.findById(cursor).isEmpty()) {
+            throw new GeneralException(CURSOR_NOT_FOUND);
+        }
+    }
+
 }
