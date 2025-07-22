@@ -1,4 +1,4 @@
-package EatPic.spring.global.common.exception.handler;
+package EatPic.spring.global.common.exception;
 
 import EatPic.spring.global.common.code.BaseErrorCode;
 import EatPic.spring.global.common.code.ErrorReasonDTO;

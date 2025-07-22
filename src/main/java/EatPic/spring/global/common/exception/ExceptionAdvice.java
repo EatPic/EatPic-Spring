@@ -3,7 +3,6 @@ package EatPic.spring.global.common.exception;
 import EatPic.spring.global.common.ApiResponse;
 import EatPic.spring.global.common.code.ErrorReasonDTO;
 import EatPic.spring.global.common.code.status.ErrorStatus;
-import EatPic.spring.global.common.exception.handler.GeneralException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
