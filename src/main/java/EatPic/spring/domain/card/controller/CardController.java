@@ -50,9 +50,6 @@ public class CardController {
 
   @PostMapping("")
   @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
-  @ApiResponses(value = {
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON201", description = "픽카드가 기록되었습니다.")
-  })
   public ApiResponse<CreateCardResponse> createCard(
       @Valid @RequestBody CardCreateRequest.CreateCardRequest request) {
     Long userId = 1L;
