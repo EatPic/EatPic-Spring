@@ -1,6 +1,7 @@
 package EatPic.spring.global.common;
 
-import EatPic.spring.global.common.code.success.SuccessCode;
+import EatPic.spring.global.common.code.BaseCode;
+import EatPic.spring.global.common.code.status.SuccessStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -19,7 +20,7 @@ public class BaseResponse<T> {
     private T result;
 
     public static <T> BaseResponse<T> onSuccess(T result){
-        return new BaseResponse<>(true, SuccessCode._OK.getCode() , SuccessCode._OK.getMessage(), result);
+        return new BaseResponse<>(true, SuccessStatus._OK.getCode() , SuccessStatus._OK.getMessage(), result);
     }
 
 

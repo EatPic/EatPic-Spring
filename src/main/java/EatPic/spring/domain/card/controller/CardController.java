@@ -54,8 +54,6 @@ public class CardController {
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON201", description = "픽카드가 기록되었습니다.")
   })
   public ApiResponse<CreateCardResponse> createCard(
-      HttpServletRequest httpServletRequest,
-      HttpServletResponse httpServletResponse,
       @Valid @RequestBody CardCreateRequest.CreateCardRequest request) {
     Long userId = 1L;
 
