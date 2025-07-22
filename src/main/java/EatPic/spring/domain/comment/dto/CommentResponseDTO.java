@@ -38,10 +38,8 @@ public class CommentResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class commentListDTO{
-        private int total;
-        private int page;
-        private int size;
-        private Long cardId;
+        private boolean hasNext;
+        private Long nextCursor;
         private List<CommentDTO> commentList;
     }
 

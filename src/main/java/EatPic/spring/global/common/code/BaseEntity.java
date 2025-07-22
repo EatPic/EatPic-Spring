@@ -1,4 +1,4 @@
-package EatPic.spring.global.common;
+package EatPic.spring.global.common.code;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

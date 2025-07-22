@@ -5,9 +5,9 @@ import EatPic.spring.domain.comment.dto.CommentRequestDTO;
 import EatPic.spring.domain.comment.dto.CommentResponseDTO;
 import EatPic.spring.domain.comment.entity.Comment;
 import EatPic.spring.domain.user.entity.User;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class CommentConverter {
     public static Comment WriteCommentDtoToComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Card card, User user) {
@@ -38,13 +38,20 @@ public class CommentConverter {
                 .build();
     }
 
-    public static CommentResponseDTO.commentListDTO CommentPageToCommentListResponseDTO(Long cardId, Page<Comment> commentList){
+    public static CommentResponseDTO.commentListDTO CommentSliceToCommentListResponseDTO(Slice<Comment> commentList){
+        List<CommentResponseDTO.CommentDTO> commentDTOList = commentList.getContent().stream().map(CommentConverter::CommentToCommentDTO).toList();
         return CommentResponseDTO.commentListDTO.builder()
-                .total((int)commentList.getTotalElements())
-                .page(commentList.getNumber() + 1)
-                .size(commentList.getSize())
-                .cardId(cardId)
-                .commentList(commentList.getContent().stream().map(CommentConverter::CommentToCommentDTO).collect(Collectors.toList()))
+                .hasNext(commentList.hasNext())
+                .nextCursor(commentList.hasNext()?commentDTOList.get(commentDTOList.size()-1).getCommentId():null)
+                .commentList(commentDTOList)
                 .build();
+    }
+
+    public static CommentResponseDTO.DeleteCommentResponseDTO CommentIdListToDeleteCommentResponseDTO(List<Long> commentIds){
+        return CommentResponseDTO.DeleteCommentResponseDTO.builder()
+                .deletedCommentIds(commentIds)
+                .total(commentIds.size())
+                .build();
+
     }
 }

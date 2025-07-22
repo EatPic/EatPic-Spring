@@ -1,7 +1,7 @@
 package EatPic.spring.domain.badge.entity;
 
 import EatPic.spring.domain.user.mapping.UserBadge;
-import EatPic.spring.global.common.BaseEntity;
+import EatPic.spring.global.common.code.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
