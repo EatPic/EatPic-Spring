@@ -1,14 +1,15 @@
 package EatPic.spring.domain.user.controller;
 
-import EatPic.spring.domain.user.dto.LoginRequestDTO;
-import EatPic.spring.domain.user.dto.LoginResponseDTO;
+import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.entity.User;
-import EatPic.spring.domain.user.dto.SignupRequestDTO;
-import EatPic.spring.domain.user.dto.SignupResponseDTO;
 import EatPic.spring.domain.user.service.UserCommandServiceImpl;
+import EatPic.spring.domain.user.service.UserQueryService;
 import EatPic.spring.domain.user.service.UserService;
+import EatPic.spring.global.common.ApiResponse;
 import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserCommandServiceImpl userCommandService;
+    private final UserQueryService userQueryService;
 
     // 회원 가입 요청
     @PostMapping("/signup")
@@ -64,6 +66,14 @@ public class UserController {
     @Operation(summary = "이메일 로그인 요청")
     public BaseResponse<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
         return BaseResponse.onSuccess(userCommandService.loginUser(request));
+    }
+
+    @GetMapping("/users")
+    @Operation(summary = "유저 내 정보 조회 - 인증 필요",
+            security = { @SecurityRequirement(name = "JWT TOKEN") }
+    )
+    public ApiResponse<UserInfoDTO> getMyInfo(HttpServletRequest request) {
+        return ApiResponse.onSuccess(userQueryService.getUserInfo(request));
     }
 }
 

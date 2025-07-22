@@ -3,6 +3,7 @@ package EatPic.spring.domain.user.converter;
 import EatPic.spring.domain.user.dto.LoginResponseDTO;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
+import EatPic.spring.domain.user.dto.UserInfoDTO;
 import EatPic.spring.domain.user.dto.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.mapping.UserFollow;
@@ -15,6 +16,14 @@ public class UserConverter {
                 .userId(userId)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+    public static UserInfoDTO toUserInfoDTO(User user){
+        return UserInfoDTO.builder()
+                .email(user.getEmail())
+                .nameId(user.getNameId())
+                .nickName(user.getNickname())
                 .build();
     }
 
