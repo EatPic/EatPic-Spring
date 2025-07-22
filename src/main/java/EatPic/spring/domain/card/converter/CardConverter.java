@@ -2,6 +2,8 @@ package EatPic.spring.domain.card.converter;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.NextMealCard;
 import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.user.entity.User;
@@ -46,5 +48,22 @@ public class CardConverter {
                 .recipe(card.getRecipe())
                 .meal(card.getMeal())
                 .build();
+    }
+
+    public static CardDetailResponse toCardDetailResponse(Card card, Long nextCardId) {
+        return CardDetailResponse.builder()
+            .cardId(card.getId())
+            .imageUrl(card.getCardImageUrl())
+            .date(card.getCreatedAt().toLocalDate())
+            .time(card.getCreatedAt().toLocalTime())
+            .mealType(card.getMeal())
+            .recipeUrl(card.getRecipeUrl())
+            .latitude(card.getLatitude())
+            .longitude(card.getLongitude())
+            .memo(card.getMemo())
+            .recipe(card.getRecipe())
+            .nextMeal(nextCardId != null ?
+                NextMealCard.builder().cardId(nextCardId).build() : null)
+            .build();
     }
 }
