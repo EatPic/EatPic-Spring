@@ -68,3 +68,4 @@ public class User extends BaseEntity {
     @Column(name = "marketing_agreed", nullable = false)
     private Boolean marketingAgreed;
 }
+

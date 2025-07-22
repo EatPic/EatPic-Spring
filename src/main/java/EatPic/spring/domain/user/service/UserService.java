@@ -14,7 +14,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    
+
     public User signup(SignupRequestDTO request) {
         // 이메일 중복 검사
         if (userRepository.existsByEmail(request.getEmail())) {

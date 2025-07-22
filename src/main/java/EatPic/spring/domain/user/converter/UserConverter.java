@@ -1,17 +1,31 @@
 package EatPic.spring.domain.user.converter;
 
-import EatPic.spring.domain.card.entity.Card;
+import EatPic.spring.domain.user.dto.LoginResponseDTO;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
+import EatPic.spring.domain.user.dto.UserInfoDTO;
 import EatPic.spring.domain.user.dto.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.mapping.UserFollow;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class UserConverter {
+
+    public static LoginResponseDTO toLoginResultDTO(Long userId, String accessToken, String refreshToken) {
+        return LoginResponseDTO.builder()
+                .userId(userId)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public static UserInfoDTO toUserInfoDTO(User user){
+        return UserInfoDTO.builder()
+                .email(user.getEmail())
+                .nameId(user.getNameId())
+                .nickName(user.getNickname())
+                .build();
+    }
 
     public static UserResponseDTO.UserIconListResponseDto toUserIconListResponseDto(Page<UserFollow> followingPage){
         return UserResponseDTO.UserIconListResponseDto.builder()
@@ -54,6 +68,4 @@ public class UserConverter {
                 .userList(profileList.getContent())
                 .build();
     }
-
-
 }
