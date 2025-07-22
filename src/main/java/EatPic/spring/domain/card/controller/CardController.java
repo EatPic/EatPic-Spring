@@ -1,6 +1,7 @@
 package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
+import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
@@ -48,6 +49,7 @@ public class CardController {
         .orElse(ResponseEntity.notFound().build());
   }
 
+  //픽카드 생성하기 부분에서 같은 날짜에, 같은 mealtype으로 픽카드 등록되지 않도록 수정해야함
   @PostMapping("")
   @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
   public ApiResponse<CreateCardResponse> createCard(
@@ -55,6 +57,13 @@ public class CardController {
     Long userId = 1L;
 
     return ApiResponse.onSuccess(cardService.createNewCard(request, userId));
+  }
+
+  @GetMapping("/{cardId}")
+  @Operation(summary = "카드 상세 조회 (홈화면에서)", description = "카드 ID를 기준으로 상세 정보를 조회하는 API")
+  public ApiResponse<CardDetailResponse> getCardDetail(@PathVariable Long cardId) {
+    Long userId = 1L; // 로그인 기능 구현 전 임시 사용자
+    return ApiResponse.onSuccess(cardService.getCardDetail(cardId, userId));
   }
 
 }

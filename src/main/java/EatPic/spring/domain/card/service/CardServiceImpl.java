@@ -1,11 +1,19 @@
 package EatPic.spring.domain.card.service;
 
+import EatPic.spring.domain.card.converter.CardConverter;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.global.common.code.status.ErrorStatus;
+import EatPic.spring.global.common.exception.handler.ExceptionHandler;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Comparator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,5 +49,37 @@ public class CardServiceImpl implements CardService {
         Card savedCard = cardRepository.save(newcard);
 
         return CardResponse.CreateCardResponse.builder().newcardId(savedCard.getId()).build();
+    }
+
+    @Override
+    @Transactional
+    public CardDetailResponse getCardDetail(Long cardId, Long userId) {
+        Card selectedCard = cardRepository.findById(cardId)
+            .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
+
+        // 1. 해당 카드의 작성 날짜
+        LocalDate date = selectedCard.getCreatedAt().toLocalDate();
+
+        // 2. 같은 유저 + 같은 날짜 카드 목록
+        List<Card> cardsOnSameDate = cardRepository.findByUserIdAndCreatedAtBetween(
+            userId,
+            date.atStartOfDay(),
+            date.atTime(LocalTime.MAX)
+        );
+
+        // 3. meal 기준 정렬 (ex. 아침 → 점심 → 저녁)
+        cardsOnSameDate.sort(Comparator.comparing(Card::getMeal));
+
+        // 4. 다음 카드 찾기
+        Long nextCardId = null;
+        for (int i = 0; i < cardsOnSameDate.size(); i++) {
+            if (cardsOnSameDate.get(i).getId().equals(cardId) && i + 1 < cardsOnSameDate.size()) {
+                nextCardId = cardsOnSameDate.get(i + 1).getId();
+                break;
+            }
+        }
+
+        // 5. 응답 DTO 생성
+        return CardConverter.toCardDetailResponse(selectedCard, nextCardId);
     }
 }
