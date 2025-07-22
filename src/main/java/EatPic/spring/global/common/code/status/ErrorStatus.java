@@ -34,7 +34,11 @@ public enum ErrorStatus implements BaseErrorCode {
     INTERNAL_AUTH_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AUTH_009", "인증 처리 중 서버 에러가 발생했습니다."),
 
     // 카드 관련 응답
-    CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_001", "해당 카드는 존재하지 않는 카드입니다.");
+    CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_001", "해당 카드는 존재하지 않는 카드입니다."),
+
+    // 댓글 관련 응답
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_001", "해당 댓글은 존재하지 않는 댓글입니다."),
+    CURSOR_NOT_FOUND(HttpStatus.BAD_REQUEST, "COMMENT_002", "유효하지 않은 커서입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
@@ -42,7 +46,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
     @Override
     public ErrorReasonDTO getReason() {
-        return ErrorReasonDTO.builder().isSuccess(false).code(code).message(message).build();
+        return ErrorReasonDTO.builder()
+                .isSuccess(false)
+                .code(code)
+                .message(message)
+                .build();
     }
 
     @Override
