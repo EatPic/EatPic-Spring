@@ -2,7 +2,7 @@ package EatPic.spring.domain.user.entity;
 
 import EatPic.spring.domain.user.mapping.UserBadge;
 import EatPic.spring.domain.user.mapping.UserTerm;
-import EatPic.spring.global.common.BaseEntity;
+import EatPic.spring.global.common.code.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

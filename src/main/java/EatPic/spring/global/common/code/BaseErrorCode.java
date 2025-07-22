@@ -1,4 +1,4 @@
-package EatPic.spring.global.common;
+package EatPic.spring.global.common.code;
 
 import org.springframework.http.HttpStatus;
 
