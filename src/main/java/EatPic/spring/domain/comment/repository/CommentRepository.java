@@ -20,4 +20,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Long countAllByParentComment(Comment comment);
     Long countAllByCard(Card card);
 
+    int countByCardId(Long cardId);
+
 }

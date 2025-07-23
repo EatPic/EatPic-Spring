@@ -5,6 +5,7 @@ import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.reaction.entity.ReactionId;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.user.entity.User;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,9 @@ public interface ReactionRepository extends JpaRepository<Reaction, ReactionId> 
 
     // 반응 개수 세기
     Long countAllReactionByCard(Card card);
+
+    Optional<Reaction> findByCardIdAndUserId(Long cardId, Long userId);
+    int countByCardId(Long cardId);
+
+
 }
