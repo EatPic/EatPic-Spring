@@ -1,11 +1,18 @@
 package EatPic.spring.domain.card.service;
 
+import EatPic.spring.domain.bookmark.repository.BookmarkRepository;
 import EatPic.spring.domain.card.converter.CardConverter;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.entity.Card;
+import EatPic.spring.domain.card.mapping.CardHashtag;
+import EatPic.spring.domain.card.repository.CardHashtagRepository;
 import EatPic.spring.domain.card.repository.CardRepository;
+import EatPic.spring.domain.comment.repository.CommentRepository;
+import EatPic.spring.domain.reaction.entity.Reaction;
+import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.global.common.code.status.ErrorStatus;
@@ -14,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +34,11 @@ public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
+    private final ReactionRepository reactionRepository;
+    private final CardHashtagRepository cardHashtagRepository;
+    private final CommentRepository commentRepository;
+    private final BookmarkRepository bookmarkRepository;
+
 
     @Override
     @Transactional
@@ -81,5 +94,23 @@ public class CardServiceImpl implements CardService {
 
         // 5. 응답 DTO 생성
         return CardConverter.toCardDetailResponse(selectedCard, nextCardId);
+    }
+
+    @Override
+    @Transactional
+    public CardFeedResponse getCardFeed(Long cardId, Long userId) {
+        Card card = cardRepository.findById(cardId)
+            .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
+
+        List<CardHashtag> hashtags = cardHashtagRepository.findByCard(card); // 해당 카드의 해시태그들 조회
+        Reaction reaction = reactionRepository.findByCardIdAndUserId(cardId, userId).orElse(null); // 사용자의 반응 조회
+        int reactionCount = reactionRepository.countByCardId(cardId); // 총 반응 수 조회
+        int commentCount = commentRepository.countByCardId(cardId); // 댓글 수 조회
+        boolean isBookmarked = bookmarkRepository.existsByCardIdAndUserId(cardId, userId); // 북마크 여부
+        User writer = card.getUser(); // 작성자 정보 얻기
+
+        return CardConverter.toFeedResponse(
+            card, hashtags, writer, reaction, reactionCount, commentCount, isBookmarked
+        );
     }
 }
