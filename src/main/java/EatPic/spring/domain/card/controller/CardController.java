@@ -2,6 +2,7 @@ package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
@@ -64,6 +65,13 @@ public class CardController {
   public ApiResponse<CardDetailResponse> getCardDetail(@PathVariable Long cardId) {
     Long userId = 1L; // 로그인 기능 구현 전 임시 사용자
     return ApiResponse.onSuccess(cardService.getCardDetail(cardId, userId));
+  }
+
+  @GetMapping("/{cardId}/feed")
+  @Operation(summary = "카드 1개만 피드 조회 ", description = "카드 1개만 피드로 조회할 때 사용되는 상세 정보를 반환합니다.")
+  public ApiResponse<CardFeedResponse> getCardFeed(@PathVariable Long cardId) {
+    Long userId = 1L; // 추후 인증에서 가져올 예정
+    return ApiResponse.onSuccess(cardService.getCardFeed(cardId, userId));
   }
 
 }
