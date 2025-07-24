@@ -33,7 +33,7 @@ public class SearchController {
     @Operation(summary = "검색 범위가 전체인 경우에서 계정 검색", description = "전체 - 계정 검색 api (nameId로 검색합니다.)")
     @GetMapping("/all/account")
     public ApiResponse<SearchResponseDTO.GetAccountListResponseDto> searchAccountInAll(
-            @RequestParam String query,
+            @RequestParam(value = "query") String query,
             @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
             @RequestParam(value = "cursor", required = false) Long cursor
             // 유저 관련 처리는 추후에..

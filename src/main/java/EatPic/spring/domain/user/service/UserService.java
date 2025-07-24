@@ -1,7 +1,7 @@
 package EatPic.spring.domain.user.service;
 
 import EatPic.spring.domain.user.entity.User;
-import EatPic.spring.domain.user.dto.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
 import EatPic.spring.domain.user.entity.UserStatus;
 import EatPic.spring.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
