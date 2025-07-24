@@ -12,7 +12,7 @@ public class UserBadgeConverter {
         .map(ub -> HomeBadgeResponse.builder()
             .userBadgeId(ub.getUserBadgeId())
             .badgeName(ub.getBadge().getName())
-            // .badgeImageUrl(ub.getBadge().getBadgeImageUrl())
+            .badgeImageUrl(ub.getBadge().getBadgeImageUrl())
             .progressRate(ub.getProgressRate())
             .isAchieved(ub.isAchieved())
             .build())
