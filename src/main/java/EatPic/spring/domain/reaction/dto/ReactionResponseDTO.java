@@ -1,12 +1,11 @@
 package EatPic.spring.domain.reaction.dto;
 
 import EatPic.spring.domain.reaction.entity.ReactionType;
-import EatPic.spring.domain.user.dto.UserResponseDTO;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
