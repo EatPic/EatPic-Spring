@@ -27,10 +27,18 @@ public class Badge extends BaseEntity {
     @Column(name = "description", length = 100, nullable = false)
     private String description;
 
+    // 뱃지 이미지
+    @Column(name = "badge_image_url", length = 500, nullable = false)
+    private String badgeImageUrl;
+
     // 뱃지 확득 조건 타입
     @Enumerated(EnumType.STRING)
     @Column(name = "condition_type", nullable = false)
     private ConditionType conditionType;
+
+    // 뱃지 확득 조건 값(수치)
+    @Column(name = "condition_value", nullable = false)
+    private Integer conditionValue;
 
     @OneToMany(mappedBy = "badge")
     private List<UserBadge> userBadges = new ArrayList<>();
