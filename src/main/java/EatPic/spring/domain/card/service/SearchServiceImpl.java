@@ -6,6 +6,9 @@ import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
+import EatPic.spring.domain.user.converter.UserConverter;
+import EatPic.spring.domain.user.entity.User;
+import EatPic.spring.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;      // 자동으로 생성자 주입
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +24,9 @@ public class SearchServiceImpl implements SearchService {
     private final CardRepository cardRepository;
     private final CommentRepository commentRepository;
     private final ReactionRepository reactionRepository;
+    private final UserRepository userRepository;
 
+    // 탐색 탭에서 모든 유저 리스트 조회
     @Override
     public SearchResponseDTO.GetCardListResponseDto getAllCards(int limit, Long cursor) {
         // 유저 관련 처리는 이후에..
@@ -41,5 +46,24 @@ public class SearchServiceImpl implements SearchService {
         boolean hasNext = cards.hasNext();
 
         return new SearchResponseDTO.GetCardListResponseDto(result, nextCursor, result.size(), hasNext);
+    }
+
+    // 검색 범위가 전체인 경우에서 계정 검색
+    @Override
+    public SearchResponseDTO.GetAccountListResponseDto getAccountInAll(String query, int limit, Long cursor) {
+        // 유저 관련 처리는 이후에...
+        // 페이징 처리 하기
+        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
+        Slice<User> users = userRepository.searchAccountInAll(query, cursor, pageable);
+
+        List<SearchResponseDTO.GetAccountResponseDto> result = users.getContent().stream()
+                .map(UserConverter::toAccountDto)
+                .toList();
+
+        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getUserId();
+        boolean hasNext = users.hasNext();
+
+        return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
+
     }
 }

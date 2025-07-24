@@ -1,5 +1,6 @@
 package EatPic.spring.domain.user.converter;
 
+import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
@@ -55,5 +56,12 @@ public class UserConverter {
                 .build();
     }
 
-
+    // 사용자 계정 받아오기
+    public static SearchResponseDTO.GetAccountResponseDto toAccountDto(User user) {
+        return SearchResponseDTO.GetAccountResponseDto.builder()
+                .userId(user.getId())
+                .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
+                .build();
+    }
 }
