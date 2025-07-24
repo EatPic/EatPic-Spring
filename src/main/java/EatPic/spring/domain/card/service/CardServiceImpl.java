@@ -18,6 +18,7 @@ import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
@@ -46,6 +47,23 @@ public class CardServiceImpl implements CardService {
 
         // 아직 유저 관련 처리 안했음
         User user = userRepository.findUserById(userId);
+
+        // 오늘 날짜 00:00부터 23:59:59까지 범위 계산
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        // 같은 날짜, 같은 meal 타입 카드 중복 확인
+        boolean existsSameMealCard = cardRepository.existsByUserIdAndMealAndCreatedAtBetween(
+                userId,
+                request.getMeal(),
+                startOfDay,
+                endOfDay
+        );
+
+        if (existsSameMealCard) {
+            throw new ExceptionHandler(ErrorStatus.DUPLICATE_MEAL_CARD);
+        }
 
         Card newcard = Card.builder()
                 .isShared(request.getIsShared())
