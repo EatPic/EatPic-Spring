@@ -1,8 +1,8 @@
 package EatPic.spring.domain.user.controller;
 
 import EatPic.spring.domain.user.entity.User;
-import EatPic.spring.domain.user.dto.SignupRequestDTO;
-import EatPic.spring.domain.user.dto.SignupResponseDTO;
+import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
 import EatPic.spring.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
