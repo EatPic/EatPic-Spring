@@ -61,7 +61,18 @@ public class CardServiceImpl implements CardService {
 
         Card savedCard = cardRepository.save(newcard);
 
-        return CardResponse.CreateCardResponse.builder().newcardId(savedCard.getId()).build();
+        log.info("새 카드 생성 완료 - ID: {}", savedCard.getId());
+        return CardResponse.CreateCardResponse.builder()
+                .newcardId(savedCard.getId())
+                .isShared(savedCard.getIsShared())
+                .latitude(savedCard.getLatitude())
+                .longitude(savedCard.getLongitude())
+                .cardImageUrl(savedCard.getCardImageUrl())
+                .recipeUrl(savedCard.getRecipeUrl())
+                .memo(savedCard.getMemo())
+                .recipe(savedCard.getRecipe())
+                .meal(savedCard.getMeal())
+                .build();
     }
 
     @Override
