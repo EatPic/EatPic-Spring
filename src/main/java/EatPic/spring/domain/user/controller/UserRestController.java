@@ -1,6 +1,6 @@
 package EatPic.spring.domain.user.controller;
 
-import EatPic.spring.domain.user.dto.UserResponseDTO;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.service.UserCommandService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,15 +1,11 @@
 package EatPic.spring.domain.user.converter;
 
-import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
-import EatPic.spring.domain.user.dto.UserResponseDTO;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.mapping.UserFollow;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserConverter {
 
