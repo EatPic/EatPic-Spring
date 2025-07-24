@@ -9,6 +9,8 @@ import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.global.common.code.status.ErrorStatus;
+import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import lombok.RequiredArgsConstructor;      // 자동으로 생성자 주입
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,6 +57,11 @@ public class SearchServiceImpl implements SearchService {
         // 페이징 처리 하기
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         Slice<User> users = userRepository.searchAccountInAll(query, cursor, pageable);
+
+        // 검색 결과가 없으면 예외 발생
+        if (users.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND); // ErrorStatus에 NO_RESULTS_FOUND 추가 필요
+        }
 
         List<SearchResponseDTO.GetAccountResponseDto> result = users.getContent().stream()
                 .map(UserConverter::toAccountDto)

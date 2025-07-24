@@ -32,11 +32,6 @@ public class Badge extends BaseEntity {
     @Column(name = "condition_type", nullable = false)
     private ConditionType conditionType;
 
-    // 뱃지 확득 조건 값(수치)
-    @Enumerated(EnumType.STRING)
-    @Column(name = "condition_value", nullable = false)
-    private ConditionValue conditionValue;
-
     @OneToMany(mappedBy = "badge")
     private List<UserBadge> userBadges = new ArrayList<>();
 
