@@ -1,4 +1,4 @@
-package EatPic.spring.domain.user.dto;
+package EatPic.spring.domain.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
