@@ -26,8 +26,8 @@ public class ReportController {
             description = ReportType.SWAGGER_DESCRIPTION)
     @PostMapping("")
     public ApiResponse<ReportResponseDTO.ReportResultResponseDTO> createReport(@RequestParam("id")Long id,
-                                                                                  @RequestParam("신고 대상")TargetType targetType,
-                                                                                  @RequestParam("신고 타입")ReportType reportType){
+                                                                                  @RequestParam TargetType targetType,
+                                                                                  @RequestParam ReportType reportType){
 
         return ApiResponse.onSuccess(reportService.createReport(targetType,id,reportType));
     }
