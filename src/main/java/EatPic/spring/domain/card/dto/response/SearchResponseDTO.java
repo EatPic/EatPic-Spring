@@ -37,4 +37,35 @@ public class SearchResponseDTO {
         private int size;
         private boolean hasNext;
     }
+
+    // 탐색하기 검색창에서 검색 범위가 전체일 때 계정 검색하기 (계정 하나 ver)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetAccountResponseDto {
+        @JsonProperty("user_id")
+        private Long userId;
+
+        @JsonProperty("name_id")
+        private String nameId;             // 유저 아이디
+
+        @JsonProperty("nickname")
+        private String nickname;           // 유저 닉네임
+
+        @JsonProperty("profile_image_url")
+        private String profileImageUrl;     // 프사
+    }
+
+    // 탐색하기 검색창에서 검색 범위가 전체일 때 계정 검색하기 (계정 여러 개 리스트로..)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetAccountListResponseDto {
+        private List<GetAccountResponseDto> accounts;
+        private Long nextCursor;
+        private int size;
+        private boolean hasNext;
+    }
 }

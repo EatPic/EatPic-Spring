@@ -14,6 +14,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON_400", "잘못된 요청입니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON_401", "인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON_403", "금지된 요청입니다."),
+    _NO_RESULTS_FOUND(HttpStatus.NOT_FOUND, "COMMON_404", "검색 결과가 없습니다."),
     _INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON_500", "서버 에러. 관리자에게 문의 바랍니다."),
 
     MULTIPLE_FIELD_VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "COMMON_001", "입력된 정보에 오류가 있습니다. 필드별 오류 메시지를 참조하세요."),
@@ -35,6 +36,9 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 카드 관련 응답
     CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_001", "해당 카드는 존재하지 않는 카드입니다."),
+    // 같은 날짜에 같은 meal 중복 에러
+    DUPLICATE_MEAL_CARD(HttpStatus.CONFLICT, "CARD_002", "이미 같은 날짜와 같은 식사 유형의 카드가 존재합니다."),
+
 
     // 댓글 관련 응답
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_001", "해당 댓글은 존재하지 않는 댓글입니다."),
