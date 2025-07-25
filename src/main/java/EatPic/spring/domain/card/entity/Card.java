@@ -2,7 +2,7 @@ package EatPic.spring.domain.card.entity;
 
 import EatPic.spring.domain.card.mapping.CardHashtag;
 import EatPic.spring.domain.user.entity.User;
-import EatPic.spring.global.common.BaseEntity;
+import EatPic.spring.global.common.code.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -52,6 +52,9 @@ public class Card extends BaseEntity {
 
     @Column(name = "longitude", precision = 11, scale = 8)
     private BigDecimal longitude;
+
+    @Column(name = "location_text", length = 500, nullable = true)
+    private String locationText; // 위치에 따른 장소 이름 추가
 
     // 피드 공유 여부
     @Column(name = "isShared", nullable = false)

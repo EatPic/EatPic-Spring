@@ -1,11 +1,9 @@
-package EatPic.spring.domain.user.dto;
+package EatPic.spring.domain.user.dto.response;
 
-import EatPic.spring.domain.reaction.entity.ReactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -33,6 +31,4 @@ public class UserResponseDTO {
         private int total;
         private List<ProfileDto> userIconList;
     }
-
-
 }

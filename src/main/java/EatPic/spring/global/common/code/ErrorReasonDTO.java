@@ -1,4 +1,4 @@
-package EatPic.spring.global.common;
+package EatPic.spring.global.common.code;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Builder
-public class ReasonDTO {
+public class ErrorReasonDTO {
 
     private final HttpStatus httpStatus;
     private final boolean isSuccess;
