@@ -31,4 +31,14 @@ public class UserResponseDTO {
         private int total;
         private List<ProfileDto> userIconList;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UserBlockResponseDto{
+        Long userId;
+        Long targetUserId;
+    }
+
 }
