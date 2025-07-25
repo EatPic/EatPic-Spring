@@ -1,5 +1,6 @@
 package EatPic.spring.domain.user.controller;
 
+import EatPic.spring.domain.user.dto.response.UserBadgeResponse.BadgeDetailResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserBadgeResponse.HomeBadgeResponse;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserBadgeRepository;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +30,14 @@ public class UserBadgeController {
     Long userId = 1L;
     List<HomeBadgeResponse> responses = userBadgeService.getUserBadgesForHome(userId);
     return ApiResponse.onSuccess(responses);
+  }
+
+  @Operation(summary = "유저 뱃지 상세 조회", description = "뱃지 팝업에 들어갈 상세 정보를 조회합니다.")
+  @GetMapping("/my/{userBadgeId}")
+  public ApiResponse<BadgeDetailResponseDTO> getBadgeDetail(
+      @PathVariable Long userBadgeId) {
+    Long userId = 1L;
+    return ApiResponse.onSuccess(userBadgeService.getBadgeDetail(userId, userBadgeId));
   }
 
 }
