@@ -10,7 +10,6 @@ public enum ReportType {
     MISINFORMATION("거짓 정보 또는 허위 사실"),
     OFFENSIVE("불쾌감을 주는 이미지 또는 언행"),
     COPYRIGHT("저작권 침해");
-
     private final String description;
     ReportType(String description) {
         this.description = description;
