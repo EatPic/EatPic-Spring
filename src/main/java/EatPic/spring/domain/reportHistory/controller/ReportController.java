@@ -7,7 +7,7 @@ import EatPic.spring.domain.reportHistory.dto.ReportResponseDTO;
 import EatPic.spring.domain.reportHistory.entity.ReportType;
 import EatPic.spring.domain.reportHistory.entity.TargetType;
 import EatPic.spring.domain.reportHistory.service.ReportService;
-import EatPic.spring.global.common.BaseResponse;
+import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +25,10 @@ public class ReportController {
             summary = "신고하기",
             description = ReportType.SWAGGER_DESCRIPTION)
     @PostMapping("")
-    public BaseResponse<ReportResponseDTO.ReportResultResponseDTO> createReport(@RequestParam("id")Long id,
+    public ApiResponse<ReportResponseDTO.ReportResultResponseDTO> createReport(@RequestParam("id")Long id,
                                                                                   @RequestParam("신고 대상")TargetType targetType,
                                                                                   @RequestParam("신고 타입")ReportType reportType){
 
-        return BaseResponse.onSuccess(reportService.createReport(targetType,id,reportType));
+        return ApiResponse.onSuccess(reportService.createReport(targetType,id,reportType));
     }
 }
