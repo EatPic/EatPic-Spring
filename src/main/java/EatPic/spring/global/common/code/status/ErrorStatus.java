@@ -42,8 +42,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 댓글 관련 응답
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_001", "해당 댓글은 존재하지 않는 댓글입니다."),
-    CURSOR_NOT_FOUND(HttpStatus.BAD_REQUEST, "COMMENT_002", "유효하지 않은 커서입니다.");
+    CURSOR_NOT_FOUND(HttpStatus.BAD_REQUEST, "COMMENT_002", "유효하지 않은 커서입니다."),
 
+    // 유저 관련 응답
+    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_001", "해당 유저는 존재하지 않는 유저입니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
