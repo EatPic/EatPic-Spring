@@ -2,7 +2,7 @@ package EatPic.spring.domain.user.entity;
 
 import EatPic.spring.domain.user.mapping.UserBadge;
 import EatPic.spring.domain.user.mapping.UserTerm;
-import EatPic.spring.global.common.BaseEntity;
+import EatPic.spring.global.common.code.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -65,4 +65,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<UserBadge> userBadges = new ArrayList<>();
 
+    @Column(name = "marketing_agreed", nullable = false)
+    private Boolean marketingAgreed;
 }

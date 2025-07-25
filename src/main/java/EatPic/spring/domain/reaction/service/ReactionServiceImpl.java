@@ -7,7 +7,7 @@ import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.user.converter.UserConverter;
-import EatPic.spring.domain.user.dto.UserResponseDTO;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserFollowRepository;
 import EatPic.spring.domain.user.repository.UserRepository;
@@ -16,9 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

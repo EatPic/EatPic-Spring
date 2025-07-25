@@ -18,4 +18,17 @@ public class SearchRequestDTO {
         @Schema(description = "커서")
         private Long cursor;
     }
+
+    // 일단 이거는 보류
+//    @Getter
+//    @Builder
+//    @AllArgsConstructor
+//    @NoArgsConstructor
+//    public static class GetAccountRequestDto {
+//        @Schema(description = "가져올 계정 개수")
+//        private int limit;
+//
+//        @Schema(description = "커서")
+//        private Long cursor;
+//    }
 }
