@@ -13,6 +13,19 @@ public class UserResponseDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class ProfileIconDto {
+        private Long userId;
+        private String profileImageUrl;
+        private String nameId;
+        private String nickname;
+        private Boolean isFollowing;
+        private String introduce;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ProfileDto {
         private Long userId;
         private String profileImageUrl;
@@ -25,11 +38,28 @@ public class UserResponseDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class DetailProfileDto {
+        private Long userId;
+        private String profileImageUrl;
+        private String nameId;
+        private String nickname;
+        private Boolean isFollowing;
+        private String introduce;
+        private Long totalCard;
+        private Long totalFollower;
+        private Long totalFollowing;
+    }
+
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class UserIconListResponseDto{
         private int page;
         private int size;
         private int total;
-        private List<ProfileDto> userIconList;
+        private List<ProfileIconDto> userIconList;
     }
 
     @Getter
