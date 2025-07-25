@@ -6,6 +6,7 @@ import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
+import EatPic.spring.domain.user.mapping.UserBlock;
 import EatPic.spring.domain.user.mapping.UserFollow;
 import org.springframework.data.domain.Page;
 
@@ -60,6 +61,13 @@ public class UserConverter {
                 .nameId(user.getNameId())
                 .nickname(user.getNickname())
                 .profileImageUrl(user.getProfileImageUrl())
+                .build();
+    }
+
+    public static UserResponseDTO.UserBlockResponseDto toUserBlockResponseDto(UserBlock userBlock) {
+        return UserResponseDTO.UserBlockResponseDto.builder()
+                .userId(userBlock.getUser().getId())
+                .targetUserId(userBlock.getBlockedUser().getId())
                 .build();
     }
 }
