@@ -31,6 +31,4 @@ public class UserResponseDTO {
         private int total;
         private List<ProfileDto> userIconList;
     }
-
-
 }

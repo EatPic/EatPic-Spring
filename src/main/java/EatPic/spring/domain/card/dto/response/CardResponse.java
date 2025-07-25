@@ -22,16 +22,35 @@ public class CardResponse {
   @Getter
   @NoArgsConstructor
   @AllArgsConstructor
+  @Schema(title = "CreateCardResponse: 카드 생성 시 응답 DTO")
   public static class CreateCardResponse {
+
+    @Schema(description = "새로 생성한 카드 ID")
     private Long newcardId;
-    private Boolean isShared;           // 공개 여부
-    private BigDecimal latitude;            // 위도
-    private BigDecimal longitude;           // 경도
-    private String cardImageUrl;           // 카드 이미지 URL
-    private String recipeUrl;           // 레시피 URL
-    private String memo;                // 메모
-    private String recipe;              // 레시피 내용
-    private Meal meal;                // 식사 종류 (breakfast, dinner, lunch, snack)
+
+    @Schema(description = "카드 공개 여부")
+    private Boolean isShared;
+
+    @Schema(description = "해당 위치 위도")
+    private BigDecimal latitude;
+
+    @Schema(description = "해당 위치 경도")
+    private BigDecimal longitude;
+
+    @Schema(description = "카드 이미지 URL")
+    private String cardImageUrl;
+
+    @Schema(description = "레시피 URL")
+    private String recipeUrl;
+
+    @Schema(description = "메모")
+    private String memo;
+
+    @Schema(description = "레시피 내용")
+    private String recipe;
+
+    @Schema(description = "식사 종류 (breakfast, dinner, lunch, snack)")
+    private Meal meal;
   }
 
   @Builder
