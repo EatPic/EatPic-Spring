@@ -4,7 +4,6 @@ import EatPic.spring.domain.card.entity.Card;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import EatPic.spring.domain.card.entity.Meal;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +23,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
   Slice<Card> findByCursor(@Param("cursor") Long cursor, Pageable pageable);
   boolean existsByUserIdAndMealAndCreatedAtBetween(Long userId, Meal meal, LocalDateTime start, LocalDateTime end);
 
+
+  List<Card> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
 }

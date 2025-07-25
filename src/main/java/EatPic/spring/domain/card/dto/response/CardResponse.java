@@ -181,6 +181,22 @@ public class CardResponse {
     private String profileImageUrl;
   }
 
+  @Builder
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Schema(title = "TodayCardResponse: 오늘의 식사(카드) 현황 응답 dto")
+  public static class TodayCardResponse {
+    @Schema(description = "카드 ID", example = "12")
+    private Long cardId;
+
+    @Schema(description = "카드 이미지 URL", example = "https://cdn.eatpic.com/cards/12.jpg")
+    private String cardImageUrl;
+
+    @Schema(description = "식사 종류", example = "BREAKFAST")
+    private Meal meal;
+  }
+
 
 
 
