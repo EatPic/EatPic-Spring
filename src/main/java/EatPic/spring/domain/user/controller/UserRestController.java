@@ -19,7 +19,7 @@ public class UserRestController {
             description = "페이지는 1부터 시작하며 total은 전체 항목 수 입니다.")
     @GetMapping("/users")
     @Tag(name = "User", description = "사용자 관련 API")
-    public ApiResponse<UserResponseDTO.UserIconListResponseDto> followingUsers(
+    public ApiResponse<UserResponseDTO.UserIconListResponseDto> followingUsersIcon(
                                       @RequestParam(defaultValue = "1") int page,
                                       @RequestParam(defaultValue = "15") int size) {
         //todo : userId -> 본인
@@ -30,7 +30,7 @@ public class UserRestController {
             summary = "커뮤니티 상단 팔로잉 유저 아이콘(나)")
     @GetMapping("/me")
     @Tag(name = "User", description = "사용자 관련 API")
-    public ApiResponse<UserResponseDTO.ProfileDto> myIcon() {
+    public ApiResponse<UserResponseDTO.ProfileIconDto> myIcon() {
         return ApiResponse.onSuccess(userService.getMyIcon());
     }
 
@@ -40,5 +40,20 @@ public class UserRestController {
     public ApiResponse<UserResponseDTO.UserBlockResponseDto> blockUser(@PathVariable Long userId) {
         return ApiResponse.onSuccess(userService.blockUser(userId));
     }
+
+    @Operation(summary = "유저 프로필 조회")
+    @PostMapping("/{userId}/profile")
+    @Tag(name = "User", description = "사용자 관련 API")
+    public ApiResponse<UserResponseDTO.DetailProfileDto> getProfile(@PathVariable Long userId) {
+        return ApiResponse.onSuccess(userService.getProfile(userId));
+    }
+
+//    @Operation(summary = "유저 프로필 조회(이미지)")
+//    @PostMapping("/{userId}/profile/cards")
+//    @Tag(name = "User", description = "사용자 관련 API")
+//    public ApiResponse<UserResponseDTO.DetailProfileDto> getProfile(@PathVariable Long userId) {
+//        return ApiResponse.onSuccess(userService.getProfile(userId));
+//    }
+
 
 }

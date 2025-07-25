@@ -24,4 +24,5 @@ public interface CardRepository extends JpaRepository<Card, Long> {
   Slice<Card> findByCursor(@Param("cursor") Long cursor, Pageable pageable);
   boolean existsByUserIdAndMealAndCreatedAtBetween(Long userId, Meal meal, LocalDateTime start, LocalDateTime end);
 
+  Long countCardById(Long id);
 }
