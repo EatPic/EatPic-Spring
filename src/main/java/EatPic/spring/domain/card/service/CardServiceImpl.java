@@ -6,6 +6,7 @@ import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.mapping.CardHashtag;
 import EatPic.spring.domain.card.repository.CardHashtagRepository;
@@ -141,5 +142,34 @@ public class CardServiceImpl implements CardService {
         return CardConverter.toFeedResponse(
             card, hashtags, writer, reaction, reactionCount, commentCount, isBookmarked
         );
+    }
+
+    @Override
+    @Transactional
+    public void deleteCard(Long cardId, Long userId) {
+        Card card = cardRepository.findByIdAndIsDeletedFalse(cardId)
+            .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
+
+        if (!card.getUser().getId().equals(userId)) {
+            throw new ExceptionHandler(ErrorStatus.CARD_DELETE_FORBIDDEN);
+        }
+
+        card.softDelete(); // isDeleted = true, deletedAt = now()
+    }
+
+    @Override
+    @Transactional
+    public List<TodayCardResponse> getTodayCards(Long userId) {
+        User user = userRepository.findUserById(userId);
+        LocalDate today = LocalDate.now();
+        List<Card> todayCards = cardRepository.findAllByUserAndCreatedAtBetween(
+            user,
+            today.atStartOfDay(),
+            today.plusDays(1).atStartOfDay()
+        );
+
+        return todayCards.stream()
+            .map(CardConverter::toTodayCard)
+            .collect(Collectors.toList());
     }
 }
