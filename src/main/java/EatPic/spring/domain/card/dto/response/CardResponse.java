@@ -84,6 +84,9 @@ public class CardResponse {
     @Schema(description = "경도", example = "127.0276")
     private BigDecimal longitude;
 
+    @Schema(description = "장소 이름", example = "장소 이름")
+    private String locationText;
+
     @Schema(description = "기록 메모", example = "오늘은 샐러드를 먹었습니다~ 아보카도를 많이 넣어 먹었어요~~")
     private String memo;
 
