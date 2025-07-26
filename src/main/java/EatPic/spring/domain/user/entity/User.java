@@ -6,6 +6,7 @@ import EatPic.spring.global.common.code.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -67,4 +68,11 @@ public class User extends BaseEntity {
 
     @Column(name = "marketing_agreed", nullable = false)
     private Boolean marketingAgreed;
+
+    @Column(name = "last_notification_check_at", nullable = true)
+    private LocalDateTime lastNotificationCheckAt;
+
+    public void updateLastNotificationCheckAt(LocalDateTime time) {
+        this.lastNotificationCheckAt = time;
+    }
 }
