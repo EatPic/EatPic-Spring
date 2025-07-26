@@ -3,6 +3,7 @@ package EatPic.spring.domain.card.service;
 import EatPic.spring.domain.bookmark.repository.BookmarkRepository;
 import EatPic.spring.domain.card.converter.CardConverter;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
+import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
@@ -171,5 +172,28 @@ public class CardServiceImpl implements CardService {
         return todayCards.stream()
             .map(CardConverter::toTodayCard)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public CardDetailResponse updateCard(Long cardId, Long userId, CardUpdateRequest request) {
+        Card card = cardRepository.findById(cardId)
+            .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
+
+        if (!card.getUser().getId().equals(userId)) {
+            throw new ExceptionHandler(ErrorStatus.CARD_UPDATE_FORBIDDEN);
+        }
+
+        card.update(
+            request.getMemo(),
+            request.getRecipe(),
+            request.getRecipeUrl(),
+            request.getLatitude(),
+            request.getLongitude(),
+            request.getLocationText(),
+            request.getIsShared()
+        );
+        // 수정 후 최신 데이터로 응답
+        return CardConverter.toCardDetailResponse(card, null); // nextCardId는 수정 시점에는 null로
     }
 }

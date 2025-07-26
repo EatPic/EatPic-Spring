@@ -77,4 +77,22 @@ public class Card extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
+    public void update(
+        String memo,
+        String recipe,
+        String recipeUrl,
+        BigDecimal latitude,
+        BigDecimal longitude,
+        String locationText,
+        Boolean isShared
+    ) {
+        if (memo != null) this.memo = memo;
+        if (recipe != null) this.recipe = recipe;
+        if (recipeUrl != null) this.recipeUrl = recipeUrl;
+        if (latitude != null) this.latitude = latitude;
+        if (longitude != null) this.longitude = longitude;
+        if (locationText != null) this.locationText = locationText;
+        if (isShared != null) this.isShared = isShared;
+    }
+
 }
