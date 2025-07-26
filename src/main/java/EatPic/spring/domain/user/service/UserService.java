@@ -1,46 +1,16 @@
 package EatPic.spring.domain.user.service;
 
-import EatPic.spring.domain.user.entity.User;
-import EatPic.spring.domain.user.dto.SignupRequestDTO;
-import EatPic.spring.domain.user.entity.UserStatus;
-import EatPic.spring.domain.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import EatPic.spring.domain.user.dto.*;
+import jakarta.servlet.http.HttpServletRequest;
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
+public interface UserService {
+    // UserCommandService
+    SignupResponseDTO signup(SignupRequestDTO request);
+    LoginResponseDTO loginUser(LoginRequestDTO request);
+    UserResponseDTO.UserIconListResponseDto followingUserIconList(Long userId, int page, int size);
+    UserResponseDTO.ProfileDto getMyIcon();
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    // UserQueryService
+    UserInfoDTO getUserInfo(HttpServletRequest request);
 
-    public User signup(SignupRequestDTO request) {
-        // 이메일 중복 검사
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
-        }
-
-        // 닉네임 중복 검사
-        if (userRepository.existsByNickname(request.getNickname())) {
-            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
-        }
-
-        // 아이디 중복 검사
-        if (userRepository.existsByNameId(request.getNameId())) {
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
-        }
-
-        // 저장
-        User user = User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .nameId(request.getNameId())
-                .nickname(request.getNickname())
-                .marketingAgreed(request.getMarketingAgreed() != null && request.getMarketingAgreed())
-                .userStatus(UserStatus.ACTIVE)
-                .build();
-
-        return userRepository.save(user);
-    }
 }

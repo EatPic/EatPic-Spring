@@ -1,7 +1,7 @@
 package EatPic.spring.global.config.jwt;
 
-import EatPic.spring.domain.user.exception.UserErrorCode;
-import EatPic.spring.domain.user.exception.handler.UserHandler;
+import EatPic.spring.global.common.code.status.ErrorStatus;
+import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import EatPic.spring.global.config.Properties.Constants;
 import EatPic.spring.global.config.Properties.JwtProperties;
 import io.jsonwebtoken.*;
@@ -93,7 +93,7 @@ public class JwtTokenProvider {
     public Authentication extractAuthentication(HttpServletRequest request){
         String accessToken = resolveToken(request);
         if(accessToken == null || !validateToken(accessToken)) {
-            throw new UserHandler(UserErrorCode.INVALID_TOKEN);
+            throw new ExceptionHandler(ErrorStatus.INVALID_TOKEN);
         }
         return getAuthentication(accessToken);
     }
