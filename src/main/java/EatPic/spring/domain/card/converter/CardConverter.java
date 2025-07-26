@@ -67,6 +67,7 @@ public class CardConverter {
             .recipeUrl(card.getRecipeUrl())
             .latitude(card.getLatitude())
             .longitude(card.getLongitude())
+            .locationText(card.getLocationText())
             .memo(card.getMemo())
             .recipe(card.getRecipe())
             .nextMeal(nextCardId != null ?

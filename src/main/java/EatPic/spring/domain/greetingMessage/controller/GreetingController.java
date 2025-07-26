@@ -2,6 +2,7 @@ package EatPic.spring.domain.greetingMessage.controller;
 
 import EatPic.spring.domain.greetingMessage.dto.GreetingResponse;
 import EatPic.spring.domain.greetingMessage.service.GreetingService;
+import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,9 @@ public class GreetingController {
   @Operation(summary = "홈화면 인사말 조회",
       description = "홈화면에 접근할 때, 요청되는 API")
   @GetMapping
-  public ResponseEntity<GreetingResponse> getGreeting() {
+  public ApiResponse<GreetingResponse> getGreeting() {
     GreetingResponse response = greetingService.getGreeting();
-    return ResponseEntity.ok(response);
+    return ApiResponse.onSuccess(response);
   }
 
 }
