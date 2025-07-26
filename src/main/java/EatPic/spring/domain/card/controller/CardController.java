@@ -1,6 +1,7 @@
 package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
+import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
@@ -10,6 +11,7 @@ import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.CardService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -92,6 +95,17 @@ public class CardController {
   ) {
     Long userId = 1L;
     return ApiResponse.onSuccess(cardService.getTodayCards(userId));
+  }
+
+  @Operation(summary = "픽카드 수정", description = "카드의 메모, 레시피, 위치 정보 등을 수정합니다.")
+  @PutMapping("/api/cards/{cardId}")
+  public ResponseEntity<ApiResponse<CardDetailResponse>> updateCard(
+      @Parameter(description = "수정할 카드 ID", example = "12")
+      @PathVariable Long cardId,
+      @RequestBody CardUpdateRequest request)
+  {
+    Long userId = 1L;
+    return ResponseEntity.ok(ApiResponse.onSuccess(cardService.updateCard(cardId, userId, request)));
   }
 
 }

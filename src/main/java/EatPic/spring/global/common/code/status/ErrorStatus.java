@@ -38,6 +38,7 @@ public enum ErrorStatus implements BaseErrorCode {
     CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_001", "해당 카드는 존재하지 않는 카드입니다."),
     // 같은 날짜에 같은 meal 중복 에러
     DUPLICATE_MEAL_CARD(HttpStatus.CONFLICT, "CARD_002", "이미 같은 날짜와 같은 식사 유형의 카드가 존재합니다."),
+    CARD_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "CARD_003", "해당 카드를 수정할 수 있는 권한이 없습니다."),
 
 
     // 댓글 관련 응답
