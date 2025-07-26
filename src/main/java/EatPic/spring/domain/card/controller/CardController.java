@@ -4,6 +4,7 @@ import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.CardService;
@@ -14,8 +15,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +75,23 @@ public class CardController {
   public ApiResponse<CardFeedResponse> getCardFeed(@PathVariable Long cardId) {
     Long userId = 1L; // 추후 인증에서 가져올 예정
     return ApiResponse.onSuccess(cardService.getCardFeed(cardId, userId));
+  }
+
+  @DeleteMapping("/{cardId}")
+  @Operation(summary = "카드 삭제", description = "카드를 소프트 삭제 처리합니다.")
+  public ApiResponse<Void> deleteCard(@PathVariable Long cardId) {
+    Long userId = 1L; // 로그인 인증 전 임시
+    cardService.deleteCard(cardId, userId);
+    return ApiResponse.onSuccess(null);
+  }
+
+  @Operation(summary = "오늘의 식사 카드 조회", description = "홈 진입 시, 오늘 등록된 식사 카드들을 조회합니다.")
+  @GetMapping("/home/today-cards")
+  public ApiResponse<List<TodayCardResponse>> getTodayCards(
+      //@AuthUser User user
+  ) {
+    Long userId = 1L;
+    return ApiResponse.onSuccess(cardService.getTodayCards(userId));
   }
 
 }

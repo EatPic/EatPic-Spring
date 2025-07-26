@@ -45,7 +45,8 @@ public enum ErrorStatus implements BaseErrorCode {
     CURSOR_NOT_FOUND(HttpStatus.BAD_REQUEST, "COMMENT_002", "유효하지 않은 커서입니다."),
 
     // 유저 관련 응답
-    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_001", "해당 유저는 존재하지 않는 유저입니다.");
+    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_001", "해당 유저는 존재하지 않는 유저입니다."),
+    CARD_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "USER_005", "해당 카드를 삭제할 권한이 없습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
