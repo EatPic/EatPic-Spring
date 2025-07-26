@@ -1,6 +1,8 @@
 package EatPic.spring.domain.card.repository;
 
 import EatPic.spring.domain.card.entity.Card;
+import EatPic.spring.domain.card.entity.Meal;
+import EatPic.spring.domain.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,4 +28,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
   boolean existsByUserIdAndMealAndCreatedAtBetween(Long userId, Meal meal, LocalDateTime start, LocalDateTime end);
 
   Optional<Card> findByIdAndIsDeletedFalse(Long id);
+
+  List<Card> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
 }
