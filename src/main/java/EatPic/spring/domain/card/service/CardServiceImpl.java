@@ -142,4 +142,17 @@ public class CardServiceImpl implements CardService {
             card, hashtags, writer, reaction, reactionCount, commentCount, isBookmarked
         );
     }
+
+    @Override
+    @Transactional
+    public void deleteCard(Long cardId, Long userId) {
+        Card card = cardRepository.findByIdAndIsDeletedFalse(cardId)
+            .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
+
+        if (!card.getUser().getId().equals(userId)) {
+            throw new ExceptionHandler(ErrorStatus.CARD_DELETE_FORBIDDEN);
+        }
+
+        card.softDelete(); // isDeleted = true, deletedAt = now()
+    }
 }
