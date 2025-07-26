@@ -4,6 +4,7 @@ import EatPic.spring.domain.card.mapping.CardHashtag;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.global.common.code.BaseEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -62,5 +63,18 @@ public class Card extends BaseEntity {
 
     @OneToMany(mappedBy = "card")
     private List<CardHashtag> cardHashtags = new ArrayList<>();
+
+    // 삭제 여부 (Soft Delete 용도)
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    // 삭제 시간 (선택, 감사용)
+    @Column(name = "deleted_at", nullable = true)
+    private LocalDateTime deletedAt;
+
+    public void softDelete() {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
 
 }
