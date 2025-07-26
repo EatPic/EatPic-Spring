@@ -9,4 +9,5 @@ public interface CardService {
   CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, Long userId);
   CardDetailResponse getCardDetail(Long cardId, Long userId);
   CardFeedResponse getCardFeed(Long cardId, Long userId);
+  void deleteCard(Long cardId, Long userId);
 }

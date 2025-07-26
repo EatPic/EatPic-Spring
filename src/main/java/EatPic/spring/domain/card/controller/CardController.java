@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +73,14 @@ public class CardController {
   public ApiResponse<CardFeedResponse> getCardFeed(@PathVariable Long cardId) {
     Long userId = 1L; // 추후 인증에서 가져올 예정
     return ApiResponse.onSuccess(cardService.getCardFeed(cardId, userId));
+  }
+
+  @DeleteMapping("/{cardId}")
+  @Operation(summary = "카드 삭제", description = "카드를 소프트 삭제 처리합니다.")
+  public ApiResponse<Void> deleteCard(@PathVariable Long cardId) {
+    Long userId = 1L; // 로그인 인증 전 임시
+    cardService.deleteCard(cardId, userId);
+    return ApiResponse.onSuccess(null);
   }
 
 }
