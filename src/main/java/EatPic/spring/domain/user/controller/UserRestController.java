@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/community")
+@RequestMapping("/api")
 public class UserRestController {
     private final UserService userService;
 
