@@ -1,0 +1,80 @@
+[33m4fd03b4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/6-users-email-login[m[33m, [m[1;31morigin/feature/6-users-email-login[m[33m)[m HEAD@{0}: checkout: moving from main to feature/6-users-email-login
+[33m2f0fb81[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/feature/69-save-card[m[33m, [m[1;31morigin/chore/deploy[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{1}: pull origin main: Fast-forward
+[33mda27cdb[m HEAD@{2}: checkout: moving from feature/6-users-email-login to main
+[33m4fd03b4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/6-users-email-login[m[33m, [m[1;31morigin/feature/6-users-email-login[m[33m)[m HEAD@{3}: checkout: moving from main to feature/6-users-email-login
+[33mda27cdb[m HEAD@{4}: checkout: moving from feature/6-users-email-login to main
+[33m4fd03b4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/6-users-email-login[m[33m, [m[1;31morigin/feature/6-users-email-login[m[33m)[m HEAD@{5}: commit: Refactor: UserService 통합 및 comment 반영 (#6)
+[33me1c1280[m HEAD@{6}: checkout: moving from feature/6-users-email-login to feature/6-users-email-login
+[33me1c1280[m HEAD@{7}: reset: moving to HEAD
+[33me1c1280[m HEAD@{8}: checkout: moving from feature/7-users-email-check to feature/6-users-email-login
+[33mbe86d57[m[33m ([m[1;32mfeature/7-users-email-check[m[33m)[m HEAD@{9}: reset: moving to HEAD
+[33mbe86d57[m[33m ([m[1;32mfeature/7-users-email-check[m[33m)[m HEAD@{10}: reset: moving to HEAD
+[33mbe86d57[m[33m ([m[1;32mfeature/7-users-email-check[m[33m)[m HEAD@{11}: checkout: moving from feature/6-users-email-login to feature/7-users-email-check
+[33me1c1280[m HEAD@{12}: commit: Feat: SwaggerConfig Authorize 추가 및 유저 정보 조회 API(마이페이지) 구현 (#6)
+[33mc79cc29[m HEAD@{13}: commit (merge): Refactor: main 충돌 해결 (#6)
+[33mbd1baa4[m HEAD@{14}: checkout: moving from main to feature/6-users-email-login
+[33mda27cdb[m HEAD@{15}: pull origin main: Fast-forward
+[33m530acd2[m[33m ([m[1;31morigin/develop[m[33m)[m HEAD@{16}: checkout: moving from feature/6-users-email-login to main
+[33mbd1baa4[m HEAD@{17}: checkout: moving from feature/7-users-email-check to feature/6-users-email-login
+[33mbe86d57[m[33m ([m[1;32mfeature/7-users-email-check[m[33m)[m HEAD@{18}: reset: moving to HEAD
+[33mbe86d57[m[33m ([m[1;32mfeature/7-users-email-check[m[33m)[m HEAD@{19}: checkout: moving from feature/6-users-email-login to feature/7-users-email-check
+[33mbd1baa4[m HEAD@{20}: commit: Refactor: UserController 수정 (#6)
+[33mbe86d57[m[33m ([m[1;32mfeature/7-users-email-check[m[33m)[m HEAD@{21}: checkout: moving from feature/7-users-email-check to feature/6-users-email-login
+[33mbe86d57[m[33m ([m[1;32mfeature/7-users-email-check[m[33m)[m HEAD@{22}: checkout: moving from feature/6-users-email-login to feature/7-users-email-check
+[33mbe86d57[m[33m ([m[1;32mfeature/7-users-email-check[m[33m)[m HEAD@{23}: checkout: moving from feature/7-users-email-check to feature/6-users-email-login
+[33mccb7ab4[m[33m ([m[1;31morigin/feature/5-users-email-signup[m[33m, [m[1;32mfeature/5-users-email-signup[m[33m)[m HEAD@{24}: checkout: moving from feature/7-users-email-check to feature/7-users-email-check
+[33mccb7ab4[m[33m ([m[1;31morigin/feature/5-users-email-signup[m[33m, [m[1;32mfeature/5-users-email-signup[m[33m)[m HEAD@{25}: checkout: moving from feature/5-users-email-signup to feature/7-users-email-check
+[33mccb7ab4[m[33m ([m[1;31morigin/feature/5-users-email-signup[m[33m, [m[1;32mfeature/5-users-email-signup[m[33m)[m HEAD@{26}: checkout: moving from feature/6-users-email-login to feature/5-users-email-signup
+[33mbe86d57[m[33m ([m[1;32mfeature/7-users-email-check[m[33m)[m HEAD@{27}: commit (merge): Recotor: main 충돌 해결 및 일부 코드 수정 (#6)
+[33me2c0ab6[m HEAD@{28}: checkout: moving from main to feature/6-users-email-login
+[33m530acd2[m[33m ([m[1;31morigin/develop[m[33m)[m HEAD@{29}: checkout: moving from feature/6-users-email-login to main
+[33me2c0ab6[m HEAD@{30}: commit: Refactor: JwtTokenProvider 재구성 및 Token 발급 수정 (#6)
+[33mfc2b551[m HEAD@{31}: checkout: moving from feature/5-users-email-signup to feature/6-users-email-login
+[33mccb7ab4[m[33m ([m[1;31morigin/feature/5-users-email-signup[m[33m, [m[1;32mfeature/5-users-email-signup[m[33m)[m HEAD@{32}: commit: Fix: SecurityConfig 인덴테이션 수정 (#5)
+[33m686b6fd[m HEAD@{33}: checkout: moving from feature/6-users-email-login to feature/5-users-email-signup
+[33mfc2b551[m HEAD@{34}: commit: Feat: 화면설계서 ver 2.0 수정 사항 반영 (#6)
+[33m0f2f13e[m HEAD@{35}: commit: Fix: 비밀번호 필드 구현 및 인덴테이션 수정 (#6)
+[33m364ef21[m HEAD@{36}: checkout: moving from feature/6-users-email-login to feature/6-users-email-login
+[33m364ef21[m HEAD@{37}: checkout: moving from feature/5-users-email-signup to feature/6-users-email-login
+[33m686b6fd[m HEAD@{38}: commit (amend): Feat: 화면설계서 ver 2.0 수정 사항 반영 (#5)
+[33mf752629[m HEAD@{39}: commit: Feat: 화면설계서 ver 2.0 수정 사항 반영
+[33m3694cba[m HEAD@{40}: commit: Fix: 비밀번호 확인 필드 구현 (#5)
+[33m07658af[m HEAD@{41}: checkout: moving from feature/6-users-email-login to feature/5-users-email-signup
+[33m364ef21[m HEAD@{42}: commit (merge): Fix: main 구조 반영 및 일부 수정(#6)
+[33mbc49a9c[m HEAD@{43}: checkout: moving from main to feature/6-users-email-login
+[33m530acd2[m[33m ([m[1;31morigin/develop[m[33m)[m HEAD@{44}: checkout: moving from feature/5-users-email-signup to main
+[33m07658af[m HEAD@{45}: commit (amend): Fix: main 구조 반영 및 일부 수정 (#5)
+[33m8af0602[m HEAD@{46}: commit (amend): Fix: main 구조 반영 및 일부 수정
+[33m9e0f321[m HEAD@{47}: commit (amend): Fix: main 구조 반영 및 일부 수정
+[33m8d4649a[m HEAD@{48}: commit (merge): Fix: main 구조 반영 및 일부 수정
+[33mea83578[m HEAD@{49}: checkout: moving from main to feature/5-users-email-signup
+[33m530acd2[m[33m ([m[1;31morigin/develop[m[33m)[m HEAD@{50}: pull origin main: Fast-forward
+[33m785de36[m[33m ([m[1;31morigin/feature/18-community-feeds[m[33m)[m HEAD@{51}: checkout: moving from feature/6-users-email-login to main
+[33mbc49a9c[m HEAD@{52}: checkout: moving from feature/6-email-login to feature/6-users-email-login
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{53}: checkout: moving from feature/6-email-login to feature/6-email-login
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{54}: checkout: moving from feature/5-users-email-signup to feature/6-email-login
+[33mea83578[m HEAD@{55}: reset: moving to HEAD
+[33mea83578[m HEAD@{56}: checkout: moving from main to feature/5-users-email-signup
+[33m785de36[m[33m ([m[1;31morigin/feature/18-community-feeds[m[33m)[m HEAD@{57}: pull origin main: Fast-forward
+[33mbff61d2[m[33m ([m[1;31morigin/Docs/4-user-swagger[m[33m, [m[1;31morigin/Docs/4-search-swagger[m[33m, [m[1;31morigin/Docs/4-newcard-swagger[m[33m, [m[1;31morigin/Docs/4-home-swagger[m[33m, [m[1;31morigin/Docs/4-community-swagger[m[33m)[m HEAD@{58}: checkout: moving from feature/6-users-email-login to main
+[33mbc49a9c[m HEAD@{59}: commit: feat: 이메일 로그인 API 구현 (#6)
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{60}: checkout: moving from feature/5-users-email-signup to feature/6-users-email-login
+[33mea83578[m HEAD@{61}: commit: refactor: dto 패키지 구조 수정 (#5)
+[33m6379040[m HEAD@{62}: checkout: moving from feature/6-users-email-login to feature/5-users-email-signup
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{63}: Branch: renamed refs/heads/feature/6-email-login to refs/heads/feature/6-users-email-login
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{65}: checkout: moving from feature/5-users-email-signup to feature/6-email-login
+[33m6379040[m HEAD@{66}: Branch: renamed refs/heads/feature/6-users-email-login to refs/heads/feature/5-users-email-signup
+[33m6379040[m HEAD@{68}: Branch: renamed refs/heads/feature/5-users-email-signup to refs/heads/feature/6-users-email-login
+[33m6379040[m HEAD@{70}: commit (amend): fix: 회원가입 API Response Body 미출력 문제 수정 (#5)
+[33mc5704d5[m HEAD@{71}: commit: Fix: 회원가입 API Response Body 미출력 문제 수정
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{72}: Branch: renamed refs/heads/feature/5-email-signup to refs/heads/feature/5-users-email-signup
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{74}: checkout: moving from feature/6-email-login to feature/5-email-signup
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{75}: checkout: moving from feature/5-email-signup to feature/6-email-login
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{76}: checkout: moving from feature/6-email-login to feature/5-email-signup
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{77}: checkout: moving from feature/5-email-signup to feature/6-email-login
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{78}: checkout: moving from feature/6-email-login to feature/5-email-signup
+[33mbff61d2[m[33m ([m[1;31morigin/Docs/4-user-swagger[m[33m, [m[1;31morigin/Docs/4-search-swagger[m[33m, [m[1;31morigin/Docs/4-newcard-swagger[m[33m, [m[1;31morigin/Docs/4-home-swagger[m[33m, [m[1;31morigin/Docs/4-community-swagger[m[33m)[m HEAD@{79}: checkout: moving from feature/5-email-signup to feature/6-email-login
+[33mddd7c0d[m[33m ([m[1;31morigin/feature/6-email-login[m[33m, [m[1;31morigin/feature/5-email-signup[m[33m)[m HEAD@{80}: commit: Feat: 이메일 회원가입 API 구현
+[33mbff61d2[m[33m ([m[1;31morigin/Docs/4-user-swagger[m[33m, [m[1;31morigin/Docs/4-search-swagger[m[33m, [m[1;31morigin/Docs/4-newcard-swagger[m[33m, [m[1;31morigin/Docs/4-home-swagger[m[33m, [m[1;31morigin/Docs/4-community-swagger[m[33m)[m HEAD@{81}: checkout: moving from main to feature/5-email-signup
+[33mbff61d2[m[33m ([m[1;31morigin/Docs/4-user-swagger[m[33m, [m[1;31morigin/Docs/4-search-swagger[m[33m, [m[1;31morigin/Docs/4-newcard-swagger[m[33m, [m[1;31morigin/Docs/4-home-swagger[m[33m, [m[1;31morigin/Docs/4-community-swagger[m[33m)[m HEAD@{82}: pull origin main: Fast-forward
+[33m7bb6fbe[m HEAD@{83}: clone: from https://github.com/EatPic/EatPic-Spring.git

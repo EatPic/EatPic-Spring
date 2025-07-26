@@ -71,4 +71,9 @@ public class UserCommandServiceImpl implements UserCommandService {
                 refreshToken
         );
     }
+
+    @Override
+    public boolean isEmailDuplicate(String email){
+        return userRepository.existsByEmail(email);
+    }
 }

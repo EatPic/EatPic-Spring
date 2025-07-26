@@ -9,6 +9,7 @@ import EatPic.spring.domain.user.service.UserCommandServiceImpl;
 import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.models.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,14 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-
     private final UserCommandServiceImpl userCommandService;
 
+    @GetMapping("/check-email")
+    @Operation(summary = "이메일 중복 검사")
+    public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
+        boolean isDuplicate = userCommandService.isEmailDuplicate(email);
+        return ResponseEntity.ok(Map.of("isDuplicate", isDuplicate));
+    }
 
     // 회원 가입 요청
     @PostMapping("/signup")
@@ -62,17 +68,9 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/login/email")
-//    @Operation(summary = "이메일 로그인 요청")
-//    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
-//        LoginResponseDTO response = userService.loginuser(request);
-//        return ResponseEntity.ok(response);
-//    }
-
     @PostMapping("/login/email")
-    @Operation(summary = "이메일 로그인")
+    @Operation(summary = "이메일 로그인 요청")
     public BaseResponse<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
         return BaseResponse.onSuccess(userCommandService.loginUser(request));
     }
-
 }
