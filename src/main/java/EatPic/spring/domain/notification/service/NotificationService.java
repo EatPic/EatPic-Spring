@@ -1,6 +1,5 @@
 package EatPic.spring.domain.notification.service;
 
-
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.notification.converter.NotificationConverter;
@@ -9,9 +8,9 @@ import EatPic.spring.domain.notification.entity.Notification;
 import EatPic.spring.domain.notification.entity.NotificationType;
 import EatPic.spring.domain.notification.repository.NotificationRepository;
 import EatPic.spring.domain.user.entity.User;
-import EatPic.spring.domain.user.exception.UserErrorCode;
 import EatPic.spring.domain.user.repository.UserFollowRepository;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -65,7 +64,7 @@ public class NotificationService {
 
   public void checkNotifications(Long userId) {
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new ExceptionHandler(UserErrorCode.USER_NOT_FOUND));
+        .orElseThrow(() -> new ExceptionHandler(ErrorStatus.USER_NOT_FOUND));
 
     user.updateLastNotificationCheckAt(LocalDateTime.now());
     userRepository.save(user);
@@ -73,7 +72,7 @@ public class NotificationService {
 
   public boolean isUnreadNotification(Long userId) {
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new ExceptionHandler(UserErrorCode.USER_NOT_FOUND));
+        .orElseThrow(() -> new ExceptionHandler(ErrorStatus.USER_NOT_FOUND));
 
     LocalDateTime lastChecked = user.getLastNotificationCheckAt();
     Notification latest = notificationRepository.findTopByReceiverOrderByCreatedAtDesc(user);

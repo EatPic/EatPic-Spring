@@ -1,10 +1,15 @@
 package EatPic.spring.domain.user.controller;
 
-import EatPic.spring.domain.user.entity.User;
+import EatPic.spring.domain.user.dto.*;
+import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
 import EatPic.spring.domain.user.service.UserService;
+import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController{
 
     private final UserService userService;
 
@@ -25,22 +30,10 @@ public class UserController {
     @PostMapping("/signup")
     @Operation(summary = "이메일 회원가입 요청")
     public ResponseEntity<SignupResponseDTO> signup(@Valid @RequestBody SignupRequestDTO request) {
-
-        User savedUser = userService.signup(request);
-
-        SignupResponseDTO response = SignupResponseDTO.builder()
-                .userId(savedUser.getId())
-                .email(savedUser.getEmail())
-                .nameId(savedUser.getNameId())
-                .nickname(savedUser.getNickname())
-                .marketingAgreed(savedUser.getMarketingAgreed())
-                .message("회원가입이 완료되었습니다.")
-                .build();
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(userService.signup(request));
     }
 
-    // 필수 동의 약관 확인
+    // 필수 동의 약관 확인 -> feature/5 Refacotor 하기
     @RestControllerAdvice
     public static class GlobalExceptionHandler {
 
@@ -55,4 +48,18 @@ public class UserController {
         }
     }
 
+    @PostMapping("/login/email")
+    @Operation(summary = "이메일 로그인 요청")
+    public ApiResponse<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
+        return ApiResponse.onSuccess(userService.loginUser(request));
+    }
+
+    @GetMapping("/users")
+    @Operation(summary = "유저 내 정보 조회 - 인증 필요",
+            security = { @SecurityRequirement(name = "JWT TOKEN") }
+    )
+    public ApiResponse<UserInfoDTO> getMyInfo(HttpServletRequest request) {
+        return ApiResponse.onSuccess(userService.getUserInfo(request));
+    }
 }
+

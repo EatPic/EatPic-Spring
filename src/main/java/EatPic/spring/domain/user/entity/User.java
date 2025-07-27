@@ -69,6 +69,8 @@ public class User extends BaseEntity {
     @Column(name = "marketing_agreed", nullable = false)
     private Boolean marketingAgreed;
 
+    // notificationAgreed 추가 -> feature/5 Refacotor 하기
+
     @Column(name = "last_notification_check_at", nullable = true)
     private LocalDateTime lastNotificationCheckAt;
 
@@ -76,3 +78,4 @@ public class User extends BaseEntity {
         this.lastNotificationCheckAt = time;
     }
 }
+
