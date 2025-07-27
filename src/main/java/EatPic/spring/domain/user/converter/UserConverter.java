@@ -1,11 +1,13 @@
 package EatPic.spring.domain.user.converter;
 
-import EatPic.spring.domain.user.dto.LoginResponseDTO;
+import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.user.dto.UserInfoDTO;
-import EatPic.spring.domain.user.dto.UserResponseDTO;
+import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
+import EatPic.spring.domain.user.mapping.UserBlock;
 import EatPic.spring.domain.user.mapping.UserFollow;
 import org.springframework.data.domain.Page;
 
@@ -66,6 +68,23 @@ public class UserConverter {
                 .size(profileList.getSize())
                 .total((int) profileList.getTotalElements())
                 .userList(profileList.getContent())
+                .build();
+    }
+
+    // 사용자 계정 받아오기
+    public static SearchResponseDTO.GetAccountResponseDto toAccountDto(User user) {
+        return SearchResponseDTO.GetAccountResponseDto.builder()
+                .userId(user.getId())
+                .nameId(user.getNameId())
+                .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
+                .build();
+    }
+
+    public static UserResponseDTO.UserBlockResponseDto toUserBlockResponseDto(UserBlock userBlock) {
+        return UserResponseDTO.UserBlockResponseDto.builder()
+                .userId(userBlock.getUser().getId())
+                .targetUserId(userBlock.getBlockedUser().getId())
                 .build();
     }
 }

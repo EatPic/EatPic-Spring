@@ -1,6 +1,11 @@
 package EatPic.spring.domain.user.service;
 
 import EatPic.spring.domain.user.dto.*;
+import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
+import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
+import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserService {
@@ -14,3 +19,4 @@ public interface UserService {
     UserInfoDTO getUserInfo(HttpServletRequest request);
 
 }
+

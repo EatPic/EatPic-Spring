@@ -30,11 +30,17 @@ public class SearchController {
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
 
-//    @Operation(summary = "검색 범위가 전체인 경우에서 계정 검색", description = "전체 - 계정 검색 api")
-//    @GetMapping("")
-//    public ResponseEntity<String> searchAccountInAll() {
-//
-//    }
+    @Operation(summary = "검색 범위가 전체인 경우에서 계정 검색", description = "전체 - 계정 검색 api (nameId로 검색합니다.)")
+    @GetMapping("/all/account")
+    public ApiResponse<SearchResponseDTO.GetAccountListResponseDto> searchAccountInAll(
+            @RequestParam(value = "query") String query,
+            @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
+            @RequestParam(value = "cursor", required = false) Long cursor
+            // 유저 관련 처리는 추후에..
+    ) {
+        SearchResponseDTO.GetAccountListResponseDto result = searchService.getAccountInAll(query, limit, cursor);
+        return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
+    }
 //
 //    @Operation(summary = "검색범위가 유저가 팔로우한 사용자인 경우에서 계정 검색", description = "팔로우 - 계정 검색 api")
 //    @GetMapping("")

@@ -2,11 +2,18 @@ package EatPic.spring.domain.user.service;
 
 import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.*;
+import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
+import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
+import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.entity.UserStatus;
+import EatPic.spring.domain.user.mapping.UserBlock;
 import EatPic.spring.domain.user.mapping.UserFollow;
 import EatPic.spring.domain.user.repository.UserFollowRepository;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.domain.user.repository.UserBlockRepository;
 import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import EatPic.spring.global.config.jwt.JwtTokenProvider;
@@ -22,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
+import static EatPic.spring.global.common.code.status.ErrorStatus.USER_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -30,7 +39,9 @@ public class UserServiceImpl implements UserService{
     private final UserFollowRepository userFollowRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserBlockRepository userBlockRepository;
 
+    // 회원가입
     public SignupResponseDTO signup(SignupRequestDTO request) {
         // 이메일 중복 검사
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -70,20 +81,7 @@ public class UserServiceImpl implements UserService{
                 .build();
     }
 
-    @Override
-    public UserResponseDTO.UserIconListResponseDto followingUserIconList(Long userId, int page, int size) {
-        User user = userRepository.findUserById(userId);
-        Page<UserFollow> followingPage = userFollowRepository.findByUser(user, PageRequest.of(page, size));
-
-        return UserConverter.toUserIconListResponseDto(followingPage);
-    }
-
-    @Override
-    public UserResponseDTO.ProfileDto getMyIcon() {
-        User me = userRepository.findUserById(1L);
-        return UserConverter.toProfileDto(me,true);
-    }
-
+    // 로그인
     @Override
     public LoginResponseDTO loginUser(LoginRequestDTO request){
         User user = userRepository.findByEmail(request.getEmail())
@@ -109,6 +107,7 @@ public class UserServiceImpl implements UserService{
         );
     }
 
+    // JWT 사용자 정보 조회
     @Override
     @Transactional(readOnly = true)
     public UserInfoDTO getUserInfo(HttpServletRequest request) {
@@ -118,5 +117,38 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
         return UserConverter.toUserInfoDTO(user);
+    }
+
+    // 팔로잉한 유저의 프로필 아이콘 목록 조회
+    @Override
+    public UserResponseDTO.UserIconListResponseDto followingUserIconList(Long userId, int page, int size) {
+        User user = userRepository.findUserById(userId);
+        Page<UserFollow> followingPage = userFollowRepository.findByUser(user, PageRequest.of(page, size));
+
+        return UserConverter.toUserIconListResponseDto(followingPage);
+    }
+
+    // 내 프로필 아이콘 조회
+    @Override
+    public UserResponseDTO.ProfileDto getMyIcon() {
+        User me = userRepository.findUserById(1L);
+        return UserConverter.toProfileDto(me,true);
+    }
+
+    // 유저 차단
+    @Transactional
+    public UserResponseDTO.UserBlockResponseDto blockUser(Long targetUserId) {
+        User user = userRepository.findUserById(1L);
+        User targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new ExceptionHandler(USER_NOT_FOUND));
+
+        UserBlock userBlock = UserBlock.builder()
+                .user(user)
+                .blockedUser(targetUser)
+                .build();
+
+        userBlockRepository.save(userBlock);
+
+        return UserConverter.toUserBlockResponseDto(userBlock);
     }
 }

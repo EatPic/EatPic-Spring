@@ -1,7 +1,7 @@
 package EatPic.spring.domain.user.controller;
 
-import EatPic.spring.domain.user.dto.UserResponseDTO;
-import EatPic.spring.domain.user.service.UserService;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
+import EatPic.spring.domain.user.service.UserServiceImpl;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
 public class UserRestController {
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @Operation(
             summary = "커뮤니티 상단 팔로잉 유저 아이콘",
@@ -23,7 +23,7 @@ public class UserRestController {
                                       @RequestParam(defaultValue = "1") int page,
                                       @RequestParam(defaultValue = "15") int size) {
         //todo : userId -> 본인
-        return ApiResponse.onSuccess(userService.followingUserIconList(1L, page-1, size));
+        return ApiResponse.onSuccess(userServiceImpl.followingUserIconList(1L, page-1, size));
     }
 
     @Operation(
@@ -31,6 +31,14 @@ public class UserRestController {
     @GetMapping("/me")
     @Tag(name = "User", description = "사용자 관련 API")
     public ApiResponse<UserResponseDTO.ProfileDto> myIcon() {
-        return ApiResponse.onSuccess(userService.getMyIcon());
+        return ApiResponse.onSuccess(userServiceImpl.getMyIcon());
     }
+
+    @Operation(summary = "해당 프로필의 유저를 차단 목록에 추가합니다.")
+    @PostMapping("/{userId}/profile/block")
+    @Tag(name = "User", description = "사용자 관련 API")
+    public ApiResponse<UserResponseDTO.UserBlockResponseDto> blockUser(@PathVariable Long userId) {
+        return ApiResponse.onSuccess(userServiceImpl.blockUser(userId));
+    }
+
 }

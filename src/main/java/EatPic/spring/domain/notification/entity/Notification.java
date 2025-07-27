@@ -39,7 +39,7 @@ public class Notification extends BaseEntity {
 
     // 관련 리소스 아이디
     @Column(name = "resource_id", nullable = true)
-    private Integer resourceId;
+    private Long resourceId;
 
     // 읽음 여부
     @Column(name = "is_read", nullable = false)

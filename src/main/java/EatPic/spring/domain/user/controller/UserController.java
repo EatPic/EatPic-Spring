@@ -1,6 +1,10 @@
 package EatPic.spring.domain.user.controller;
 
 import EatPic.spring.domain.user.dto.*;
+import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
+import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
+import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
 import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
