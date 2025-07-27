@@ -14,6 +14,7 @@ public interface UserService {
     LoginResponseDTO loginUser(LoginRequestDTO request);
     UserResponseDTO.UserIconListResponseDto followingUserIconList(Long userId, int page, int size);
     UserResponseDTO.ProfileDto getMyIcon();
+    UserResponseDTO.UserBlockResponseDto blockUser(Long targetUserId);
 
     // UserQueryService
     UserInfoDTO getUserInfo(HttpServletRequest request);
