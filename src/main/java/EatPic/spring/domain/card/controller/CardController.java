@@ -2,6 +2,7 @@ package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest;
+import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
@@ -9,6 +10,7 @@ import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.CardService;
+import EatPic.spring.domain.comment.dto.CommentResponseDTO;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,14 +22,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -107,5 +102,16 @@ public class CardController {
     Long userId = 1L;
     return ResponseEntity.ok(ApiResponse.onSuccess(cardService.updateCard(cardId, userId, request)));
   }
+
+  @Operation(
+          summary = "피드 조회",
+          description = "특정 사용자(null이면 전체 사용자)의 최근 7일 동안의 피드를 조회합니다.(전체, 본인의 경우 전체 피드를 조회합니다)")
+  @GetMapping("/community/feeds")
+  public ApiResponse<CardResponse.PagedCardFeedResponseDto> getFeeds(@RequestParam(required = false) Long userId,
+                                                                     @RequestParam(required = false) Long cursor,
+                                                                     @RequestParam(defaultValue = "15") int size) {
+    return ApiResponse.onSuccess(cardService.getCardFeedByCursor(userId,size,cursor));
+  }
+
 
 }
