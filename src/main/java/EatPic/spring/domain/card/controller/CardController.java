@@ -1,6 +1,7 @@
 package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
+import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
@@ -16,12 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -72,6 +68,14 @@ public class CardController {
   public ApiResponse<CardFeedResponse> getCardFeed(@PathVariable Long cardId) {
     Long userId = 1L; // 추후 인증에서 가져올 예정
     return ApiResponse.onSuccess(cardService.getCardFeed(cardId, userId));
+  }
+
+  @GetMapping("/profile/{userId}/cards")
+  @Operation(summary = "프로필 화면 피드 미리보기", description = "공유한 카드의 번호와 이미지 url 조회 API")
+  public ApiResponse<CardResponse.profileCardListDTO> getProfileCardsList(@PathVariable Long userId,
+                                                                          @RequestParam(required = false) Long cursor,
+                                                                          @RequestParam(defaultValue = "15") int size) {
+    return ApiResponse.onSuccess(cardService.getProfileCardList(userId,size,cursor));
   }
 
 }
