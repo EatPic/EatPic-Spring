@@ -181,6 +181,27 @@ public class CardResponse {
     private String profileImageUrl;
   }
 
+  @Builder
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class profileCardListDTO{
+    private Long userId;
+    private boolean hasNext;
+    private Long nextCursor;
+    private List<ProfileCardDTO> cardsList;
+  }
+
+  @Builder
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class ProfileCardDTO {
+    private Long cardId;
+    private String cardImageUrl;
+  }
+
+
 
 
 
