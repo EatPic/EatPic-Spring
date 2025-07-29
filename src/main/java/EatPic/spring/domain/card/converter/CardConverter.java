@@ -12,9 +12,6 @@ import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.mapping.CardHashtag;
 import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.user.entity.User;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.Slice;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -113,23 +110,6 @@ public class CardConverter {
             .build();
     }
 
-    public static CardResponse.ProfileCardDTO toProfileCardDto(Card card){
-        return CardResponse.ProfileCardDTO.builder()
-                .cardId(card.getId())
-                .cardImageUrl(card.getCardImageUrl())
-                .build();
-    }
-
-    public static CardResponse.profileCardListDTO toProfileCardList(Long userId, Slice<Card> cardList){
-        return CardResponse.profileCardListDTO.builder()
-                .hasNext(cardList.hasNext())
-                .nextCursor(cardList.hasNext()?cardList.getContent().get(cardList.getContent().size()-1).getId():null)
-                .userId(userId)
-                .cardsList(cardList.getContent().stream()
-                        .map(CardConverter::toProfileCardDto)
-                        .toList())
-                .build();
-      
     public static TodayCardResponse toTodayCard(Card card) {
         return TodayCardResponse.builder()
             .cardId(card.getId())

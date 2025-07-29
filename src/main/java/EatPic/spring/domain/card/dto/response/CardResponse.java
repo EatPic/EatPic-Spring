@@ -188,22 +188,6 @@ public class CardResponse {
   @Getter
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class profileCardListDTO{
-    private Long userId;
-    private boolean hasNext;
-    private Long nextCursor;
-    private List<ProfileCardDTO> cardsList;
-  }
-
-  @Builder
-  @Getter
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class ProfileCardDTO {
-    private Long cardId;
-    private String cardImageUrl;
-  }
-  
   @Schema(title = "TodayCardResponse: 오늘의 식사(카드) 현황 응답 dto")
   public static class TodayCardResponse {
     @Schema(description = "카드 ID", example = "12")
@@ -215,5 +199,8 @@ public class CardResponse {
     @Schema(description = "식사 종류", example = "BREAKFAST")
     private Meal meal;
   }
+
+
+
 
 }
