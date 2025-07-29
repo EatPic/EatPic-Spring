@@ -34,28 +34,29 @@ public class CalendarService {
     LocalDateTime end = currentMonth.atEndOfMonth().atTime(LocalTime.MAX);
 
     // 해당 기간 동안의 카드들 조회
-    List<Card> cards = cardRepository.findByUserIdAndCreatedAtBetween(userId, start, end);
+    List<Card> cards = cardRepository.findByUserIdAndCreatedAtBetween(userId, start, end)
+        .stream()
+        .filter(card -> !card.isDeleted()) // 삭제된 카드 제외
+        .toList();
 
-    // 날짜별로 그룹화 (날짜 기준, 카드 리스트)
+    // 카드들을 생성일(LocalDate) 기준으로 그룹화 (날짜별로 카드 묶기)
     Map<LocalDate, List<Card>> grouped = cards.stream()
         .collect(Collectors.groupingBy(card -> card.getCreatedAt().toLocalDate()));
 
-    // 날짜순 정렬
+    // 결과 리스트 초기화
     List<CalendarDayResponse> result = new ArrayList<>();
 
+
+    //각 날짜별로 대표 카드 선정 (식사 우선순위 기준: 아침 > 점심 > 저녁 > 간식)
     grouped.forEach((date, cardList) -> {
-      // 아침 → 점심 → 저녁 → 간식 순으로 첫 식사 선택
       Optional<Card> firstMealCard = getFirstMealCard(cardList);
-
-      // 대표 이미지 가져오기
-      String imageUrl = firstMealCard
-              .map(Card::getCardImageUrl)
-              .orElse(null);
-
-      result.add(CalendarDayResponse.builder()
-          .date(date)
-          .imageUrl(imageUrl)
-          .build());
+      if (firstMealCard.isPresent()) {
+        result.add(CalendarDayResponse.builder()
+            .date(date) // 해당 날짜
+            .imageUrl(firstMealCard.get().getCardImageUrl()) // 대표 카드 이미지
+            .cardId(firstMealCard.get().getId()) // 대표 카드 ID
+            .build());
+      }
     });
 
     // 최신 날짜가 아래로 오도록 정렬
@@ -72,10 +73,11 @@ public class CalendarService {
         Meal.DINNER,
         Meal.SNACK
     );
+    // 식사 우선순위에 따라 하나씩 탐색
     for (Meal mealType : priority) {
       for (Card card : cards) {
         if (card.getMeal() == mealType) {
-          return Optional.of(card);
+          return Optional.of(card); // 가장 우선순위 높은 카드 반환
         }
       }
     }

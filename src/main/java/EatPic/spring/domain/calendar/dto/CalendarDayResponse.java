@@ -15,4 +15,7 @@ public class CalendarDayResponse {
   @Schema(description = "대표 이미지 URL", example = "https://example.com/image.jpg")
   private String imageUrl;
 
+  @Schema(description = "카드 ID", example = "123")
+  private Long cardId;
+
 }

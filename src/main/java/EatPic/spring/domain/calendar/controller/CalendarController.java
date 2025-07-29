@@ -3,6 +3,7 @@ package EatPic.spring.domain.calendar.controller;
 import EatPic.spring.domain.calendar.dto.CalendarDayResponse;
 import EatPic.spring.domain.calendar.service.CalendarService;
 import EatPic.spring.domain.card.repository.CardRepository;
+import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -24,14 +25,14 @@ public class CalendarController {
   @Operation(summary = "캘린더 화면 데이터 조회",  //Operation의 구성요소 중 하나로, API에 대한 한줄요약.
       description = "캘린더에서 기록이 있는 날짜에 해당하는 대표이미지를 불러오는 API") //상세설명
   @GetMapping
-  public List<CalendarDayResponse> getCalendar(
+  public ApiResponse<List<CalendarDayResponse>> getCalendar(
       //@AuthenticationPrincipal CustomUserDetails userDetails,
       @RequestParam int year,
       @RequestParam int month
   ) {
     Long userId = 1L; //Long userId = userDetails.getUser().getId(); //로그인 구현 시 이렇게 바꾸기
     //User user = userDetails.getUser(); //아니면 이렇게 해서 객체 자체를 넘기기 (이게 일반적인 방법)
-    return calendarService.getCalendar(userId, year, month);
+    return ApiResponse.onSuccess(calendarService.getCalendar(userId, year, month));
   }
 
 
