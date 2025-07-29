@@ -38,18 +38,18 @@ public enum ErrorStatus implements BaseErrorCode {
     CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_001", "해당 카드는 존재하지 않는 카드입니다."),
     // 같은 날짜에 같은 meal 중복 에러
     DUPLICATE_MEAL_CARD(HttpStatus.CONFLICT, "CARD_002", "이미 같은 날짜와 같은 식사 유형의 카드가 존재합니다."),
-    ALREADY_BOOKMARKED(HttpStatus.CONFLICT, "CARD_003", "이미 저장된 카드입니다."),
-    BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_004", "카드를 저장한 기록이 없습니다"),
-
-
-
+    CARD_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "CARD_003", "해당 카드를 수정할 수 있는 권한이 없습니다."),
+    ALREADY_BOOKMARKED(HttpStatus.CONFLICT, "CARD_004", "이미 저장된 카드입니다."),
+    BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_005", "카드를 저장한 기록이 없습니다"),
+   
 
     // 댓글 관련 응답
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_001", "해당 댓글은 존재하지 않는 댓글입니다."),
     CURSOR_NOT_FOUND(HttpStatus.BAD_REQUEST, "COMMENT_002", "유효하지 않은 커서입니다."),
 
     // 유저 관련 응답
-    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_001", "해당 유저는 존재하지 않는 유저입니다.");
+    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_001", "해당 유저는 존재하지 않는 유저입니다."),
+    CARD_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "USER_005", "해당 카드를 삭제할 권한이 없습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
