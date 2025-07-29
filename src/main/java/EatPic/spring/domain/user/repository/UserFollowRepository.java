@@ -12,4 +12,7 @@ import java.util.List;
 public interface UserFollowRepository extends JpaRepository<UserFollow,Long> {
     Page<UserFollow> findByUser(User user, Pageable pageable);
     Boolean existsByUserAndTargetUser(User user, User targetUser);
+
+    Long countUserFollowByTargetUser(User targetUser);
+    Long countUserFollowByUser(User user);
 }
