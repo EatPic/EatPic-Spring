@@ -200,6 +200,16 @@ public class CardResponse {
     private Meal meal;
   }
 
+  @Builder
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class PagedCardFeedResponseDto{
+    private Long selectedId;
+    private boolean hasNext;
+    private Long nextCursor;
+    private List<CardFeedResponse> cardFeedList;
+  }
 
 
 

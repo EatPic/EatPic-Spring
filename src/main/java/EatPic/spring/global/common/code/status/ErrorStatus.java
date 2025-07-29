@@ -39,7 +39,8 @@ public enum ErrorStatus implements BaseErrorCode {
     // 같은 날짜에 같은 meal 중복 에러
     DUPLICATE_MEAL_CARD(HttpStatus.CONFLICT, "CARD_002", "이미 같은 날짜와 같은 식사 유형의 카드가 존재합니다."),
     CARD_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "CARD_003", "해당 카드를 수정할 수 있는 권한이 없습니다."),
-    ALREADY_BOOKMARKED(HttpStatus.CONFLICT, "CARD_004", "이미 저장된 카드입니다."),
+    NO_RECENT_CARDS(HttpStatus.NOT_FOUND,"CARD_004","최근 7일간 작성된 피드가 없습니다,"),
+    ALREADY_BOOKMARKED(HttpStatus.CONFLICT, "CARD_006", "이미 저장된 카드입니다."),
     BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_005", "카드를 저장한 기록이 없습니다"),
    
 
