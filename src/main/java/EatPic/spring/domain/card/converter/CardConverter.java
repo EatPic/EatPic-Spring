@@ -6,6 +6,7 @@ import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedUserDTO;
 import EatPic.spring.domain.card.dto.response.CardResponse.NextMealCard;
+import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.mapping.CardHashtag;
@@ -69,6 +70,7 @@ public class CardConverter {
             .recipeUrl(card.getRecipeUrl())
             .latitude(card.getLatitude())
             .longitude(card.getLongitude())
+            .locationText(card.getLocationText())
             .memo(card.getMemo())
             .recipe(card.getRecipe())
             .nextMeal(nextCardId != null ?
@@ -127,5 +129,12 @@ public class CardConverter {
                         .map(CardConverter::toProfileCardDto)
                         .toList())
                 .build();
+      
+    public static TodayCardResponse toTodayCard(Card card) {
+        return TodayCardResponse.builder()
+            .cardId(card.getId())
+            .cardImageUrl(card.getCardImageUrl())
+            .meal(card.getMeal())
+            .build();
     }
 }

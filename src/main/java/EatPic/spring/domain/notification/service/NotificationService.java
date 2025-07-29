@@ -9,8 +9,10 @@ import EatPic.spring.domain.notification.entity.Notification;
 import EatPic.spring.domain.notification.entity.NotificationType;
 import EatPic.spring.domain.notification.repository.NotificationRepository;
 import EatPic.spring.domain.user.entity.User;
+import EatPic.spring.domain.user.exception.UserErrorCode;
 import EatPic.spring.domain.user.repository.UserFollowRepository;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,6 +61,24 @@ public class NotificationService {
 
     // Converter 호출 (resourceId도 포함됨)
     return NotificationConverter.toRecentNotificationResponse(notification, cardImageUrl, isFollowing);
+  }
+
+  public void checkNotifications(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ExceptionHandler(UserErrorCode.USER_NOT_FOUND));
+
+    user.updateLastNotificationCheckAt(LocalDateTime.now());
+    userRepository.save(user);
+  }
+
+  public boolean isUnreadNotification(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ExceptionHandler(UserErrorCode.USER_NOT_FOUND));
+
+    LocalDateTime lastChecked = user.getLastNotificationCheckAt();
+    Notification latest = notificationRepository.findTopByReceiverOrderByCreatedAtDesc(user);
+
+    return latest != null && (lastChecked == null || lastChecked.isBefore(latest.getCreatedAt()));
   }
 
 

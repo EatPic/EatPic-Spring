@@ -84,6 +84,9 @@ public class CardResponse {
     @Schema(description = "경도", example = "127.0276")
     private BigDecimal longitude;
 
+    @Schema(description = "장소 이름", example = "장소 이름")
+    private String locationText;
+
     @Schema(description = "기록 메모", example = "오늘은 샐러드를 먹었습니다~ 아보카도를 많이 넣어 먹었어요~~")
     private String memo;
 
@@ -200,9 +203,17 @@ public class CardResponse {
     private Long cardId;
     private String cardImageUrl;
   }
+  
+  @Schema(title = "TodayCardResponse: 오늘의 식사(카드) 현황 응답 dto")
+  public static class TodayCardResponse {
+    @Schema(description = "카드 ID", example = "12")
+    private Long cardId;
 
+    @Schema(description = "카드 이미지 URL", example = "https://cdn.eatpic.com/cards/12.jpg")
+    private String cardImageUrl;
 
-
-
+    @Schema(description = "식사 종류", example = "BREAKFAST")
+    private Meal meal;
+  }
 
 }

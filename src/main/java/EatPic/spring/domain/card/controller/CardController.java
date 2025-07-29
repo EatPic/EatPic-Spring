@@ -2,19 +2,23 @@ package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
+import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.CardService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,12 +74,40 @@ public class CardController {
     return ApiResponse.onSuccess(cardService.getCardFeed(cardId, userId));
   }
 
+
   @GetMapping("/profile/{userId}/cards")
   @Operation(summary = "프로필 화면 피드 미리보기", description = "공유한 카드의 번호와 이미지 url 조회 API")
   public ApiResponse<CardResponse.profileCardListDTO> getProfileCardsList(@PathVariable Long userId,
                                                                           @RequestParam(required = false) Long cursor,
                                                                           @RequestParam(defaultValue = "15") int size) {
     return ApiResponse.onSuccess(cardService.getProfileCardList(userId,size,cursor));
+  
+  @DeleteMapping("/{cardId}")
+  @Operation(summary = "카드 삭제", description = "카드를 소프트 삭제 처리합니다.")
+  public ApiResponse<Void> deleteCard(@PathVariable Long cardId) {
+    Long userId = 1L; // 로그인 인증 전 임시
+    cardService.deleteCard(cardId, userId);
+    return ApiResponse.onSuccess(null);
+  }
+
+  @Operation(summary = "오늘의 식사 카드 조회", description = "홈 진입 시, 오늘 등록된 식사 카드들을 조회합니다.")
+  @GetMapping("/home/today-cards")
+  public ApiResponse<List<TodayCardResponse>> getTodayCards(
+      //@AuthUser User user
+  ) {
+    Long userId = 1L;
+    return ApiResponse.onSuccess(cardService.getTodayCards(userId));
+  }
+
+  @Operation(summary = "픽카드 수정", description = "카드의 메모, 레시피, 위치 정보 등을 수정합니다.")
+  @PutMapping("/api/cards/{cardId}")
+  public ResponseEntity<ApiResponse<CardDetailResponse>> updateCard(
+      @Parameter(description = "수정할 카드 ID", example = "12")
+      @PathVariable Long cardId,
+      @RequestBody CardUpdateRequest request)
+  {
+    Long userId = 1L;
+    return ResponseEntity.ok(ApiResponse.onSuccess(cardService.updateCard(cardId, userId, request)));
   }
 
 }
