@@ -25,13 +25,8 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     ORDER BY c.id ASC
 """)
   Slice<Card> findByCursor(@Param("cursor") Long cursor, Pageable pageable);
-  
   boolean existsByUserIdAndMealAndCreatedAtBetween(Long userId, Meal meal, LocalDateTime start, LocalDateTime end);
 
-  Long countCardById(Long id);
-
-  Slice<Card> findByUserIdAndIsSharedTrueOrderByIdDesc(Long userId, Pageable pageable);
-  Slice<Card> findByUserIdAndIsSharedTrueAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
   Optional<Card> findByIdAndIsDeletedFalse(Long id);
 
   List<Card> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
