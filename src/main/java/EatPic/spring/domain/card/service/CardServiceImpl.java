@@ -24,9 +24,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -146,6 +149,19 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public CardResponse.profileCardListDTO getProfileCardList(Long userId, int size, Long cursor) {
+
+        Slice<Card> cardSlice;
+        Pageable pageable = PageRequest.of(0, size);
+
+        if (cursor == null) {
+            cardSlice = cardRepository.findByUserIdAndIsSharedTrueOrderByIdDesc(userId, pageable);
+        } else {
+            cardSlice = cardRepository.findByUserIdAndIsSharedTrueAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
+        }
+        return CardConverter.toProfileCardList(userId, cardSlice);
+
     @Transactional
     public void deleteCard(Long cardId, Long userId) {
         Card card = cardRepository.findByIdAndIsDeletedFalse(cardId)
