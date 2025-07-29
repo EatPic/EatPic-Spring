@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: spring
+  jpa:
+    show-sql: false
+    generate-ddl: true
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update   # 계속 update 유지
+        format_sql: false
+        use_sql_comments: true
+        default_batch_fetch_size: 1000
+        dialect: org.hibernate.dialect.MySQLDialect
+    database: mysql
+  datasource:
+    url: jdbc:mysql://eatpic-database.cxg2668gsj4t.ap-northeast-2.rds.amazonaws.com:3306/eatpic_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: eatpic
+    password: eatpic123***
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jwt:
+    secret: EatPic2025@JWTToken!SecureKey
+    access-token-validity: 3600000
+  profiles:
+    include:
+      - database
+      - swagger
+      - jwt
+      - s3
