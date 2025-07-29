@@ -1,7 +1,6 @@
 package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
-import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
@@ -21,7 +20,14 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -74,14 +80,6 @@ public class CardController {
     return ApiResponse.onSuccess(cardService.getCardFeed(cardId, userId));
   }
 
-
-  @GetMapping("/profile/{userId}/cards")
-  @Operation(summary = "프로필 화면 피드 미리보기", description = "공유한 카드의 번호와 이미지 url 조회 API")
-  public ApiResponse<CardResponse.profileCardListDTO> getProfileCardsList(@PathVariable Long userId,
-                                                                          @RequestParam(required = false) Long cursor,
-                                                                          @RequestParam(defaultValue = "15") int size) {
-    return ApiResponse.onSuccess(cardService.getProfileCardList(userId,size,cursor));
-  
   @DeleteMapping("/{cardId}")
   @Operation(summary = "카드 삭제", description = "카드를 소프트 삭제 처리합니다.")
   public ApiResponse<Void> deleteCard(@PathVariable Long cardId) {

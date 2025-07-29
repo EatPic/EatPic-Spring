@@ -1,6 +1,5 @@
 package EatPic.spring.domain.user.service;
 
-import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
@@ -31,7 +30,6 @@ public class UserService {
     private final UserFollowRepository userFollowRepository;
 
     private final PasswordEncoder passwordEncoder;
-    private final CardRepository cardRepository;
 
     public User signup(SignupRequestDTO request) {
         // 이메일 중복 검사
@@ -87,22 +85,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDTO.ProfileIconDto getMyIcon() {
+    public UserResponseDTO.ProfileDto getMyIcon() {
         User me = userRepository.findUserById(1L);
-        return UserConverter.toProfileIconDto(me);
-    }
-
-    public UserResponseDTO.DetailProfileDto getProfile(Long userId) {
-        // todo: 로그인 사용자
-        User me = userRepository.findUserById(1L);
-
-        User user = userRepository.findUserById(userId);
-        Boolean isFollowing = userFollowRepository.existsByUserAndTargetUser(me, user);
-        Long totalCard = cardRepository.countCardById(userId);
-        Long totalFollower = userFollowRepository.countUserFollowByTargetUser(me);
-        Long totalFollowing = userFollowRepository.countUserFollowByUser(user);
-
-        return UserConverter.toDetailProfileDto(user, isFollowing,totalCard,totalFollower,totalFollowing);
+        return UserConverter.toProfileDto(me,true);
     }
 
 }
