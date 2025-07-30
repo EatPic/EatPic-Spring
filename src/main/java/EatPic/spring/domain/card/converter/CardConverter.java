@@ -129,6 +129,7 @@ public class CardConverter {
                         .map(CardConverter::toProfileCardDto)
                         .toList())
                 .build();
+    }
       
     public static TodayCardResponse toTodayCard(Card card) {
         return TodayCardResponse.builder()

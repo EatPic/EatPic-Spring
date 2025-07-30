@@ -74,14 +74,14 @@ public class CardController {
     return ApiResponse.onSuccess(cardService.getCardFeed(cardId, userId));
   }
 
-
   @GetMapping("/profile/{userId}/cards")
   @Operation(summary = "프로필 화면 피드 미리보기", description = "공유한 카드의 번호와 이미지 url 조회 API")
   public ApiResponse<CardResponse.profileCardListDTO> getProfileCardsList(@PathVariable Long userId,
                                                                           @RequestParam(required = false) Long cursor,
                                                                           @RequestParam(defaultValue = "15") int size) {
-    return ApiResponse.onSuccess(cardService.getProfileCardList(userId,size,cursor));
-  
+    return ApiResponse.onSuccess(cardService.getProfileCardList(userId, size, cursor));
+  }
+
   @DeleteMapping("/{cardId}")
   @Operation(summary = "카드 삭제", description = "카드를 소프트 삭제 처리합니다.")
   public ApiResponse<Void> deleteCard(@PathVariable Long cardId) {
@@ -100,14 +100,12 @@ public class CardController {
   }
 
   @Operation(summary = "픽카드 수정", description = "카드의 메모, 레시피, 위치 정보 등을 수정합니다.")
-  @PutMapping("/api/cards/{cardId}")
+  @PutMapping("/{cardId}")
   public ResponseEntity<ApiResponse<CardDetailResponse>> updateCard(
       @Parameter(description = "수정할 카드 ID", example = "12")
       @PathVariable Long cardId,
-      @RequestBody CardUpdateRequest request)
-  {
+      @RequestBody CardUpdateRequest request) {
     Long userId = 1L;
     return ResponseEntity.ok(ApiResponse.onSuccess(cardService.updateCard(cardId, userId, request)));
   }
-
 }

@@ -203,7 +203,12 @@ public class CardResponse {
     private Long cardId;
     private String cardImageUrl;
   }
-  
+
+
+  @Builder
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
   @Schema(title = "TodayCardResponse: 오늘의 식사(카드) 현황 응답 dto")
   public static class TodayCardResponse {
     @Schema(description = "카드 ID", example = "12")
