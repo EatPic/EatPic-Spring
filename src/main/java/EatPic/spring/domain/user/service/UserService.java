@@ -54,6 +54,7 @@ public class UserService {
                 .nameId(request.getNameId())
                 .nickname(request.getNickname())
                 .marketingAgreed(request.getMarketingAgreed() != null && request.getMarketingAgreed())
+                .notificationAgreed(request.getNotificationAgreed() != null && request.getNotificationAgreed())
                 .userStatus(UserStatus.ACTIVE)
                 .build();
 

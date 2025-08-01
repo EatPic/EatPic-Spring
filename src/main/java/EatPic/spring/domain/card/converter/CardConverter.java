@@ -12,6 +12,8 @@ import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.mapping.CardHashtag;
 import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.user.entity.User;
+import org.springframework.data.domain.Slice;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,62 +61,71 @@ public class CardConverter {
 
     public static CardDetailResponse toCardDetailResponse(Card card, Long nextCardId) {
         return CardDetailResponse.builder()
-            .cardId(card.getId())
-            .imageUrl(card.getCardImageUrl())
-            .date(card.getCreatedAt().toLocalDate())
-            .time(card.getCreatedAt().toLocalTime())
-            .mealType(card.getMeal())
-            .recipeUrl(card.getRecipeUrl())
-            .latitude(card.getLatitude())
-            .longitude(card.getLongitude())
-            .locationText(card.getLocationText())
-            .memo(card.getMemo())
-            .recipe(card.getRecipe())
-            .nextMeal(nextCardId != null ?
-                NextMealCard.builder().cardId(nextCardId).build() : null)
-            .build();
+                .cardId(card.getId())
+                .imageUrl(card.getCardImageUrl())
+                .date(card.getCreatedAt().toLocalDate())
+                .time(card.getCreatedAt().toLocalTime())
+                .mealType(card.getMeal())
+                .recipeUrl(card.getRecipeUrl())
+                .latitude(card.getLatitude())
+                .longitude(card.getLongitude())
+                .locationText(card.getLocationText())
+                .memo(card.getMemo())
+                .recipe(card.getRecipe())
+                .nextMeal(nextCardId != null ?
+                        NextMealCard.builder().cardId(nextCardId).build() : null)
+                .build();
     }
 
     public static CardResponse.CardFeedResponse toFeedResponse(
-        Card card,
-        List<CardHashtag> cardHashtags,
-        User writer,
-        Reaction userReaction,
-        int totalReactionCount,
-        int commentCount,
-        boolean isBookmarked) {
+            Card card,
+            List<CardHashtag> cardHashtags,
+            User writer,
+            Reaction userReaction,
+            int totalReactionCount,
+            int commentCount,
+            boolean isBookmarked) {
         return CardResponse.CardFeedResponse.builder()
-            .cardId(card.getId())
-            .imageUrl(card.getCardImageUrl())
-            .date(card.getCreatedAt().toLocalDate())
-            .time(card.getCreatedAt().toLocalTime())
-            .meal(card.getMeal())
-            .memo(card.getMemo())
-            .recipe(card.getRecipe())
-            .recipeUrl(card.getRecipeUrl())
-            .latitude(card.getLatitude())
-            .longitude(card.getLongitude())
-            .locationText(card.getLocationText())
-            .hashtags(cardHashtags.stream()
-                .map(ch -> ch.getHashtag().getHashtagName())
-                .collect(Collectors.toList()))
-            .user(CardResponse.CardFeedUserDTO.builder()
-                .userId(writer.getId())
-                .nickname(writer.getNickname())
-                .profileImageUrl(writer.getProfileImageUrl())
-                .build())
-            .reactionCount(totalReactionCount)
-            .userReaction(userReaction != null ? userReaction.getReactionType().name() : null)
-            .commentCount(commentCount)
-            .isBookmarked(isBookmarked)
-            .build();
+                .cardId(card.getId())
+                .imageUrl(card.getCardImageUrl())
+                .date(card.getCreatedAt().toLocalDate())
+                .time(card.getCreatedAt().toLocalTime())
+                .meal(card.getMeal())
+                .memo(card.getMemo())
+                .recipe(card.getRecipe())
+                .recipeUrl(card.getRecipeUrl())
+                .latitude(card.getLatitude())
+                .longitude(card.getLongitude())
+                .locationText(card.getLocationText())
+                .hashtags(cardHashtags.stream()
+                        .map(ch -> ch.getHashtag().getHashtagName())
+                        .collect(Collectors.toList()))
+                .user(CardResponse.CardFeedUserDTO.builder()
+                        .userId(writer.getId())
+                        .nickname(writer.getNickname())
+                        .profileImageUrl(writer.getProfileImageUrl())
+                        .build())
+                .reactionCount(totalReactionCount)
+                .userReaction(userReaction != null ? userReaction.getReactionType().name() : null)
+                .commentCount(commentCount)
+                .isBookmarked(isBookmarked)
+                .build();
     }
 
     public static TodayCardResponse toTodayCard(Card card) {
         return TodayCardResponse.builder()
-            .cardId(card.getId())
-            .cardImageUrl(card.getCardImageUrl())
-            .meal(card.getMeal())
-            .build();
+                .cardId(card.getId())
+                .cardImageUrl(card.getCardImageUrl())
+                .meal(card.getMeal())
+                .build();
+    }
+
+    public static CardResponse.PagedCardFeedResponseDto toPagedCardFeedResponseDTto(Long userId, Slice<Card> cardSlice, List<CardFeedResponse> feedList) {
+        return CardResponse.PagedCardFeedResponseDto.builder()
+                .selectedId(userId)
+                .hasNext(cardSlice.hasNext())
+                .nextCursor(cardSlice.hasNext() ? cardSlice.getContent().get(cardSlice.getContent().size() - 1).getId() : null)
+                .cardFeedList(feedList)
+                .build();
     }
 }
