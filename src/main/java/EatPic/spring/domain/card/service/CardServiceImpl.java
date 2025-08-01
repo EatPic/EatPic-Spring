@@ -18,7 +18,6 @@ import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.global.common.code.status.ErrorStatus;
-import EatPic.spring.global.common.exception.GeneralException;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

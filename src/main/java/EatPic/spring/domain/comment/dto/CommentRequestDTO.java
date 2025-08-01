@@ -15,10 +15,10 @@ public class CommentRequestDTO {
     @NoArgsConstructor
     public static class WriteCommentDto{
 
-        long parentCommentId;
+        private Long parentCommentId;
 
         @NotBlank(message = "내용은 필수입니다.")
         @Size(max = 255, message = "댓글은 255자 이하로 입력해주세요.")
-        String content;
+        private String content;
     }
 }
