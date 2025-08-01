@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     //private final CorsConfig corsConfig;
@@ -29,6 +31,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 // CORS 설정 활성화(보통은 CORS 설정 활성화 하지 않음. 서버에서 NginX로 CORS 검증)
                 //.cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
+                // CORS 비활성화 (필요 시 활성화 방법도 추가 가능)
+                // .cors(AbstractHttpConfigurer::disable)
+
+                // Spring Security에서 CORS 활성화
+                .cors(Customizer.withDefaults())
+
+                // 폼 로그인 비활성화
+                .formLogin(AbstractHttpConfigurer::disable)
                 // HTTP Basic 인증 기본 설정
                 //.httpBasic(Customizer.withDefaults())
                 // 세션을 생성하지 않음 (JWT 사용으로 인한 Stateless 설정)
@@ -37,12 +47,14 @@ public class SecurityConfig {
                 // HTTP 요청에 대한 권한 설정
                 .authorizeHttpRequests(
                         request -> request
-                                        // Swagger 경로 인증 필요
-                                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                        // 인증 없이 허용할 경로
-                                        .requestMatchers("/api/**").permitAll()
-                                        // 그 외 모든 요청은 모두 인증 필요
-                                        .anyRequest().authenticated());
+                                // Swagger 경로 인증 필요
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                // 인증 없이 허용할 경로
+                                .requestMatchers("/api/**").permitAll()
+                                // ADMIN 권한
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                // 그 외 모든 요청은 모두 인증 필요
+                                .anyRequest().authenticated());
         //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
