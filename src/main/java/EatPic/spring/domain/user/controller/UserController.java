@@ -40,19 +40,4 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // 필수 동의 약관 확인
-    @RestControllerAdvice
-    public static class GlobalExceptionHandler {
-
-        @ExceptionHandler(MethodArgumentNotValidException.class)
-        public ResponseEntity<?> handleValidationErrors(MethodArgumentNotValidException ex) {
-            Map<String, String> errors = new HashMap<>();
-            ex.getBindingResult().getFieldErrors().forEach(error -> {
-                errors.put(error.getField(), error.getDefaultMessage());
-            });
-
-            return ResponseEntity.badRequest().body(errors);
-        }
-    }
-
 }
