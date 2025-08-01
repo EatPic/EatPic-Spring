@@ -3,6 +3,7 @@ package EatPic.spring.domain.card.repository;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.entity.Meal;
 import EatPic.spring.domain.user.entity.User;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,4 +41,5 @@ public interface CardRepository extends JpaRepository<Card, Long> {
   Slice<Card> findByIsDeletedFalseAndUserIdAndCreatedAtAfterOrderByIdDesc(Long userId, LocalDateTime sevenDaysAgo, Pageable pageable);
   Slice<Card> findByIsDeletedFalseAndUserIdAndCreatedAtAfterAndIdLessThanOrderByIdDesc(Long userId, LocalDateTime sevenDaysAgo, Long cursor, Pageable pageable);
 
+  boolean existsByUserAndCreatedAtBetweenAndMeal(User user, LocalDateTime start, LocalDateTime end, Meal meal);
 }

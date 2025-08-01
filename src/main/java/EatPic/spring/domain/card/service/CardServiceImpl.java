@@ -1,5 +1,6 @@
 package EatPic.spring.domain.card.service;
 
+import EatPic.spring.domain.badge.entity.ConditionType;
 import EatPic.spring.domain.bookmark.repository.BookmarkRepository;
 import EatPic.spring.domain.card.converter.CardConverter;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
@@ -9,6 +10,7 @@ import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.entity.Card;
+import EatPic.spring.domain.card.entity.Meal;
 import EatPic.spring.domain.card.mapping.CardHashtag;
 import EatPic.spring.domain.card.repository.CardHashtagRepository;
 import EatPic.spring.domain.card.repository.CardRepository;
@@ -17,6 +19,7 @@ import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.domain.user.service.UserBadgeService;
 import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.GeneralException;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
@@ -48,6 +51,7 @@ public class CardServiceImpl implements CardService {
     private final CardHashtagRepository cardHashtagRepository;
     private final CommentRepository commentRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final UserBadgeService userBadgeService;
 
 
     @Override
@@ -87,6 +91,26 @@ public class CardServiceImpl implements CardService {
                 .build();
 
         Card savedCard = cardRepository.save(newcard);
+
+        // 뱃지 획득 부분 처리
+        userBadgeService.checkAndAssignBadges(user, ConditionType.CARD_UPLOAD, 1);
+        if (savedCard.hasLocation()) {
+            userBadgeService.checkAndAssignBadges(user, ConditionType.LOCATION_INCLUDED, 1);
+        }
+        if (savedCard.containsHashtag("혼밥")) {
+            userBadgeService.checkAndAssignBadges(user, ConditionType.HASHTAG_USAGE_ALONE, 1);
+        }
+        if (savedCard.hasRecipeUrl()) {
+            userBadgeService.checkAndAssignBadges(user, ConditionType.RECIPE_SHARED, 1);
+        }
+        // 카드 저장 이후, 해당 날짜 기준 유저의 카드 3끼 여부 확인
+        if (cardRepository.existsByUserAndCreatedAtBetweenAndMeal(user, startOfDay, endOfDay, Meal.BREAKFAST) &&
+            cardRepository.existsByUserAndCreatedAtBetweenAndMeal(user, startOfDay, endOfDay, Meal.LUNCH) &&
+            cardRepository.existsByUserAndCreatedAtBetweenAndMeal(user, startOfDay, endOfDay, Meal.DINNER)) {
+
+            userBadgeService.checkAndAssignBadges(user, ConditionType.FULL_DAY_MEALS, 1);
+        }
+
 
         log.info("새 카드 생성 완료 - ID: {}", savedCard.getId());
         return CardResponse.CreateCardResponse.builder()
