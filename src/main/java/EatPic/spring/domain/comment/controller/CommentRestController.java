@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/community")
@@ -24,7 +26,7 @@ public class CommentRestController {
             description = "parent_comment_id가 null이면 댓글, non-null이면 답글 입니다.")
     @PostMapping("/cards/{cardId}/comments")
     public ApiResponse<CommentResponseDTO.WriteCommentResponseDTO> writeComment(@PathVariable("cardId") Long cardId,
-                                                                                @RequestBody @Valid CommentRequestDTO.WriteCommentDto requestDto) {
+                                                                                @Valid @RequestBody CommentRequestDTO.WriteCommentDto requestDto) {
         Comment comment = commentService.writeComment(requestDto,cardId);
 
         return ApiResponse.onSuccess(CommentConverter.CommentToWriteCommentResponseDTO(comment));
