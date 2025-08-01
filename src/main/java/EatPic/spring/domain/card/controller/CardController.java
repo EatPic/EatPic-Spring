@@ -21,8 +21,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,14 +54,15 @@ public class CardController {
   }
 
   //픽카드 생성하기 부분에서 같은 날짜에, 같은 mealtype으로 픽카드 등록되지 않도록 수정해야함
-  @PostMapping("")
+  @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
   public ApiResponse<CreateCardResponse> createCard(
-      @Valid @RequestBody CardCreateRequest.CreateCardRequest request) {
+          @RequestPart("request") @Valid CardCreateRequest.CreateCardRequest request,
+          @RequestPart(value = "cardImageFile", required = false) MultipartFile cardImageFile) {
     Long userId = 1L;
-
-    return ApiResponse.onSuccess(cardService.createNewCard(request, userId));
+    return ApiResponse.onSuccess(cardService.createNewCard(request, userId, cardImageFile));
   }
+
 
   @GetMapping("/{cardId}")
   @Operation(summary = "카드 상세 조회 (홈화면에서)", description = "카드 ID를 기준으로 상세 정보를 조회하는 API")

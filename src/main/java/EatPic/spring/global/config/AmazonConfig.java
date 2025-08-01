@@ -28,6 +28,18 @@ public class AmazonConfig {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    // 추가: 버킷 이름 프로퍼티 주입
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    // 추가: userProfile 디렉토리 path
+    @Value("${cloud.aws.s3.path.userProfile}")
+    private String userProfilePath;
+
+    // 추가: newcard 디렉토리 path
+    @Value("${cloud.aws.s3.path.newcard}")
+    private String newcardPath;
+
     @PostConstruct
     public void init() {
         this.awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
