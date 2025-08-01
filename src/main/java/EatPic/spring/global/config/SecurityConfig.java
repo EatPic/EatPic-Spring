@@ -34,7 +34,7 @@ public class SecurityConfig {
                 // CORS 비활성화 (필요 시 활성화 방법도 추가 가능)
                 // .cors(AbstractHttpConfigurer::disable)
 
-                // CORS 활성화
+                // Spring Security에서 CORS 활성화
                 .cors(Customizer.withDefaults())
 
                 // 폼 로그인 비활성화
