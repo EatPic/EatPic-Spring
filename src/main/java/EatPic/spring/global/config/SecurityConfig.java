@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     //private final CorsConfig corsConfig;
@@ -41,6 +43,8 @@ public class SecurityConfig {
                                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                         // 인증 없이 허용할 경로
                                         .requestMatchers("/api/**").permitAll()
+                                        // ADMIN 권한
+                                        .requestMatchers("/admin/**").hasRole("ADMIN")
                                         // 그 외 모든 요청은 모두 인증 필요
                                         .anyRequest().authenticated());
         //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
