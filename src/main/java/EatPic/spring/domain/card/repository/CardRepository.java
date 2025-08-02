@@ -40,4 +40,5 @@ public interface CardRepository extends JpaRepository<Card, Long> {
   Slice<Card> findByIsDeletedFalseAndUserIdAndCreatedAtAfterOrderByIdDesc(Long userId, LocalDateTime sevenDaysAgo, Pageable pageable);
   Slice<Card> findByIsDeletedFalseAndUserIdAndCreatedAtAfterAndIdLessThanOrderByIdDesc(Long userId, LocalDateTime sevenDaysAgo, Long cursor, Pageable pageable);
 
+  boolean existsByUserAndCreatedAtBetweenAndMeal(User user, LocalDateTime start, LocalDateTime end, Meal meal);
 }

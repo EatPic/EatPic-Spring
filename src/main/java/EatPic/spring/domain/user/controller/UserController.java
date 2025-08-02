@@ -3,6 +3,7 @@ package EatPic.spring.domain.user.controller;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
+import EatPic.spring.domain.user.service.UserBadgeService;
 import EatPic.spring.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final UserBadgeService userBadgeService;
 
     // 회원 가입 요청
     @PostMapping("/signup")
@@ -27,6 +29,9 @@ public class UserController {
     public ResponseEntity<SignupResponseDTO> signup(@Valid @RequestBody SignupRequestDTO request) {
 
         User savedUser = userService.signup(request);
+
+        userBadgeService.initializeUserBadges(savedUser);
+
 
         SignupResponseDTO response = SignupResponseDTO.builder()
                 .userId(savedUser.getId())

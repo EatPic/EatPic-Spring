@@ -40,4 +40,16 @@ public class UserBadge extends BaseEntity {
     // 뱃지 획득 여부
     @Column(name = "is_achieved", nullable = false)
     private boolean isAchieved = false;     // default: false
+
+    public void updateCurrentValue(int currentValue) {
+        this.currentValue = currentValue;
+    }
+
+    public void updateProgressRate(int progressRate) {
+        this.progressRate = progressRate;
+    }
+
+    public void updateAchieved(boolean achieved) {
+        isAchieved = achieved;
+    }
 }
