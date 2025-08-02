@@ -40,7 +40,7 @@ jobs:
 
       ## create application.yml
       - name: make application.yml
-        if: contains(github.ref, 'main')
+        if: contains(github.ref, 'main') || contains(github.ref, 'refs/pull/')
         run: |
           mkdir -p ./src/main/resources
           cd ./src/main/resources

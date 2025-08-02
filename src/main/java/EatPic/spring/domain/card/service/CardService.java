@@ -16,4 +16,5 @@ public interface CardService {
   void deleteCard(Long cardId, Long userId);
   List<TodayCardResponse> getTodayCards(Long userId);
   CardDetailResponse updateCard(Long cardId, Long userId, CardUpdateRequest request);
+  CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(Long userId, int size, Long cursor);
 }

@@ -27,8 +27,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -195,5 +200,48 @@ public class CardServiceImpl implements CardService {
         );
         // 수정 후 최신 데이터로 응답
         return CardConverter.toCardDetailResponse(card, null); // nextCardId는 수정 시점에는 null로
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(Long userId, int size, Long cursor) {
+
+        Slice<Card> cardSlice;
+        Pageable pageable = PageRequest.of(0, size);
+        if(userId == null) { // 전체 선택
+            if (cursor == null) {
+                cardSlice = cardRepository.findByIsDeletedFalseAndIsSharedTrueOrderByIdDesc(pageable);
+            } else {
+                cardSlice = cardRepository.findByIsDeletedFalseAndIsSharedTrueAndIdLessThanOrderByIdDesc(cursor, pageable);
+            }
+        }else if(userId == 1L){ // 내 피드 조회 todo: 로그인 유저로
+            // 전체 기록
+            if(cursor == null){
+                cardSlice = cardRepository.findByIsDeletedFalseAndUserIdOrderByIdDesc(userId,pageable);
+            }else{
+                cardSlice = cardRepository.findByIsDeletedFalseAndIsSharedTrueAndUserIdAndIdLessThanOrderByIdDesc(userId,cursor,pageable);
+            }
+        }else{ // 선택한 사용자
+            //최근 7일 기록
+            LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);
+            if(cursor == null){
+                cardSlice = cardRepository.findByIsDeletedFalseAndUserIdAndCreatedAtAfterOrderByIdDesc(
+                        userId, sevenDaysAgo, pageable);
+            } else {
+                cardSlice = cardRepository.findByIsDeletedFalseAndUserIdAndCreatedAtAfterAndIdLessThanOrderByIdDesc(
+                        userId, sevenDaysAgo, cursor, pageable);
+            }
+            if(cardSlice.isEmpty()){
+                throw new ExceptionHandler(NO_RECENT_CARDS);
+            }
+        }
+        if(cardSlice.isEmpty()){
+            throw new ExceptionHandler(CARD_NOT_FOUND);
+        }
+        List<CardFeedResponse> feedList = cardSlice.stream()
+                .map(card -> getCardFeed(card.getId(),userId))
+                .toList();
+
+        return CardConverter.toPagedCardFeedResponseDTto(userId,cardSlice,feedList);
     }
 }
