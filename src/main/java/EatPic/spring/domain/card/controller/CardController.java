@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -62,7 +63,6 @@ public class CardController {
     Long userId = 1L;
     return ApiResponse.onSuccess(cardService.createNewCard(request, userId, cardImageFile));
   }
-
 
   @GetMapping("/{cardId}")
   @Operation(summary = "카드 상세 조회 (홈화면에서)", description = "카드 ID를 기준으로 상세 정보를 조회하는 API")
