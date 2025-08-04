@@ -1,5 +1,6 @@
 package EatPic.spring.domain.badge.service;
 
+
 import EatPic.spring.domain.badge.entity.Badge;
 import EatPic.spring.domain.badge.entity.ConditionType;
 import EatPic.spring.domain.badge.repository.BadgeRepository;

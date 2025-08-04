@@ -9,6 +9,7 @@ import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.user.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.util.List;
 
 public interface CardService {

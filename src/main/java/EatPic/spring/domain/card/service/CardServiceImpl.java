@@ -21,6 +21,7 @@ import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserBadgeService;
 import EatPic.spring.global.aws.s3.AmazonS3Manager;
+import EatPic.spring.domain.user.service.UserBadgeService;
 import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.GeneralException;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
@@ -134,7 +135,6 @@ public class CardServiceImpl implements CardService {
 
             userBadgeService.checkAndAssignBadges(user, ConditionType.FULL_DAY_MEALS, 1);
         }
-
 
         log.info("새 카드 생성 완료 - ID: {}", savedCard.getId());
         return CardResponse.CreateCardResponse.builder()
