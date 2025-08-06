@@ -211,6 +211,20 @@ public class CardResponse {
     private List<CardFeedResponse> cardFeedList;
   }
 
+  @Builder
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Schema(title = "RecommendCardResponse: 추천 카드 응답 dto")
+  public static class RecommendCardResponse {
+    @Schema(description = "카드 ID", example = "12")
+    private Long cardId;
+
+    @Schema(description = "카드 이미지 URL", example = "https://cdn.eatpic.com/cards/12.jpg")
+    private String cardImageUrl;
+
+  }
+
 
 
 }
