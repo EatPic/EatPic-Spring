@@ -8,6 +8,7 @@ import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest
 import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.RecommendCardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.entity.Meal;
@@ -25,6 +26,7 @@ import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -282,5 +284,21 @@ public class CardServiceImpl implements CardService {
                 .toList();
 
         return CardConverter.toPagedCardFeedResponseDTto(userId,cardSlice,feedList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RecommendCardResponse> getRecommendedCardPreviews() {
+        List<Card> cards = cardRepository.findCardsWithReactionCountOver1();
+
+        // 랜덤 셔플 후 최대 10개 추출
+        Collections.shuffle(cards);
+        return cards.stream()
+            .limit(10)
+            .map(card -> new RecommendCardResponse(
+                card.getId(),
+                card.getCardImageUrl() // 첫 이미지 URL 가져오는 메서드 필요
+            ))
+            .toList();
     }
 }
