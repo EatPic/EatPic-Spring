@@ -91,23 +91,39 @@ public class CardServiceImpl implements CardService {
         Card savedCard = cardRepository.save(newcard);
 
         // 뱃지 획득 부분 처리
+
+        // 1. 한끼했당, 7. 피드요정 뱃지 처리
         userBadgeService.checkAndAssignBadges(user, ConditionType.CARD_UPLOAD, 1);
+
+        // 4. 맛집왕 뱃지 처리 (위치 포함 여부 확인)
         if (savedCard.hasLocation()) {
             userBadgeService.checkAndAssignBadges(user, ConditionType.LOCATION_INCLUDED, 1);
         }
+
+        // 3. 혼밥러 뱃지 처리 (혼밥 해시태그 포함 여부 확인)
         if (savedCard.containsHashtag("혼밥")) {
             userBadgeService.checkAndAssignBadges(user, ConditionType.HASHTAG_USAGE_ALONE, 1);
         }
+
+        // 6. 공유잼 뱃지 처리 (레시피 포함 여부 확인)
         if (savedCard.hasRecipeUrl()) {
             userBadgeService.checkAndAssignBadges(user, ConditionType.RECIPE_SHARED, 1);
         }
-        // 카드 저장 이후, 해당 날짜 기준 유저의 카드 3끼 여부 확인
+
+        // 2. 삼시세끼 뱃지 처리 (카드 저장 이후, 해당 날짜 기준 유저의 카드 3끼 여부 확인)
         if (cardRepository.existsByUserAndCreatedAtBetweenAndMeal(user, startOfDay, endOfDay, Meal.BREAKFAST) &&
             cardRepository.existsByUserAndCreatedAtBetweenAndMeal(user, startOfDay, endOfDay, Meal.LUNCH) &&
             cardRepository.existsByUserAndCreatedAtBetweenAndMeal(user, startOfDay, endOfDay, Meal.DINNER)) {
 
             userBadgeService.checkAndAssignBadges(user, ConditionType.FULL_DAY_MEALS, 1);
         }
+
+        // 8. 일주완료 뱃지 처리
+        userBadgeService.checkAndAssignBadges(user, ConditionType.CONSECUTIVE_DAYS, 1);
+        // 9. 한달러 뱃지 처리
+        userBadgeService.checkAndAssignBadges(user, ConditionType.WEEKLY_DAYS, 1);
+
+
 
         log.info("새 카드 생성 완료 - ID: {}", savedCard.getId());
         return CardResponse.CreateCardResponse.builder()
