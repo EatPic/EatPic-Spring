@@ -83,6 +83,10 @@ public class CardController {
     }
 
     Long userId = 1L;
+
+    if (cardImageFile == null || cardImageFile.isEmpty()) {
+      throw new GeneralException(ErrorStatus.IMAGE_REQUIRED);
+    }
     CardResponse.CreateCardResponse response = cardService.createNewCard(request, userId, cardImageFile);
     return ApiResponse.onSuccess(response);
   }

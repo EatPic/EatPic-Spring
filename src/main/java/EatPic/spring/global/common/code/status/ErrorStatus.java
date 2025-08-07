@@ -42,6 +42,7 @@ public enum ErrorStatus implements BaseErrorCode {
     NO_RECENT_CARDS(HttpStatus.NOT_FOUND,"CARD_004","최근 7일간 작성된 피드가 없습니다,"),
     ALREADY_BOOKMARKED(HttpStatus.CONFLICT, "CARD_006", "이미 저장된 카드입니다."),
     BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_005", "카드를 저장한 기록이 없습니다"),
+    IMAGE_REQUIRED(HttpStatus.BAD_REQUEST, "CARD_007", "카드에 이미지를 첨부해주세요."),
    
 
     // 댓글 관련 응답
