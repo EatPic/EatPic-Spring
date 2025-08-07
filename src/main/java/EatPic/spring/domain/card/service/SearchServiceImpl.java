@@ -60,7 +60,7 @@ public class SearchServiceImpl implements SearchService {
 
         // 검색 결과가 없으면 예외 발생
         if (users.isEmpty()) {
-            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND); // ErrorStatus에 NO_RESULTS_FOUND 추가 필요
+            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND);
         }
 
         List<SearchResponseDTO.GetAccountResponseDto> result = users.getContent().stream()
@@ -72,5 +72,26 @@ public class SearchServiceImpl implements SearchService {
 
         return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
 
+    }
+
+    // 검색범위가 유저가 팔로우한 사용자인 경우에서 계정 검색
+    @Override
+    public SearchResponseDTO.GetAccountListResponseDto getAccountInFollow(String query, int limit, Long cursor, Long userId) {
+        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
+        // loginUserId가 팔로우한 사람 중에서, query 조건으로
+        Slice<User> users = userRepository.searchAccountInFollow(query, cursor, pageable, userId);
+
+        if (users.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND);
+        }
+
+        List<SearchResponseDTO.GetAccountResponseDto> result = users.getContent().stream()
+                .map(UserConverter::toAccountDto)
+                .toList();
+
+        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getUserId();
+        boolean hasNext = users.hasNext();
+
+        return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
     }
 }
