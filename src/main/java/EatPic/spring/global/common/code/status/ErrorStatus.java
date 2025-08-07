@@ -48,6 +48,9 @@ public enum ErrorStatus implements BaseErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_001", "해당 댓글은 존재하지 않는 댓글입니다."),
     CURSOR_NOT_FOUND(HttpStatus.BAD_REQUEST, "COMMENT_002", "유효하지 않은 커서입니다."),
 
+    // s3 사진 첨부 에러
+    FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_001", "파일 업로드에 실패했습니다."),
+
     // 유저 관련 응답
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_001", "해당 유저는 존재하지 않는 유저입니다."),
     CARD_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "USER_005", "해당 카드를 삭제할 권한이 없습니다.");

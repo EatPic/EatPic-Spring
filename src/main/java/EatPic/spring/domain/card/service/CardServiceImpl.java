@@ -47,8 +47,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
-import static EatPic.spring.global.common.code.status.ErrorStatus.*;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -99,7 +97,14 @@ public class CardServiceImpl implements CardService {
             String keyName = "newcards/" + uuid + "_" + cardImageFile.getOriginalFilename();
 
             // S3 업로드
-            cardImageUrl = s3Manager.uploadFile(keyName, cardImageFile);
+            try {
+                // S3 업로드 시 예외 발생 가능성 있음, try-catch로 처리
+                cardImageUrl = s3Manager.uploadFile(keyName, cardImageFile);
+            } catch (Exception e) {
+                log.error("S3 파일 업로드 실패", e);
+                // 적절한 커스텀 예외 또는 공통 예외로 감싸서 던짐
+                throw new GeneralException(ErrorStatus.FILE_UPLOAD_FAILED);
+            }
         }
 
         // Card 엔티티에 이미지 URL 포함하여 생성
