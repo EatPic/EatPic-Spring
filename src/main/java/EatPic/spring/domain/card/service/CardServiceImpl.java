@@ -15,7 +15,9 @@ import EatPic.spring.domain.card.entity.Meal;
 import EatPic.spring.domain.card.mapping.CardHashtag;
 import EatPic.spring.domain.card.repository.CardHashtagRepository;
 import EatPic.spring.domain.card.repository.CardRepository;
+import EatPic.spring.domain.card.repository.HashtagRepository;
 import EatPic.spring.domain.comment.repository.CommentRepository;
+import EatPic.spring.domain.hashtag.entity.Hashtag;
 import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.user.entity.User;
@@ -52,6 +54,30 @@ public class CardServiceImpl implements CardService {
     private final CommentRepository commentRepository;
     private final BookmarkRepository bookmarkRepository;
     private final UserBadgeService userBadgeService;
+    private final HashtagRepository hashtagRepository;
+
+    private void connectHashtagsToCard(Card card, List<String> hashtags, User user) {
+        if (hashtags == null || hashtags.isEmpty()) return;
+        for (String hashtagName : hashtags) {
+            // ① 이미 존재하는 해시태그 찾기
+            Hashtag hashtag = hashtagRepository.findByHashtagName(hashtagName)
+                    .orElseGet(() -> {
+                        // ② 없으면 새로 생성 & 저장
+                        Hashtag newHashtag = Hashtag.builder()
+                                .hashtagName(hashtagName)
+                                .user(user)
+                                .build();
+                        return hashtagRepository.save(newHashtag);
+                    });
+
+            // ③ CardHashtag 저장
+            CardHashtag cardHashtag = CardHashtag.builder()
+                    .card(card)
+                    .hashtag(hashtag)
+                    .build();
+            cardHashtagRepository.save(cardHashtag);
+        }
+    }
 
 
     @Override
@@ -91,6 +117,9 @@ public class CardServiceImpl implements CardService {
                 .build();
 
         Card savedCard = cardRepository.save(newcard);
+
+        // 1. 해시태그 연결 (추가)
+        connectHashtagsToCard(newcard, request.getHashtags(), user);
 
         // 뱃지 획득 부분 처리
 

@@ -3,6 +3,7 @@ package EatPic.spring.domain.card.dto.request;
 import EatPic.spring.domain.card.entity.Meal;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class CardCreateRequest {
     private String memo;                // 메모
     private String recipe;              // 레시피 내용
     private Meal meal;                // 식사 종류 (breakfast, dinner, lunch, snack)
+    private List<String> hashtags; // 사용자가 선택/생성한 해시태그 목록 (이름 기준)
   }
 
   @Builder
