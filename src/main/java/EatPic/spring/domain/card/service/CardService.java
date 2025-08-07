@@ -5,6 +5,7 @@ import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest
 import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.RecommendCardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.user.entity.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,4 +21,5 @@ public interface CardService {
   List<TodayCardResponse> getTodayCards(Long userId);
   CardDetailResponse updateCard(Long cardId, Long userId, CardUpdateRequest request);
   CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(Long userId, int size, Long cursor);
+  List<RecommendCardResponse> getRecommendedCardPreviews();
 }

@@ -6,6 +6,7 @@ import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.RecommendCardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
@@ -136,6 +137,13 @@ public class CardController {
                                                                      @RequestParam(required = false) Long cursor,
                                                                      @RequestParam(defaultValue = "15") int size) {
     return ApiResponse.onSuccess(cardService.getCardFeedByCursor(userId,size,cursor));
+  }
+
+
+  @Operation(summary = "추천 픽카드 조회", description = "홈화면 진입 시 추천 픽카드 최대 10개를 조회합니다.")
+  @GetMapping("/recommended-cards")
+  public ApiResponse<List<RecommendCardResponse>> getRecommendedCards() {
+    return ApiResponse.onSuccess(cardService.getRecommendedCardPreviews());
   }
 
 
