@@ -27,5 +27,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, ReactionId> 
     Optional<Reaction> findByCardIdAndUserId(Long cardId, Long userId);
     int countByCardId(Long cardId);
 
+    long countByCardAndReactionType(Card card, ReactionType reactionType);
+
 
 }

@@ -41,4 +41,16 @@ public interface CardRepository extends JpaRepository<Card, Long> {
   Slice<Card> findByIsDeletedFalseAndUserIdAndCreatedAtAfterAndIdLessThanOrderByIdDesc(Long userId, LocalDateTime sevenDaysAgo, Long cursor, Pageable pageable);
 
   boolean existsByUserAndCreatedAtBetweenAndMeal(User user, LocalDateTime start, LocalDateTime end, Meal meal);
+
+  boolean existsByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
+
+  List<Card> findByUser(User user);
+
+  @Query("""
+    SELECT c FROM Card c
+    JOIN Reaction r ON r.card = c
+    GROUP BY c
+    HAVING COUNT(r) >= 1
+""")
+  List<Card> findCardsWithReactionCountOver1();  //초기 테스트로 1개로 수정 (기존은 100개)
 }
