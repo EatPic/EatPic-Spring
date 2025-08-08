@@ -41,17 +41,16 @@ public class SearchController {
         SearchResponseDTO.GetAccountListResponseDto result = searchService.getAccountInAll(query, limit, cursor);
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
-//
-    @Operation(summary = "검색범위가 유저가 팔로우한 사용자인 경우에서 계정 검색", description = "팔로우 - 계정 검색 api (nameId로 검색합니다.)")
+
+    @Operation(summary = "검색범위가 유저가 팔로우한 사용자인 경우에서 계정 검색", description = "팔로우 - 계정 검색 api")
     @GetMapping("/user-follow/account")
     public ApiResponse<SearchResponseDTO.GetAccountListResponseDto> searchAccountInFollow(
             @RequestParam(value = "query") String query,
             @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
             @RequestParam(value = "cursor", required = false) Long cursor
-            // 유저 관련 처리는 추후에..
     ) {
-        Long userId = 1L;       // 아직 유저 처리가 안돼서 임의로 해두었습니다.
-        SearchResponseDTO.GetAccountListResponseDto result = searchService.getAccountInFollow(userId, query, limit, cursor);
+        Long userId = 1L;
+        SearchResponseDTO.GetAccountListResponseDto result = searchService.getAccountInFollow(query, limit, cursor, userId);
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
 //

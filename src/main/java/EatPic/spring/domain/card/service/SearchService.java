@@ -6,4 +6,5 @@ public interface SearchService {
     SearchResponseDTO.GetCardListResponseDto getAllCards(int limit, Long cursor);
     SearchResponseDTO.GetAccountListResponseDto getAccountInFollow(Long userId, String query, int limit, Long cursor);
     SearchResponseDTO.GetAccountListResponseDto getAccountInAll(String query, int limit, Long cursor);
+    SearchResponseDTO.GetAccountListResponseDto getAccountInFollow(String query, int limit, Long cursor, Long userId);
 }
