@@ -48,11 +48,14 @@ public class SearchController {
 //
 //    }
 //
-//    @Operation(summary = "검색 범위가 전체인 경우에서 해시태그 검색", description = "전체 - 해시태그 검색 api")
-//    @GetMapping("")
-//    public ResponseEntity<String> searchHashtagInAll() {
-//
-//    }
+    @Operation(summary = "검색 범위가 전체인 경우에서 해시태그 검색", description = "전체 - 해시태그 검색 api")
+    @GetMapping("")
+    public ResponseEntity<String> searchHashtagInAll(
+            @RequestParam(value = "query") String query,
+            @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
+            @RequestParam(value = "cursor", required = false) Long cursor) {
+
+    }
 //
 //    @Operation(summary = "검색범위가 유저가 팔로우한 사용자인 경우에서 해시태그 검색", description = "팔로우 - 해시태그 검색 api")
 //    @GetMapping("")
