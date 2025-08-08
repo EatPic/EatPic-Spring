@@ -35,7 +35,6 @@ public class CardConverter {
                 .isShared(request.getIsShared())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
-                .cardImageUrl(request.getCardImageUrl())
                 .recipeUrl(request.getRecipeUrl())
                 .memo(request.getMemo())
                 .recipe(request.getRecipe())

@@ -3,6 +3,7 @@ package EatPic.spring.domain.card.repository;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.entity.Meal;
 import EatPic.spring.domain.user.entity.User;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

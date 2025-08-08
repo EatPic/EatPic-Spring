@@ -9,11 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,7 +27,6 @@ public class UserController {
         User savedUser = userService.signup(request);
 
         userBadgeService.initializeUserBadges(savedUser);
-
 
         SignupResponseDTO response = SignupResponseDTO.builder()
                 .userId(savedUser.getId())

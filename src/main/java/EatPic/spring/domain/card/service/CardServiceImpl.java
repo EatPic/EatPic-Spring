@@ -23,7 +23,10 @@ import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserBadgeService;
+import EatPic.spring.global.aws.s3.AmazonS3Manager;
+import EatPic.spring.domain.user.service.UserBadgeService;
 import EatPic.spring.global.common.code.status.ErrorStatus;
+import EatPic.spring.global.common.exception.GeneralException;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,14 +34,20 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.core.parameters.P;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
@@ -79,10 +88,13 @@ public class CardServiceImpl implements CardService {
         }
     }
 
+    // s3 설정
+    private final AmazonS3Manager s3Manager;
+
 
     @Override
     @Transactional
-    public CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, Long userId) {
+    public CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, Long userId, MultipartFile cardImageFile) {
 
         // 아직 유저 관련 처리 안했음
         User user = userRepository.findUserById(userId);
@@ -104,11 +116,31 @@ public class CardServiceImpl implements CardService {
             throw new ExceptionHandler(ErrorStatus.DUPLICATE_MEAL_CARD);
         }
 
-        Card newcard = Card.builder()
+        // S3 업로드 로직 추가: 이미지 파일이 존재하면 UUID 생성 및 업로드 처리
+        String cardImageUrl = null;
+        if (cardImageFile != null && !cardImageFile.isEmpty()) {
+            String uuid = UUID.randomUUID().toString();
+
+            // keyName 예: newcards/{uuid}_{원본파일명} 형태로 생성
+            String keyName = "newcards/" + uuid + "_" + cardImageFile.getOriginalFilename();
+
+            // S3 업로드
+            try {
+                // S3 업로드 시 예외 발생 가능성 있음, try-catch로 처리
+                cardImageUrl = s3Manager.uploadFile(keyName, cardImageFile);
+            } catch (Exception e) {
+                log.error("S3 파일 업로드 실패", e);
+                // 적절한 커스텀 예외 또는 공통 예외로 감싸서 던짐
+                throw new GeneralException(ErrorStatus.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        // Card 엔티티에 이미지 URL 포함하여 생성
+        Card newCard = Card.builder()
                 .isShared(request.getIsShared())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
-                .cardImageUrl(request.getCardImageUrl())
+                .cardImageUrl(cardImageUrl)  // S3 업로드 후 URL 세팅
                 .recipeUrl(request.getRecipeUrl())
                 .memo(request.getMemo())
                 .recipe(request.getRecipe())
@@ -116,7 +148,7 @@ public class CardServiceImpl implements CardService {
                 .user(user)
                 .build();
 
-        Card savedCard = cardRepository.save(newcard);
+        Card savedCard = cardRepository.save(newCard);
 
         // 1. 해시태그 연결 (추가)
         connectHashtagsToCard(newcard, request.getHashtags(), user);
