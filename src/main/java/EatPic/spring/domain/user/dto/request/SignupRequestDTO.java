@@ -1,6 +1,7 @@
 package EatPic.spring.domain.user.dto.request;
 
 
+import EatPic.spring.domain.user.entity.Role;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignupRequestDTO {
+    @NotNull
+    Role role;
 
     @NotBlank
     @Email
@@ -43,5 +46,7 @@ public class SignupRequestDTO {
     @AssertTrue(message = "개인정보 처리방침에 동의해야 합니다.")
     private Boolean privacyPolicyAgreed;       // (필수) 개인정보 처리방침
 
-    private Boolean marketingAgreed;            // (선택) 마케팅 수신 동의
+    private Boolean marketingAgreed;           // (선택) 마케팅 수신 동의
+
+    private Boolean notificationAgreed;        // (선택) 알림 수신 동의
 }

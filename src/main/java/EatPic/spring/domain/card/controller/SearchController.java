@@ -53,7 +53,7 @@ public class SearchController {
         SearchResponseDTO.GetAccountListResponseDto result = searchService.getAccountInFollow(query, limit, cursor, userId);
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
-
+//
 //    @Operation(summary = "검색 범위가 전체인 경우에서 해시태그 검색", description = "전체 - 해시태그 검색 api")
 //    @GetMapping("")
 //    public ResponseEntity<String> searchHashtagInAll() {
