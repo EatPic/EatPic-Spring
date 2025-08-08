@@ -65,10 +65,15 @@ public class SearchController {
 //    public ResponseEntity<String> searchHashtagInFollow() {
 //
 //    }
-//
-//    @Operation(summary = "해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회", description = "팔로우 - 해시태그 검색 api")
-//    @GetMapping("")
-//    public ResponseEntity<String> getCardsByHashtag() {
-//
-//    }
+
+    @Operation(summary = "해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회", description = "해시태그 선택 시 카드 조회")
+    @GetMapping("/all/hashtag-cards")
+    public ApiResponse<SearchResponseDTO.GetCardListResponseDto> getCardsByHashtag(
+            @RequestParam("hashtagId") Long hashtagId,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(value = "cursor", required = false) Long cursor
+    ) {
+        var result = searchService.getCardsByHashtag(hashtagId, limit, cursor);
+        return ApiResponse.onSuccess(result);
+    }
 }
