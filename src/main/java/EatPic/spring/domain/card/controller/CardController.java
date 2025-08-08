@@ -13,6 +13,10 @@ import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.CardService;
 import EatPic.spring.domain.comment.dto.CommentResponseDTO;
 import EatPic.spring.global.common.ApiResponse;
+import EatPic.spring.global.common.code.status.ErrorStatus;
+import EatPic.spring.global.common.exception.GeneralException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,8 +26,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,13 +60,35 @@ public class CardController {
   }
 
   //픽카드 생성하기 부분에서 같은 날짜에, 같은 mealtype으로 픽카드 등록되지 않도록 수정해야함
-  @PostMapping("")
-  @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
+//  @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//  @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
+//  public ApiResponse<CreateCardResponse> createCard(
+//          @RequestPart(value = "request") @Valid CardCreateRequest.CreateCardRequest request,
+//          @RequestPart(value = "cardImageFile", required = false) MultipartFile cardImageFile) {
+//    Long userId = 1L;
+//    return ApiResponse.onSuccess(cardService.createNewCard(request, userId, cardImageFile));
+//  }
+
+  @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ApiResponse<CreateCardResponse> createCard(
-      @Valid @RequestBody CardCreateRequest.CreateCardRequest request) {
+          @RequestParam("request") String requestJson,
+          @RequestPart(value = "cardImageFile", required = false) MultipartFile cardImageFile) {
+
+    CardCreateRequest.CreateCardRequest request;
+    try {
+      ObjectMapper objectMapper = new ObjectMapper();
+      request = objectMapper.readValue(requestJson, CardCreateRequest.CreateCardRequest.class);
+    } catch (JsonProcessingException e) {
+      throw new GeneralException(ErrorStatus.REQUEST_BODY_INVALID);
+    }
+
     Long userId = 1L;
 
-    return ApiResponse.onSuccess(cardService.createNewCard(request, userId));
+    if (cardImageFile == null || cardImageFile.isEmpty()) {
+      throw new GeneralException(ErrorStatus.IMAGE_REQUIRED);
+    }
+    CardResponse.CreateCardResponse response = cardService.createNewCard(request, userId, cardImageFile);
+    return ApiResponse.onSuccess(response);
   }
 
   @GetMapping("/{cardId}")

@@ -73,4 +73,26 @@ public class SearchServiceImpl implements SearchService {
         return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
 
     }
+
+    @Override
+    public SearchResponseDTO.GetAccountListResponseDto getAccountInFollow(Long userId, String query, int limit, Long cursor) {
+        // 유저 관련 처리는 이후에...
+        // 페이징 처리 하기
+        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
+        Slice<User> users = userRepository.searchAccountInAll(query, cursor, pageable);
+
+        // 검색 결과가 없으면 예외 발생
+        if (users.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND); // ErrorStatus에 NO_RESULTS_FOUND 추가 필요
+        }
+
+        List<SearchResponseDTO.GetAccountResponseDto> result = users.getContent().stream()
+                .map(UserConverter::toAccountDto)
+                .toList();
+
+        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getUserId();
+        boolean hasNext = users.hasNext();
+
+        return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
+    }
 }
