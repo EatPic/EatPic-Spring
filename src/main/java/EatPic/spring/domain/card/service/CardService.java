@@ -8,10 +8,13 @@ import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.RecommendCardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.user.entity.User;
+import org.springframework.web.multipart.MultipartFile;
+
+
 import java.util.List;
 
 public interface CardService {
-  CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, Long userId);
+  CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, Long userId, MultipartFile cardImageFile);
   CardDetailResponse getCardDetail(Long cardId, Long userId);
   CardFeedResponse getCardFeed(Long cardId, Long userId);
   void deleteCard(Long cardId, Long userId);

@@ -4,6 +4,7 @@ import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
+import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.mapping.UserBlock;
@@ -70,4 +71,12 @@ public class UserConverter {
                 .targetUserId(userBlock.getBlockedUser().getId())
                 .build();
     }
+
+//    public static User toUser(SignupRequestDTO request) {
+//        return User.builder()
+//                .email(request.getEmail())
+//                .password(request.getPassword())
+//                .role(request.getRole())
+//                .build();
+//    }
 }

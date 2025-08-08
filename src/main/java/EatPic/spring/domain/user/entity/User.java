@@ -30,6 +30,9 @@ public class User extends BaseEntity {
     @Column(name = "password", length = 255, nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
+
     // 유저 아이디
     @Column(name = "name_id", length = 100, nullable = false)
     @Size(min = 5, message = "5자 이상")
@@ -68,6 +71,9 @@ public class User extends BaseEntity {
 
     @Column(name = "marketing_agreed", nullable = false)
     private Boolean marketingAgreed;
+
+    @Column(name = "notification_agreed", nullable = false)
+    private Boolean notificationAgreed;
 
     @Column(name = "last_notification_check_at", nullable = true)
     private LocalDateTime lastNotificationCheckAt;
