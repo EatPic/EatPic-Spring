@@ -55,7 +55,7 @@ public class SearchController {
     }
 
     @Operation(summary = "검색 범위가 전체인 경우에서 해시태그 검색", description = "전체 - 해시태그 검색 api")
-    @GetMapping("/all/hashtag")
+    @GetMapping("/all/hashtag-search")
     public ApiResponse<SearchResponseDTO.GetHashtagListResponseDto> searchHashtagInAll(
             @RequestParam(value = "query") String query,
             @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
