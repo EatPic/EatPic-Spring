@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CardHashtagRepository extends JpaRepository<CardHashtag, Long> {
 
   List<CardHashtag> findAllByCardId(Long cardId);
-
   List<CardHashtag> findByCard(Card card);
+
+  List<CardHashtag> findByHashtag(Hashtag hashtag);      // Hashtag 객체
+  List<CardHashtag> findByHashtagId(Long hashtagId);      // Hashtag의 PK값
 }
