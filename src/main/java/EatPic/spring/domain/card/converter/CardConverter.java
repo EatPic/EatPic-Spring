@@ -10,6 +10,7 @@ import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.mapping.CardHashtag;
+import EatPic.spring.domain.hashtag.entity.Hashtag;
 import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.user.entity.User;
 import org.springframework.data.domain.Slice;
@@ -125,6 +126,14 @@ public class CardConverter {
                 .hasNext(cardSlice.hasNext())
                 .nextCursor(cardSlice.hasNext() ? cardSlice.getContent().get(cardSlice.getContent().size() - 1).getId() : null)
                 .cardFeedList(feedList)
+                .build();
+    }
+
+    public static SearchResponseDTO.GetHashtagResponseDto toHashtagDto(Hashtag hashtag, long cardCount) {
+        return SearchResponseDTO.GetHashtagResponseDto.builder()
+                .hashtagId(hashtag.getId())
+                .hashtagName(hashtag.getHashtagName())
+                .card_count(cardCount)
                 .build();
     }
 }
