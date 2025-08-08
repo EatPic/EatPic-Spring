@@ -60,16 +60,8 @@ public class CardController {
   }
 
   //픽카드 생성하기 부분에서 같은 날짜에, 같은 mealtype으로 픽카드 등록되지 않도록 수정해야함
-//  @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//  @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
-//  public ApiResponse<CreateCardResponse> createCard(
-//          @RequestPart(value = "request") @Valid CardCreateRequest.CreateCardRequest request,
-//          @RequestPart(value = "cardImageFile", required = false) MultipartFile cardImageFile) {
-//    Long userId = 1L;
-//    return ApiResponse.onSuccess(cardService.createNewCard(request, userId, cardImageFile));
-//  }
-
   @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
   public ApiResponse<CreateCardResponse> createCard(
           @RequestParam("request") String requestJson,
           @RequestPart(value = "cardImageFile", required = false) MultipartFile cardImageFile) {
