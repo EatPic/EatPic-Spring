@@ -151,7 +151,7 @@ public class CardServiceImpl implements CardService {
         Card savedCard = cardRepository.save(newCard);
 
         // 1. 해시태그 연결 (추가)
-        connectHashtagsToCard(newcard, request.getHashtags(), user);
+        connectHashtagsToCard(newCard, request.getHashtags(), user);
 
         // 뱃지 획득 부분 처리
 
