@@ -71,12 +71,4 @@ public class UserConverter {
                 .targetUserId(userBlock.getBlockedUser().getId())
                 .build();
     }
-
-//    public static User toUser(SignupRequestDTO request) {
-//        return User.builder()
-//                .email(request.getEmail())
-//                .password(request.getPassword())
-//                .role(request.getRole())
-//                .build();
-//    }
 }

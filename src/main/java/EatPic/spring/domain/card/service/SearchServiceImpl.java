@@ -82,12 +82,6 @@ public class SearchServiceImpl implements SearchService {
     // 검색범위가 유저가 팔로우한 사용자인 경우에서 계정 검색
     @Override
     public SearchResponseDTO.GetAccountListResponseDto getAccountInFollow(String query, int limit, Long cursor, Long userId) {
-        // 팔로우한 유저 목록 조회
-        List<Long> followingUserIds = userFollowRepository.findFollowingUserIds(userId);
-        if (followingUserIds == null || followingUserIds.isEmpty()) {
-            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND); // 팔로잉한 유저가 없는 경우
-        }
-
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         // loginUserId가 팔로우한 사람 중에서, query 조건으로
         Slice<User> users = userRepository.searchAccountInFollow(query, cursor, pageable, userId);
@@ -105,6 +99,30 @@ public class SearchServiceImpl implements SearchService {
 
         return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
 
+    }
+
+    // 검색범위가 전체인 경우 해시태그 검색
+    @Override
+    public SearchResponseDTO.GetHashtagListResponseDto getHashtagInAll(String query, int limit, Long cursor) {
+        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
+        Slice<Hashtag> hashtags = hashtagRepository.searchHashtagInAll("%" + query + "%", cursor, pageable);
+
+        List<SearchResponseDTO.GetHashtagResponseDto> result = hashtags.getContent().stream()
+                .map(hashtag -> CardConverter.toHashtagDto(
+                        hashtag,
+                        cardRepository.countCardsByHashtag(hashtag.getId())
+                ))
+                .filter(dto -> dto.getCard_count() > 0)  // 카드가 없는 해시태그는 제외
+                .toList();
+
+        if (result.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND);
+
+        }
+        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getHashtagId();
+        boolean hasNext = hashtags.hasNext();
+
+        return new SearchResponseDTO.GetHashtagListResponseDto(result, nextCursor, result.size(), hasNext);
     }
 
     // 유저가 팔로우한 사용자인 경우에서 해시태그 검색
