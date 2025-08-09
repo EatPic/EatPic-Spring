@@ -2,6 +2,7 @@ package EatPic.spring.domain.card.repository;
 
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.entity.Meal;
+import EatPic.spring.domain.card.mapping.CardHashtag;
 import EatPic.spring.domain.user.entity.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,4 +55,16 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     HAVING COUNT(r) >= 1
 """)
   List<Card> findCardsWithReactionCountOver1();  //초기 테스트로 1개로 수정 (기존은 100개)
+
+  @Query("""
+    SELECT COUNT(c)
+    FROM CardHashtag ch
+    JOIN ch.card c
+    WHERE ch.hashtag.id = :hashtagId
+      AND c.isDeleted = false
+      AND c.isShared = true
+""")
+  Long countCardsByHashtag(@Param("hashtagId") Long hashtagId);
+
+
 }

@@ -4,7 +4,9 @@ import EatPic.spring.domain.card.converter.CardConverter;
 import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
+import EatPic.spring.domain.card.repository.HashtagRepository;
 import EatPic.spring.domain.comment.repository.CommentRepository;
+import EatPic.spring.domain.hashtag.entity.Hashtag;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.entity.User;
@@ -27,6 +29,7 @@ public class SearchServiceImpl implements SearchService {
     private final CommentRepository commentRepository;
     private final ReactionRepository reactionRepository;
     private final UserRepository userRepository;
+    private final HashtagRepository hashtagRepository;
 
     // 탐색 탭에서 모든 유저 리스트 조회
     @Override
@@ -96,25 +99,29 @@ public class SearchServiceImpl implements SearchService {
 
     }
 
+    // 검색범위가 전체인 경우 해시태그 검색
     @Override
-    public SearchResponseDTO.GetAccountListResponseDto getAccountInFollow(Long userId, String query, int limit, Long cursor) {
-        // 유저 관련 처리는 이후에...
-        // 페이징 처리 하기
+    public SearchResponseDTO.GetHashtagListResponseDto getHashtagInAll(String query, int limit, Long cursor) {
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
-        Slice<User> users = userRepository.searchAccountInAll(query, cursor, pageable);
+        Slice<Hashtag> hashtags = hashtagRepository.searchHashtagInAll("%" + query + "%", cursor, pageable);
 
-        // 검색 결과가 없으면 예외 발생
-        if (users.isEmpty()) {
-            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND); // ErrorStatus에 NO_RESULTS_FOUND 추가 필요
-        }
-
-        List<SearchResponseDTO.GetAccountResponseDto> result = users.getContent().stream()
-                .map(UserConverter::toAccountDto)
+        List<SearchResponseDTO.GetHashtagResponseDto> result = hashtags.getContent().stream()
+                .map(hashtag -> CardConverter.toHashtagDto(
+                        hashtag,
+                        cardRepository.countCardsByHashtag(hashtag.getId())
+                ))
+                .filter(dto -> dto.getCard_count() > 0)  // 카드가 없는 해시태그는 제외
                 .toList();
 
-        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getUserId();
-        boolean hasNext = users.hasNext();
+        if (result.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND);
 
-        return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
+        }
+        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getHashtagId();
+        boolean hasNext = hashtags.hasNext();
+
+        return new SearchResponseDTO.GetHashtagListResponseDto(result, nextCursor, result.size(), hasNext);
     }
+
+
 }

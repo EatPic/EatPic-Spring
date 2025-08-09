@@ -1,6 +1,7 @@
 package EatPic.spring.domain.card.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,6 +65,34 @@ public class SearchResponseDTO {
     @AllArgsConstructor
     public static class GetAccountListResponseDto {
         private List<GetAccountResponseDto> accounts;
+        private Long nextCursor;
+        private int size;
+        private boolean hasNext;
+    }
+
+    // 탐색하기 검색창에서 검색 범위가 전체일 때 해시태그 검색하기 (해시태그 하나 ver)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetHashtagResponseDto {
+        @JsonProperty("hashtag_id")
+        private Long hashtagId;
+
+        @JsonProperty("hashtag_name")
+        private String hashtagName;
+
+        @JsonProperty("card_count")
+        private Long card_count;
+    }
+
+    // 탐색하기 검색창에서 검색 범위가 전체일 때 해시태그 검색하기 (해시태그 여러 개 리스트로..)
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetHashtagListResponseDto {
+        private List<GetHashtagResponseDto> hashtags;
         private Long nextCursor;
         private int size;
         private boolean hasNext;

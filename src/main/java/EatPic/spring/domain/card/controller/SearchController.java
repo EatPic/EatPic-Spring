@@ -53,12 +53,18 @@ public class SearchController {
         SearchResponseDTO.GetAccountListResponseDto result = searchService.getAccountInFollow(query, limit, cursor, userId);
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
-//
-//    @Operation(summary = "검색 범위가 전체인 경우에서 해시태그 검색", description = "전체 - 해시태그 검색 api")
-//    @GetMapping("")
-//    public ResponseEntity<String> searchHashtagInAll() {
-//
-//    }
+
+    @Operation(summary = "검색 범위가 전체인 경우에서 해시태그 검색", description = "전체 - 해시태그 검색 api")
+    @GetMapping("/all/hashtag-search")
+    public ApiResponse<SearchResponseDTO.GetHashtagListResponseDto> searchHashtagInAll(
+            @RequestParam(value = "query") String query,
+            @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
+            @RequestParam(value = "cursor", required = false) Long cursor
+    ) {
+        Long userId = 1L;
+        SearchResponseDTO.GetHashtagListResponseDto result = searchService.getHashtagInAll(query, limit, cursor);
+        return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
+    }
 //
 //    @Operation(summary = "검색범위가 유저가 팔로우한 사용자인 경우에서 해시태그 검색", description = "팔로우 - 해시태그 검색 api")
 //    @GetMapping("")
