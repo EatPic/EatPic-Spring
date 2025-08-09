@@ -127,4 +127,13 @@ public class CardConverter {
                 .cardFeedList(feedList)
                 .build();
     }
+
+//    public static SearchResponseDTO.GetCardResponseDto toCardResponseDto(Card card) {
+//        return new SearchResponseDTO.GetCardResponseDto(
+//                card.getId(),
+//                card.getCardImageUrl(),
+//                card.getCardHashtags(),
+//                card.
+//        );
+//    }
 }

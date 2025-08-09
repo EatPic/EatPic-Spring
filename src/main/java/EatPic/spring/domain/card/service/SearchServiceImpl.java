@@ -118,3 +118,17 @@ public class SearchServiceImpl implements SearchService {
         return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
     }
 }
+
+//    @Override
+//    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(Long hashtagId, int limit, Long cursor) {
+//        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
+//        Slice<Card> cards = cardRepository.findCardsByHashtagId(hashtagId, cursor, pageable);
+//
+//        List<SearchResponseDTO.GetCardResponseDto> content = cards.getContent().stream()
+//                .map(CardConverter::toCardResponseDto)
+//                .toList();
+//
+//        Long nextCursor = content.isEmpty() ? null : content.get(content.size() - 1).getCardId();
+//
+//        return new SearchResponseDTO.GetCardListResponseDto(content, nextCursor, content.size(), cards.hasNext());
+//    }
