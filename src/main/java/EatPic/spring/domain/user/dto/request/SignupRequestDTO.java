@@ -23,11 +23,6 @@ public class SignupRequestDTO {
     @NotBlank(message = "다시 한 번 입력해 주세요.")
     private String passwordConfirm;
 
-    @AssertTrue(message = "비밀번호가 일치하지 않습니다.")
-    public boolean isPasswordMatching() {
-        return password != null && password.equals(passwordConfirm); // password : Not Null
-    }
-
     @NotBlank
     @Size(min = 5, max = 8)
     @Pattern(regexp = "^[a-z0-9]+$", message = "5~8자 사이의 소문자 및 숫자 입력")

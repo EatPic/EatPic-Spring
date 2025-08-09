@@ -28,7 +28,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserBlockRepository userBlockRepository;
     private final UserFollowRepository userFollowRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     public User signup(SignupRequestDTO request) {
@@ -49,6 +48,7 @@ public class UserService {
 
         // 저장
         User user = User.builder()
+                .role(request.getRole())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nameId(request.getNameId())
