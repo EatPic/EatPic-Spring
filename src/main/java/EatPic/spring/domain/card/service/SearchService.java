@@ -7,5 +7,6 @@ public interface SearchService {
     SearchResponseDTO.GetCardListResponseDto getAllCards(int limit, Long cursor);
     SearchResponseDTO.GetAccountListResponseDto getAccountInAll(String query, int limit, Long cursor);
     SearchResponseDTO.GetAccountListResponseDto getAccountInFollow(String query, int limit, Long cursor, Long userId);
+    SearchResponseDTO.GetHashtagListResponseDto getHashtagInFollow(String query, int limit, Long cursor, Long userId);
     SearchResponseDTO.GetHashtagListResponseDto getHashtagInAll(String query, int limit, Long cursor);
 }

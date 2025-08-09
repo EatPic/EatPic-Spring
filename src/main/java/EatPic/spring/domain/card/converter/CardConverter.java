@@ -136,5 +136,4 @@ public class CardConverter {
                 .card_count(cardCount)
                 .build();
     }
-
 }
