@@ -1,6 +1,7 @@
 package EatPic.spring.domain.user.dto.request;
 
 
+import EatPic.spring.domain.user.entity.Role;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignupRequestDTO {
+    @NotNull
+    Role role;
 
     @NotBlank
     @Email
@@ -19,11 +22,6 @@ public class SignupRequestDTO {
 
     @NotBlank(message = "다시 한 번 입력해 주세요.")
     private String passwordConfirm;
-
-    @AssertTrue(message = "비밀번호가 일치하지 않습니다.")
-    public boolean isPasswordMatching() {
-        return password != null && password.equals(passwordConfirm); // password : Not Null
-    }
 
     @NotBlank
     @Size(min = 5, max = 8)

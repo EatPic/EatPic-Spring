@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,7 @@ public class UserServiceImpl implements UserService{
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserBlockRepository userBlockRepository;
+    //private final UserDetailsService userDetailsService;
 
     // 회원가입
     public SignupResponseDTO signup(SignupRequestDTO request) {
@@ -65,7 +67,9 @@ public class UserServiceImpl implements UserService{
                 .nameId(request.getNameId())
                 .nickname(request.getNickname())
                 .marketingAgreed(request.getMarketingAgreed() != null && request.getMarketingAgreed())
+                .notificationAgreed(request.getNotificationAgreed() != null && request.getNotificationAgreed())
                 .userStatus(UserStatus.ACTIVE)
+                .role(request.getRole())
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -77,6 +81,8 @@ public class UserServiceImpl implements UserService{
                 .nameId(savedUser.getNameId())
                 .nickname(savedUser.getNickname())
                 .marketingAgreed(savedUser.getMarketingAgreed())
+                .notificationAgreed(savedUser.getNotificationAgreed())
+                .role(request.getRole())
                 .message("회원가입이 완료되었습니다.")
                 .build();
     }
@@ -93,18 +99,18 @@ public class UserServiceImpl implements UserService{
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user.getEmail(), null,
-                Collections.emptyList()
-                //Collections.singleton(() -> user.getRole().name())
+                //Collections.emptyList()
+                Collections.singleton(() -> user.getRole().name())
         );
 
         String accessToken = jwtTokenProvider.generateToken(authentication);
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
 
-        return UserConverter.toLoginResultDTO(
-                user.getId(),
-                accessToken,
-                refreshToken
-        );
+        // refreshToken -> DB에 저장
+        user.updateRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        return UserConverter.toLoginResultDTO(user, accessToken, refreshToken);
     }
 
     // JWT 사용자 정보 조회

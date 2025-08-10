@@ -13,18 +13,17 @@ import EatPic.spring.global.config.Properties.Constants;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
-    //@Override
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = resolveToken(request);
-
-        if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
+        String token = JwtTokenProvider.resolveToken(request); // 또는 내부 resolveToken
+        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

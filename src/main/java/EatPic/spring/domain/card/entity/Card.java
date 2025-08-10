@@ -65,6 +65,7 @@ public class Card extends BaseEntity {
     private List<CardHashtag> cardHashtags = new ArrayList<>();
 
     // 삭제 여부 (Soft Delete 용도)
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 

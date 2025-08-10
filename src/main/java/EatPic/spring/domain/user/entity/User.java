@@ -8,8 +8,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -30,6 +33,9 @@ public class User extends BaseEntity {
     @Column(name = "password", length = 255, nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
+
     // 유저 아이디
     @Column(name = "name_id", length = 100, nullable = false)
     @Size(min = 5, message = "5자 이상")
@@ -45,8 +51,12 @@ public class User extends BaseEntity {
     @Column(name = "social_type", nullable = true)
     private SocialType socialType;
 
-    @Column(name = "refresh_token", length = 255)
+    @Column(name = "refresh_token", length = 512)
     private String refreshToken;
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
     @Column(name = "profile_image_url", length = 500)
     private String profileImageUrl;
@@ -69,7 +79,8 @@ public class User extends BaseEntity {
     @Column(name = "marketing_agreed", nullable = false)
     private Boolean marketingAgreed;
 
-    // notificationAgreed 추가 -> feature/5 Refacotor 하기
+    @Column(name = "notification_agreed", nullable = false)
+    private Boolean notificationAgreed;
 
     @Column(name = "last_notification_check_at", nullable = true)
     private LocalDateTime lastNotificationCheckAt;

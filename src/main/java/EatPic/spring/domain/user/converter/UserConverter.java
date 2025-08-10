@@ -13,9 +13,11 @@ import org.springframework.data.domain.Page;
 
 public class UserConverter {
 
-    public static LoginResponseDTO toLoginResultDTO(Long userId, String accessToken, String refreshToken) {
+    public static LoginResponseDTO toLoginResultDTO(User user, String accessToken, String refreshToken) {
         return LoginResponseDTO.builder()
-                .userId(userId)
+                .role(user.getRole())
+                .userId(user.getId())
+                .email(user.getEmail())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
