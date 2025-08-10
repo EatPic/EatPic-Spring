@@ -61,6 +61,7 @@ public class Card extends BaseEntity {
     @Column(name = "isShared", nullable = false)
     private Boolean isShared = true;        // default: true
 
+    // 해시태그 관련 리스트
     @OneToMany(mappedBy = "card")
     private List<CardHashtag> cardHashtags = new ArrayList<>();
 
@@ -94,6 +95,22 @@ public class Card extends BaseEntity {
         if (longitude != null) this.longitude = longitude;
         if (locationText != null) this.locationText = locationText;
         if (isShared != null) this.isShared = isShared;
+    }
+
+    // 뱃지 조건 확인용 메서드들
+    public boolean hasLocation() {
+        return this.latitude != null && this.longitude != null;
+    }
+
+    public boolean hasRecipeUrl() {
+        return this.recipeUrl != null;
+    }
+
+    public boolean containsHashtag(String targetTag) {
+        if (this.cardHashtags == null || this.cardHashtags.isEmpty()) return false;
+
+        return cardHashtags.stream()
+            .anyMatch(cardHashtag -> cardHashtag.getHashtag().getHashtagName().equalsIgnoreCase(targetTag));
     }
 
 }

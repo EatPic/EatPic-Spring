@@ -1,8 +1,11 @@
 package EatPic.spring.domain.card.dto.request;
 
 import EatPic.spring.domain.card.entity.Meal;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,15 +22,36 @@ public class CardCreateRequest {
   @NoArgsConstructor
   @AllArgsConstructor
   public static class CreateCardRequest {
-    private Boolean isShared;           // 공개 여부
-    private BigDecimal latitude;            // 위도
-    private BigDecimal longitude;           // 경도
-    private String cardImageUrl;           // 카드 이미지 URL
-    private String recipeUrl;           // 레시피 URL
-    private String memo;                // 메모
-    private String recipe;              // 레시피 내용
-    private Meal meal;                // 식사 종류 (breakfast, dinner, lunch, snack)
+
+    @JsonProperty("isShared")
+    private Boolean isShared;
+
+    @JsonProperty("latitude")
+    private BigDecimal latitude;
+
+    @JsonProperty("longitude")
+    private BigDecimal longitude;
+
+    // 파일(cardImageFile)을 별도로
+//    @JsonProperty("cardImageUrl")
+//    private String cardImageUrl;
+
+    @JsonProperty("recipeUrl")
+    private String recipeUrl;
+
+    @JsonProperty("memo")
+    private String memo;
+
+    @JsonProperty("recipe")
+    private String recipe;
+
+    @JsonProperty("meal")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Meal meal; // Enum 매핑 시 대소문자 주의
+
+    private List<String> hashtags; // 사용자가 선택/생성한 해시태그 목록 (이름 기준)
   }
+
 
   @Builder
   @Getter

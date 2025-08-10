@@ -46,6 +46,13 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+
+	// CORS 설정
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    // S3 설정
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.649'
 }
 
 tasks.named('test') {

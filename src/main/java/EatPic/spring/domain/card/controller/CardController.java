@@ -2,14 +2,21 @@ package EatPic.spring.domain.card.controller;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest;
+import EatPic.spring.domain.card.dto.response.CardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.RecommendCardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.CardService;
+import EatPic.spring.domain.comment.dto.CommentResponseDTO;
 import EatPic.spring.global.common.ApiResponse;
+import EatPic.spring.global.common.code.status.ErrorStatus;
+import EatPic.spring.global.common.exception.GeneralException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,15 +26,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,13 +60,27 @@ public class CardController {
   }
 
   //픽카드 생성하기 부분에서 같은 날짜에, 같은 mealtype으로 픽카드 등록되지 않도록 수정해야함
-  @PostMapping("")
+  @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
   public ApiResponse<CreateCardResponse> createCard(
-      @Valid @RequestBody CardCreateRequest.CreateCardRequest request) {
+          @RequestParam("request") String requestJson,
+          @RequestPart(value = "cardImageFile", required = false) MultipartFile cardImageFile) {
+
+    CardCreateRequest.CreateCardRequest request;
+    try {
+      ObjectMapper objectMapper = new ObjectMapper();
+      request = objectMapper.readValue(requestJson, CardCreateRequest.CreateCardRequest.class);
+    } catch (JsonProcessingException e) {
+      throw new GeneralException(ErrorStatus.REQUEST_BODY_INVALID);
+    }
+
     Long userId = 1L;
 
-    return ApiResponse.onSuccess(cardService.createNewCard(request, userId));
+    if (cardImageFile == null || cardImageFile.isEmpty()) {
+      throw new GeneralException(ErrorStatus.IMAGE_REQUIRED);
+    }
+    CardResponse.CreateCardResponse response = cardService.createNewCard(request, userId, cardImageFile);
+    return ApiResponse.onSuccess(response);
   }
 
   @GetMapping("/{cardId}")
@@ -107,5 +124,23 @@ public class CardController {
     Long userId = 1L;
     return ResponseEntity.ok(ApiResponse.onSuccess(cardService.updateCard(cardId, userId, request)));
   }
+
+  @Operation(
+          summary = "피드 조회",
+          description = "특정 사용자(null이면 전체 사용자)의 최근 7일 동안의 피드를 조회합니다.(전체, 본인의 경우 전체 피드를 조회합니다)")
+  @GetMapping("/community/feeds")
+  public ApiResponse<CardResponse.PagedCardFeedResponseDto> getFeeds(@RequestParam(required = false) Long userId,
+                                                                     @RequestParam(required = false) Long cursor,
+                                                                     @RequestParam(defaultValue = "15") int size) {
+    return ApiResponse.onSuccess(cardService.getCardFeedByCursor(userId,size,cursor));
+  }
+
+
+  @Operation(summary = "추천 픽카드 조회", description = "홈화면 진입 시 추천 픽카드 최대 10개를 조회합니다.")
+  @GetMapping("/recommended-cards")
+  public ApiResponse<List<RecommendCardResponse>> getRecommendedCards() {
+    return ApiResponse.onSuccess(cardService.getRecommendedCardPreviews());
+  }
+
 
 }

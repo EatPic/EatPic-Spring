@@ -40,7 +40,7 @@ jobs:
 
       ## create application.yml
       - name: make application.yml
-        if: contains(github.ref, 'main')
+        if: contains(github.ref, 'main') || contains(github.ref, 'refs/pull/')
         run: |
           mkdir -p ./src/main/resources
           cd ./src/main/resources
@@ -55,8 +55,8 @@ jobs:
       - name: docker build
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/imagename .
-          docker push ${{ secrets.DOCKER_USERNAME }}/imagename:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/eatpic .
+          docker push ${{ secrets.DOCKER_USERNAME }}/eatpic:latest
 
       ## docker deploy
       - name: Deploy to dev

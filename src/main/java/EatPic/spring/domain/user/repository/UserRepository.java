@@ -29,4 +29,17 @@ public interface UserRepository extends JpaRepository<User,Long> {
     """)
     Slice<User> searchAccountInAll(@Param("query") String query,
                                    @Param("cursor") Long cursor, Pageable pageable);
+
+    @Query("""
+    SELECT u
+    FROM User u
+    JOIN UserFollow uf ON u.id = uf.targetUser.id
+    WHERE uf.user.id = :loginUserId
+      AND (:cursor IS NULL OR u.id > :cursor)
+      AND u.nickname LIKE %:query%
+    ORDER BY u.id ASC
+""")
+    Slice<User> searchAccountInFollow(@Param("query") String query,
+                                      @Param("cursor") Long cursor, Pageable pageable, @Param("loginUserId") Long userId);
+
 }

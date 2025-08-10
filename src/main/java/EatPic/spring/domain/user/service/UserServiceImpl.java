@@ -38,9 +38,10 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final UserFollowRepository userFollowRepository;
+    private final UserBlockRepository userBlockRepository;
+    private final UserBadgeService userBadgeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserBlockRepository userBlockRepository;
     //private final UserDetailsService userDetailsService;
 
     // 회원가입
@@ -62,6 +63,7 @@ public class UserServiceImpl implements UserService{
 
         // 저장
         User user = User.builder()
+                .role(request.getRole())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nameId(request.getNameId())
@@ -69,20 +71,22 @@ public class UserServiceImpl implements UserService{
                 .marketingAgreed(request.getMarketingAgreed() != null && request.getMarketingAgreed())
                 .notificationAgreed(request.getNotificationAgreed() != null && request.getNotificationAgreed())
                 .userStatus(UserStatus.ACTIVE)
-                .role(request.getRole())
                 .build();
 
         User savedUser = userRepository.save(user);
 
+        // 뱃지 초기화
+        userBadgeService.initializeUserBadges(savedUser);
+
         // DTO로 응답 생성
         return SignupResponseDTO.builder()
+                .role(request.getRole())
                 .userId(savedUser.getId())
                 .email(savedUser.getEmail())
                 .nameId(savedUser.getNameId())
                 .nickname(savedUser.getNickname())
                 .marketingAgreed(savedUser.getMarketingAgreed())
                 .notificationAgreed(savedUser.getNotificationAgreed())
-                .role(request.getRole())
                 .message("회원가입이 완료되었습니다.")
                 .build();
     }
