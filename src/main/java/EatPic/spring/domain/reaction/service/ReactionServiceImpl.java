@@ -3,6 +3,7 @@ package EatPic.spring.domain.reaction.service;
 import EatPic.spring.domain.badge.entity.ConditionType;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
+import EatPic.spring.domain.reaction.converter.ReactionConverter;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.reaction.entity.ReactionType;
@@ -36,7 +37,7 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
-    public Reaction handleReaction(Long cardId, ReactionType reactionType) {
+    public ReactionResponseDTO.ReactionHandleResponseDto handleReaction(Long cardId, ReactionType reactionType) {
         User user = userRepository.findUserById(1L); //todo: 로그인한 사용자로 수정
         Card card = cardRepository.findCardById(cardId);
 
@@ -50,13 +51,14 @@ public class ReactionServiceImpl implements ReactionService {
             // 사진 장인 뱃지 처리
             User cardAuthor = card.getUser();
             userBadgeService.checkAndAssignBadges(cardAuthor, ConditionType.CARD_LIKES_RECEIVED, 1);
+            return ReactionConverter.reactionToReactionHandleResponseDTO(reaction,"add");
         }else if (!prev.getReactionType().equals(reactionType)) { // 반응을 변경할 경우
             prev.setReactionType(reactionType);
+            return ReactionConverter.reactionToReactionHandleResponseDTO(reaction,"change");
         }else{ // 이전에 작성한 반응을 한 번더 누를 경우(삭제)
             reactionRepository.delete(prev);
+            return ReactionConverter.reactionToReactionHandleResponseDTO(reaction,"delete");
         }
-
-        return reaction;
     }
 
     @Override

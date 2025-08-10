@@ -26,8 +26,7 @@ public class ReactionRestController {
     @PostMapping("/cards/{cardId}/reactions/{reactionType}")
     public ApiResponse<ReactionResponseDTO.ReactionHandleResponseDto> handleReaction(@PathVariable("cardId") Long cardId,
                                                                                      @PathVariable("reactionType") ReactionType reactionType) {
-        Reaction reaction = reactionService.handleReaction(cardId,reactionType);
-        return ApiResponse.onSuccess(ReactionConverter.reactionToReactionHandleResponseDTO(reaction));
+        return ApiResponse.onSuccess(reactionService.handleReaction(cardId,reactionType));
     }
 
     @Operation(
