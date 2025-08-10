@@ -47,14 +47,14 @@ public class SecurityConfig {
                 // HTTP 요청에 대한 권한 설정
                 .authorizeHttpRequests(
                         request -> request
-                                        // Swagger 경로 인증 필요
-                                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                        // 인증 없이 허용할 경로
-                                        .requestMatchers("/api/**").permitAll()
-                                        // ADMIN 권한
-                                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                                        // 그 외 모든 요청은 모두 인증 필요
-                                        .anyRequest().authenticated());
+                                // Swagger 경로 인증 필요
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                // 인증 없이 허용할 경로
+                                .requestMatchers("/api/**").permitAll()
+                                // ADMIN 권한
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                // 그 외 모든 요청은 모두 인증 필요
+                                .anyRequest().authenticated());
         //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

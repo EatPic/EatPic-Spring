@@ -61,6 +61,7 @@ public class Card extends BaseEntity {
     @Column(name = "isShared", nullable = false)
     private Boolean isShared = true;        // default: true
 
+    // 해시태그 관련 리스트
     @OneToMany(mappedBy = "card")
     private List<CardHashtag> cardHashtags = new ArrayList<>();
 

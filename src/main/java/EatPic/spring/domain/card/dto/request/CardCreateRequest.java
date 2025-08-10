@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,6 +48,8 @@ public class CardCreateRequest {
     @JsonProperty("meal")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Meal meal; // Enum 매핑 시 대소문자 주의
+
+    private List<String> hashtags; // 사용자가 선택/생성한 해시태그 목록 (이름 기준)
   }
 
 

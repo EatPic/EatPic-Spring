@@ -29,11 +29,13 @@ public class UserController {
         userBadgeService.initializeUserBadges(savedUser);
 
         SignupResponseDTO response = SignupResponseDTO.builder()
+                .role(savedUser.getRole())
                 .userId(savedUser.getId())
                 .email(savedUser.getEmail())
                 .nameId(savedUser.getNameId())
                 .nickname(savedUser.getNickname())
                 .marketingAgreed(savedUser.getMarketingAgreed())
+                .notificationAgreed(savedUser.getNotificationAgreed())
                 .message("회원가입이 완료되었습니다.")
                 .build();
 
