@@ -77,19 +77,6 @@ public class SearchController {
         SearchResponseDTO.GetHashtagListResponseDto result = searchService.getHashtagInFollow(query, limit, cursor, userId);
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
-//
-//    @Operation(summary = "해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회", description = "팔로우 - 해시태그 검색 api")
-//    @GetMapping("")
-//    public ResponseEntity<String> getCardsByHashtag() {
-//
-//    }
-//    }
-//
-//    @Operation(summary = "검색범위가 유저가 팔로우한 사용자인 경우에서 해시태그 검색", description = "팔로우 - 해시태그 검색 api")
-//    @GetMapping("")
-//    public ResponseEntity<String> searchHashtagInFollow() {
-//
-//    }
 
     @Operation(summary = "해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회", description = "해시태그 선택 시 카드 조회")
     @GetMapping("/all/hashtag-cards")
