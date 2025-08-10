@@ -19,6 +19,7 @@ public class ReactionResponseDTO {
         private long cardId;
         private long userId;
         ReactionType reactionType;
+        private String status;
     }
 
     @Getter
