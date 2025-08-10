@@ -18,3 +18,4 @@ public class SignupResponseDTO {
     private Boolean notificationAgreed;  // 알림 수신 동의 여부
     private String message;              // 예: "회원가입이 완료되었습니다."
 }
+

@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorStatus implements BaseErrorCode {
-
     // 기본 에러
     _BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON_400", "잘못된 요청입니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON_401", "인증이 필요합니다."),
@@ -36,6 +35,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 카드 관련 응답
     CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_001", "해당 카드는 존재하지 않는 카드입니다."),
+
     // 같은 날짜에 같은 meal 중복 에러
     DUPLICATE_MEAL_CARD(HttpStatus.CONFLICT, "CARD_002", "이미 같은 날짜와 같은 식사 유형의 카드가 존재합니다."),
     CARD_UPDATE_FORBIDDEN(HttpStatus.FORBIDDEN, "CARD_003", "해당 카드를 수정할 수 있는 권한이 없습니다."),
@@ -43,7 +43,6 @@ public enum ErrorStatus implements BaseErrorCode {
     ALREADY_BOOKMARKED(HttpStatus.CONFLICT, "CARD_006", "이미 저장된 카드입니다."),
     BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "CARD_005", "카드를 저장한 기록이 없습니다"),
     IMAGE_REQUIRED(HttpStatus.BAD_REQUEST, "CARD_007", "카드에 이미지를 첨부해주세요."),
-   
 
     // 댓글 관련 응답
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_001", "해당 댓글은 존재하지 않는 댓글입니다."),
@@ -54,7 +53,12 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 유저 관련 응답
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_001", "해당 유저는 존재하지 않는 유저입니다."),
-    CARD_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "USER_005", "해당 카드를 삭제할 권한이 없습니다.");
+    CARD_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "USER_005", "해당 카드를 삭제할 권한이 없습니다."),
+    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_404", "사용자가 없습니다."),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "USER_401", "비밀번호가 불일치합니다."),
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST, "USER_403", "유효하지 않은 토큰입니다."),
+    DUPLICATE_JOIN_REQUEST(HttpStatus.BAD_REQUEST, "USER_400", "해당 이메일로 이미 가입된 사용자가 존재합니다.");
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
