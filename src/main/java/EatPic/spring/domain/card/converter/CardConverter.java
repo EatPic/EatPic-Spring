@@ -145,4 +145,14 @@ public class CardConverter {
                 .card_count(cardCount)
                 .build();
     }
+
+
+    public static SearchResponseDTO.GetCardResponseDto toCardResponseDto(Card card) {
+        return new SearchResponseDTO.GetCardResponseDto(
+                card.getId(),
+                card.getTitle(),
+                card.getImageUrl(),
+                card.getUser().getNickname()
+        );
+    }
 }

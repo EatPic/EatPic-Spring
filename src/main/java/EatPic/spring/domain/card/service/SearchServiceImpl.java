@@ -155,7 +155,6 @@ public class SearchServiceImpl implements SearchService {
 
         return new SearchResponseDTO.GetHashtagListResponseDto(result, nextCursor, result.size(), hasNext);
     }
-}
 
 //    @Override
 //    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(Long hashtagId, int limit, Long cursor) {
@@ -166,7 +165,29 @@ public class SearchServiceImpl implements SearchService {
 //                .map(CardConverter::toCardResponseDto)
 //                .toList();
 //
-//        Long nextCursor = content.isEmpty() ? null : content.get(content.size() - 1).getCardId();
+//        Long nextCursor = content.size() > limit
+//                ? content.get(limit).getCardId()
+//                : null;
 //
-//        return new SearchResponseDTO.GetCardListResponseDto(content, nextCursor, content.size(), cards.hasNext());
+//        boolean hasNext = content.size() > limit;
+//        if (hasNext) {
+//            content = content.subList(0, limit); // limit+1 로 가져온 마지막 요소는 잘라줌
+//        }
+//
+//        return new SearchResponseDTO.GetCardListResponseDto(content, nextCursor, content.size(), hasNext);
 //    }
+
+    @Override
+    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(Long hashtagId, int limit, Long cursor) {
+        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
+        Slice<Card> cards = cardRepository.findCardsByHashtagId(hashtagId, cursor, pageable);
+
+        List<SearchResponseDTO.GetCardResponseDto> content = cards.getContent().stream()
+                .map(CardConverter::toCardResponseDto)
+                .toList();
+
+        Long nextCursor = content.isEmpty() ? null : content.get(content.size() - 1).getCardId();
+
+        return new SearchResponseDTO.GetCardListResponseDto(content, nextCursor, content.size(), cards.hasNext());
+    }
+}
