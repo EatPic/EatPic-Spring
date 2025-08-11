@@ -20,8 +20,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,17 +32,16 @@ public class UserBadgeService {
   private final BadgeRepository badgeRepository;
   private final CardRepository cardRepository;
   private final ReactionRepository reactionRepository;
-  private final UserService userService;
 
   // 홈화면 뱃지 리스트 조회
-  public List<HomeBadgeResponse> getUserBadgesForHome(HttpServletRequest request, Long userId) {
-    User user = userService.getLoginUser(request); // 로그인 적용할 때 바꾸기!! 인자 User로 받기!
+  public List<HomeBadgeResponse> getUserBadgesForHome(Long userId) {
+    User user = userRepository.findUserById(userId); // 로그인 적용할 때 바꾸기!! 인자 User로 받기!
     List<UserBadge> userBadges = userBadgeRepository.findByUser(user);
     return UserBadgeConverter.toHomeBadgeDTOList(userBadges);
   }
 
-  public BadgeDetailResponseDTO getBadgeDetail(HttpServletRequest request,Long userId, Long userBadgeId) {
-    User user = userService.getLoginUser(request);
+  public BadgeDetailResponseDTO getBadgeDetail(Long userId, Long userBadgeId) {
+    User user = userRepository.findUserById(userId);
     UserBadge userBadge = userBadgeRepository.findByUser_IdAndUserBadgeId(user.getId(), userBadgeId)
         .orElseThrow(() -> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
     return UserBadgeConverter.toBadgeDetailResponse(userBadge);

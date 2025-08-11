@@ -61,7 +61,6 @@ public class CommentRestController {
             description = "댓글이면 답글까지 전체 삭제, 답글이면 해당 답글만 삭제합니다.")
     @DeleteMapping("/{commentId}")
     public ApiResponse<CommentResponseDTO.DeleteCommentResponseDTO> deleteComment(HttpServletRequest request,
-                                                                                  @PathVariable("cardId") Long cardId,
                                                                                   @PathVariable("commentId") Long commentId) {
 
         return ApiResponse.onSuccess(commentService.deleteComments(request,commentId));

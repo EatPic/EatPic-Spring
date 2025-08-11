@@ -28,7 +28,6 @@ import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 @Transactional
 public class BookmarkServiceImpl implements BookmarkService{
     private final BookmarkRepository bookmarkRepository;
-    private final UserRepository userRepository;
     private final CardRepository cardRepository;
     private final UserService userService;
 

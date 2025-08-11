@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService{
     private final UserBadgeService userBadgeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserService userService;
     //private final UserDetailsService userDetailsService;
 
     // 회원가입
@@ -133,7 +132,7 @@ public class UserServiceImpl implements UserService{
     // 팔로잉한 유저의 프로필 아이콘 목록 조회
     @Override
     public UserResponseDTO.UserIconListResponseDto followingUserIconList(HttpServletRequest request,int page, int size) {
-        User user = userService.getLoginUser(request);
+        User user = getLoginUser(request);
         Page<UserFollow> followingPage = userFollowRepository.findByUser(user, PageRequest.of(page, size));
 
         return UserConverter.toUserIconListResponseDto(followingPage);
@@ -142,14 +141,14 @@ public class UserServiceImpl implements UserService{
     // 내 프로필 아이콘 조회
     @Override
     public UserResponseDTO.ProfileDto getMyIcon(HttpServletRequest request) {
-        User me = userService.getLoginUser(request);
+        User me = getLoginUser(request);
         return UserConverter.toProfileDto(me,true);
     }
 
     // 유저 차단
     @Transactional
     public UserResponseDTO.UserBlockResponseDto blockUser(HttpServletRequest request,Long targetUserId) {
-        User user = userService.getLoginUser(request);
+        User user = getLoginUser(request);
         User targetUser = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new ExceptionHandler(USER_NOT_FOUND));
 
