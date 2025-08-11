@@ -29,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
-import static EatPic.spring.global.common.code.status.ErrorStatus.FOLLOW_ALREADY_EXISTS;
-import static EatPic.spring.global.common.code.status.ErrorStatus.USER_NOT_FOUND;
+import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
 @Service
 @RequiredArgsConstructor
