@@ -22,5 +22,5 @@ public interface CardService {
   List<TodayCardResponse> getTodayCards(Long userId);
   CardDetailResponse updateCard(Long cardId, Long userId, CardUpdateRequest request);
   CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(HttpServletRequest request, Long userId, int size, Long cursor);
-  List<RecommendCardResponse> getRecommendedCardPreviews();
+  List<RecommendCardResponse> getRecommendedCardPreviews(Long userId);
 }
