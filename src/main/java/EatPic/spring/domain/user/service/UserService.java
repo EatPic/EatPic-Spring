@@ -15,12 +15,13 @@ public interface UserService {
     LoginResponseDTO loginUser(LoginRequestDTO request);
     UserResponseDTO.UserIconListResponseDto followingUserIconList(HttpServletRequest request, int page, int size);
     UserResponseDTO.ProfileDto getMyIcon(HttpServletRequest request);
-    UserResponseDTO.UserBlockResponseDto blockUser(HttpServletRequest request,Long targetUserId);
+    UserResponseDTO.UserActionResponseDto blockUser(HttpServletRequest request, Long targetUserId);
     boolean isEmailDuplicate(String email);
     boolean isnameIdDuplicate(String nameId);
     // UserQueryService
     UserInfoDTO getUserInfo(HttpServletRequest request);
-
+    UserResponseDTO.UserActionResponseDto followUser(HttpServletRequest request, Long targetUserId);
+    UserResponseDTO.UserActionResponseDto unfollowUser(HttpServletRequest request, Long targetUserId);
     User getLoginUser(HttpServletRequest request);
 }
 

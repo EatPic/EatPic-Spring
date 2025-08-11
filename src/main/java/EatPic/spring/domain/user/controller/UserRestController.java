@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
+@Tag(name = "User", description = "사용자 관련 API")
 public class UserRestController {
     private final UserService userService;
 
@@ -38,8 +39,19 @@ public class UserRestController {
     @Operation(summary = "해당 프로필의 유저를 차단 목록에 추가합니다.")
     @PostMapping("/{userId}/profile/block")
     @Tag(name = "User", description = "사용자 관련 API")
-    public ApiResponse<UserResponseDTO.UserBlockResponseDto> blockUser(HttpServletRequest request,@PathVariable Long userId) {
+    public ApiResponse<UserResponseDTO.UserActionResponseDto> blockUser(HttpServletRequest request, @PathVariable Long userId) {
         return ApiResponse.onSuccess(userService.blockUser(request,userId));
+    }
+
+    @Operation(summary = "팔로잉")
+    @PostMapping("/follow/{userId}")
+    public ApiResponse<UserResponseDTO.UserActionResponseDto> followUser(HttpServletRequest request, @PathVariable Long userId) {
+        return ApiResponse.onSuccess(userService.followUser(request,userId));
+    }
+    @Operation(summary = "팔로잉 취소")
+    @DeleteMapping("/follow/{userId}")
+    public ApiResponse<UserResponseDTO.UserActionResponseDto> unfollowUser(HttpServletRequest request, @PathVariable Long userId) {
+        return ApiResponse.onSuccess(userService.unfollowUser(request,userId));
     }
 
 }
