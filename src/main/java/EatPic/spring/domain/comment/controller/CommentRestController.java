@@ -8,6 +8,7 @@ import EatPic.spring.domain.comment.service.CommentService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -25,9 +26,10 @@ public class CommentRestController {
             summary = "카드 댓글 작성",
             description = "parent_comment_id가 null이면 댓글, non-null이면 답글 입니다.")
     @PostMapping("/{cardId}")
-    public ApiResponse<CommentResponseDTO.WriteCommentResponseDTO> writeComment(@PathVariable("cardId") Long cardId,
+    public ApiResponse<CommentResponseDTO.WriteCommentResponseDTO> writeComment(HttpServletRequest request,
+                                                                                @PathVariable("cardId") Long cardId,
                                                                                 @Valid @RequestBody CommentRequestDTO.WriteCommentDto requestDto) {
-        Comment comment = commentService.writeComment(requestDto,cardId);
+        Comment comment = commentService.writeComment(request,requestDto,cardId);
 
         return ApiResponse.onSuccess(CommentConverter.CommentToWriteCommentResponseDTO(comment));
     }
@@ -58,9 +60,9 @@ public class CommentRestController {
             summary = "카드 댓글 삭제",
             description = "댓글이면 답글까지 전체 삭제, 답글이면 해당 답글만 삭제합니다.")
     @DeleteMapping("/{commentId}")
-    public ApiResponse<CommentResponseDTO.DeleteCommentResponseDTO> deleteComment(@PathVariable("cardId") Long cardId,
+    public ApiResponse<CommentResponseDTO.DeleteCommentResponseDTO> deleteComment(HttpServletRequest request,
                                                                                   @PathVariable("commentId") Long commentId) {
 
-        return ApiResponse.onSuccess(commentService.deleteComments(commentId));
+        return ApiResponse.onSuccess(commentService.deleteComments(request,commentId));
     }
 }

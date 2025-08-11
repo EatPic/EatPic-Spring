@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class CardConverter {
     // 탐색하기에서 모든 픽카드 조회하기 할 때
     public static SearchResponseDTO.GetCardResponseDto toGetCardResponseDto(
-            Card card, Long commentCount, Long reactionCount) {
+            Card card, int commentCount, int reactionCount) {
         return SearchResponseDTO.GetCardResponseDto.builder()
                 .id(card.getId())
                 .cardImageUrl(card.getCardImageUrl())
@@ -126,6 +126,20 @@ public class CardConverter {
                 .hasNext(cardSlice.hasNext())
                 .nextCursor(cardSlice.hasNext() ? cardSlice.getContent().get(cardSlice.getContent().size() - 1).getId() : null)
                 .cardFeedList(feedList)
+                .build();
+    }
+
+    // 해시태그로 검색된 픽카드 리스트 조회
+    public static SearchResponseDTO.GetCardResponseDto toCardResponseDto(
+            Card card,
+            int commentCount,
+            int reactionCount
+    ) {
+        return SearchResponseDTO.GetCardResponseDto.builder()
+                .id(card.getId())
+                .cardImageUrl(card.getCardImageUrl())
+                .commentCount(commentCount)
+                .reactionCount(reactionCount)
                 .build();
     }
 

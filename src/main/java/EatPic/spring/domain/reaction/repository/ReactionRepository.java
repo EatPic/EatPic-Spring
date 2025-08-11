@@ -22,7 +22,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, ReactionId> 
                                               Pageable pageable);
 
     // 반응 개수 세기
-    Long countAllReactionByCard(Card card);
+    int countAllReactionByCard(Card card);
 
     Optional<Reaction> findByCardIdAndUserId(Long cardId, Long userId);
     int countByCardId(Long cardId);

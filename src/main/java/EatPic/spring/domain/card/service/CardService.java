@@ -8,6 +8,7 @@ import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.RecommendCardResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.TodayCardResponse;
 import EatPic.spring.domain.user.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -20,6 +21,6 @@ public interface CardService {
   void deleteCard(Long cardId, Long userId);
   List<TodayCardResponse> getTodayCards(Long userId);
   CardDetailResponse updateCard(Long cardId, Long userId, CardUpdateRequest request);
-  CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(Long userId, int size, Long cursor);
-  List<RecommendCardResponse> getRecommendedCardPreviews();
+  CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(HttpServletRequest request, Long userId, int size, Long cursor);
+  List<RecommendCardResponse> getRecommendedCardPreviews(Long userId);
 }

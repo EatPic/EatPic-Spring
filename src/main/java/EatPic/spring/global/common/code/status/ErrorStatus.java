@@ -60,7 +60,11 @@ public enum ErrorStatus implements BaseErrorCode {
     DUPLICATE_JOIN_REQUEST(HttpStatus.BAD_REQUEST, "USER_006", "해당 이메일로 이미 가입된 사용자가 존재합니다."),
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "USER_007", "이미 사용중인 이메일입니다."),
     DUPLICATE_NAMEID(HttpStatus.BAD_REQUEST, "USER_008", "이미 사용중인 아이디입니다."),
-    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "USER_009", "이미 사용중인 닉네임입니다.");
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "USER_009", "이미 사용중인 닉네임입니다."),
+
+    // 팔로우 관련 응답
+    FOLLOW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "FOLLOW_001", "이미 팔로잉 중입니다"),
+    FOLLOW_NOT_EXISTS(HttpStatus.BAD_REQUEST, "FOLLOW_002", "팔로우 기록이 없습니다");
 
     private final HttpStatus httpStatus;
     private final String code;

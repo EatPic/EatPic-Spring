@@ -7,17 +7,14 @@ import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
 import EatPic.spring.domain.user.dto.response.CheckNicknameResponseDTO;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
-import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.ApiResponse;
-import EatPic.spring.global.common.code.ErrorReasonDTO;
 import EatPic.spring.global.common.code.status.ErrorStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

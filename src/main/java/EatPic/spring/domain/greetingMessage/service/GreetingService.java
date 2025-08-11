@@ -7,6 +7,9 @@ import EatPic.spring.domain.greetingMessage.repository.GreetingMessageRepository
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import java.time.LocalTime;
+
+import EatPic.spring.domain.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +20,12 @@ public class GreetingService {
 
   private final GreetingMessageRepository greetingMessageRepository;
   private final UserRepository userRepository;
+  private final UserService userService;
 
   @Transactional
-  public GreetingResponse getGreeting() {
-    // 임시 사용자 (로그인 구현 전)
-    Long userId = 1L;
-
+  public GreetingResponse getGreeting(HttpServletRequest request) {
     // 사용자 조회
-    User user = userRepository.findById(userId)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+    User user = userService.getLoginUser(request);
 
     // 현재 시간대 계산
     TimeType timeType = getCurrentTimeType();
