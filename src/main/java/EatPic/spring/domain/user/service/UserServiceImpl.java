@@ -41,7 +41,6 @@ public class UserServiceImpl implements UserService{
     private final UserBadgeService userBadgeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    //private final UserDetailsService userDetailsService;
 
     // 회원가입
     public SignupResponseDTO signup(SignupRequestDTO request) {
@@ -176,6 +175,12 @@ public class UserServiceImpl implements UserService{
         return userRepository.existsByNameId(nameId);
     }
 
+
+    // 닉네임 중복 검사
+    public boolean isNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
     @Override
     public User getLoginUser(HttpServletRequest request) {
         Authentication authentication = jwtTokenProvider.extractAuthentication(request);
@@ -213,5 +218,6 @@ public class UserServiceImpl implements UserService{
 
         userFollowRepository.save(follow);
         return UserConverter.toUserActionResponseDto(follow);
+
     }
 }
