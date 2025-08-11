@@ -65,7 +65,7 @@ public class SearchController {
         SearchResponseDTO.GetHashtagListResponseDto result = searchService.getHashtagInAll(query, limit, cursor);
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
-//
+
     @Operation(summary = "검색범위가 유저가 팔로우한 사용자인 경우에서 해시태그 검색", description = "팔로우 - 해시태그 검색 api")
     @GetMapping("/user-follow/hashtag")
     public ApiResponse<SearchResponseDTO.GetHashtagListResponseDto> searchHashtagInFollow(
@@ -81,11 +81,12 @@ public class SearchController {
     @Operation(summary = "해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회", description = "해시태그 선택 시 카드 목록을 커서 페이징으로 조회")
     @GetMapping("/all/hashtag-cards")
     public ApiResponse<SearchResponseDTO.GetCardListResponseDto> getCardsByHashtag(
-            @RequestParam("hashtagId") Long hashtagId,
+            // @RequestParam("hashtagId") Long hashtagId,
+            @RequestParam(value = "hashtag") String hashtag,
             @RequestParam(value = "limit", defaultValue = "10") int limit,
             @RequestParam(value = "cursor", required = false) Long cursor
     ) {
-        SearchResponseDTO.GetCardListResponseDto result = searchService.getCardsByHashtag(hashtagId, limit, cursor);
+        SearchResponseDTO.GetCardListResponseDto result = searchService.getCardsByHashtag(hashtag, limit, cursor);
         return ApiResponse.onSuccess(result);
     }
 }

@@ -66,8 +66,8 @@ public interface CardRepository extends JpaRepository<Card, Long> {
           AND c.isShared = true
         ORDER BY c.id ASC
     """)
-  Slice<Card> findCardsByHashtagId(
-          @Param("hashtagId") Long hashtagId,
+  Slice<Card> findCardsByHashtag(
+          @Param("hashtag") String hashtag,
           @Param("cursor") Long cursor,
           Pageable pageable
   );
@@ -81,6 +81,5 @@ public interface CardRepository extends JpaRepository<Card, Long> {
       AND c.isShared = true
 """)
   Long countCardsByHashtag(@Param("hashtagId") Long hashtagId);
-
 
 }

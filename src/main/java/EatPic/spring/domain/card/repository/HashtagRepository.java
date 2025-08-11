@@ -1,5 +1,6 @@
 package EatPic.spring.domain.card.repository;
 
+import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.hashtag.entity.Hashtag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -42,5 +43,4 @@ public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
             @Param("cursor") Long cursor,
             Pageable pageable
     );
-
 }

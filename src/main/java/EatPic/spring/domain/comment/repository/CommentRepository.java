@@ -18,7 +18,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Slice<Comment> findAllByParentComment(Comment comment, Pageable pageable);
     Slice<Comment> findAllByParentCommentAndIdGreaterThanOrderByIdAsc(Comment parent, Long cursor, Pageable pageable);
     Long countAllByParentComment(Comment comment);
-    Long countAllByCard(Card card);
+    int countAllByCard(Card card);
 
     int countByCardId(Long cardId);
 

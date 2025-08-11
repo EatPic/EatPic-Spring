@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class CardConverter {
     // 탐색하기에서 모든 픽카드 조회하기 할 때
     public static SearchResponseDTO.GetCardResponseDto toGetCardResponseDto(
-            Card card, Long commentCount, Long reactionCount) {
+            Card card, int commentCount, int reactionCount) {
         return SearchResponseDTO.GetCardResponseDto.builder()
                 .id(card.getId())
                 .cardImageUrl(card.getCardImageUrl())
@@ -129,14 +129,19 @@ public class CardConverter {
                 .build();
     }
 
-//    public static SearchResponseDTO.GetCardResponseDto toCardResponseDto(Card card) {
-//        return new SearchResponseDTO.GetCardResponseDto(
-//                card.getId(),
-//                card.getCardImageUrl(),
-//                card.getCardHashtags(),
-//                card.
-//        );
-//    }
+    // 해시태그로 검색된 픽카드 리스트 조회
+    public static SearchResponseDTO.GetCardResponseDto toCardResponseDto(
+            Card card,
+            int commentCount,
+            int reactionCount
+    ) {
+        return SearchResponseDTO.GetCardResponseDto.builder()
+                .id(card.getId())
+                .cardImageUrl(card.getCardImageUrl())
+                .commentCount(commentCount)
+                .reactionCount(reactionCount)
+                .build();
+    }
 
     public static SearchResponseDTO.GetHashtagResponseDto toHashtagDto(Hashtag hashtag, long cardCount) {
         return SearchResponseDTO.GetHashtagResponseDto.builder()
@@ -144,15 +149,5 @@ public class CardConverter {
                 .hashtagName(hashtag.getHashtagName())
                 .card_count(cardCount)
                 .build();
-    }
-
-
-    public static SearchResponseDTO.GetCardResponseDto toCardResponseDto(Card card) {
-        return new SearchResponseDTO.GetCardResponseDto(
-                card.getId(),
-                card.getTitle(),
-                card.getImageUrl(),
-                card.getUser().getNickname()
-        );
     }
 }

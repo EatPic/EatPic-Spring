@@ -86,7 +86,7 @@ public class CardController {
   @GetMapping("/{cardId}")
   @Operation(summary = "카드 상세 조회 (홈화면에서)", description = "카드 ID를 기준으로 상세 정보를 조회하는 API")
   public ApiResponse<CardDetailResponse> getCardDetail(@PathVariable Long cardId) {
-    Long userId = 1L; // 로그인 기능 구현 전 임시 사용자
+    Long userId = 1L; // 로그인 기능 구현 전 임시 사용자 1
     return ApiResponse.onSuccess(cardService.getCardDetail(cardId, userId));
   }
 

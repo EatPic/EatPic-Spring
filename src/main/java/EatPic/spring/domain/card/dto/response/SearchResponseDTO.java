@@ -22,8 +22,8 @@ public class SearchResponseDTO {
         @JsonProperty("card_image_url")
         private String cardImageUrl;
 
-        private Long commentCount;
-        private Long reactionCount;
+        private int commentCount;
+        private int reactionCount;
     }
 
     // 탐색하기 탭에서 전체 픽카드 조회할 때~ (카드 배열이랑 페이지 정보까지)

@@ -156,38 +156,29 @@ public class SearchServiceImpl implements SearchService {
         return new SearchResponseDTO.GetHashtagListResponseDto(result, nextCursor, result.size(), hasNext);
     }
 
-//    @Override
-//    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(Long hashtagId, int limit, Long cursor) {
-//        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
-//        Slice<Card> cards = cardRepository.findCardsByHashtagId(hashtagId, cursor, pageable);
-//
-//        List<SearchResponseDTO.GetCardResponseDto> content = cards.getContent().stream()
-//                .map(CardConverter::toCardResponseDto)
-//                .toList();
-//
-//        Long nextCursor = content.size() > limit
-//                ? content.get(limit).getCardId()
-//                : null;
-//
-//        boolean hasNext = content.size() > limit;
-//        if (hasNext) {
-//            content = content.subList(0, limit); // limit+1 로 가져온 마지막 요소는 잘라줌
-//        }
-//
-//        return new SearchResponseDTO.GetCardListResponseDto(content, nextCursor, content.size(), hasNext);
-//    }
-
+    // 해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회
     @Override
-    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(Long hashtagId, int limit, Long cursor) {
+    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(String hashtag, int limit, Long cursor) {
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
-        Slice<Card> cards = cardRepository.findCardsByHashtagId(hashtagId, cursor, pageable);
+        Slice<Card> cards = cardRepository.findCardsByHashtag(hashtag, cursor, pageable);
 
         List<SearchResponseDTO.GetCardResponseDto> content = cards.getContent().stream()
-                .map(CardConverter::toCardResponseDto)
+                .map(card -> {
+                    int commentCount = commentRepository.countByCardId(card.getId());
+                    int reactionCount = reactionRepository.countByCardId(card.getId());
+                    return CardConverter.toCardResponseDto(card, commentCount, reactionCount);
+                })
                 .toList();
 
-        Long nextCursor = content.isEmpty() ? null : content.get(content.size() - 1).getCardId();
+        Long nextCursor = content.size() > limit
+                ? content.get(limit).getId()
+                : null;
 
-        return new SearchResponseDTO.GetCardListResponseDto(content, nextCursor, content.size(), cards.hasNext());
+        boolean hasNext = content.size() > limit;
+        if (hasNext) {
+            content = content.subList(0, limit); // limit+1 로 가져온 마지막 요소는 잘라줌
+        }
+
+        return new SearchResponseDTO.GetCardListResponseDto(content, nextCursor, content.size(), hasNext);
     }
 }
