@@ -171,4 +171,9 @@ public class UserServiceImpl implements UserService{
     public boolean isnameIdDuplicate(String nameId){
         return userRepository.existsByNameId(nameId);
     }
+
+    // 닉네임 중복 검사
+    public boolean isNicknameDuplicate(String nickname){
+        return userRepository.existsByNickname(nickname);
+    }
 }

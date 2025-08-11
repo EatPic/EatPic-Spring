@@ -17,6 +17,7 @@ public interface UserService {
     UserResponseDTO.UserBlockResponseDto blockUser(Long targetUserId);
     boolean isEmailDuplicate(String email);
     boolean isnameIdDuplicate(String nameId);
+    boolean isNicknameDuplicate(String nickname);
 
     // UserQueryService
     UserInfoDTO getUserInfo(HttpServletRequest request);
