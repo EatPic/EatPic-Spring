@@ -4,10 +4,7 @@ import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
-import EatPic.spring.domain.user.dto.response.CheckEmailResponseDTO;
-import EatPic.spring.domain.user.dto.response.CheckNicknameResponseDTO;
-import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
-import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
+import EatPic.spring.domain.user.dto.response.*;
 import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.ApiResponse;
 import EatPic.spring.global.common.code.status.ErrorStatus;
@@ -70,9 +67,17 @@ public class UserController{
     // 유저 아이디 중복 검사
     @GetMapping("/check-user-id")
     @Operation(summary = "유저 아이디 중복 검사")
-    public ApiResponse<Map<String, Boolean>> checkUserId(@RequestParam String nameId) {
+    public ApiResponse<CheckNameIdResponseDTO> checkUserId(@RequestParam String nameId) {
         boolean isDuplicate = userService.isnameIdDuplicate(nameId);
-        return ApiResponse.onSuccess(Map.of("isDuplicate", isDuplicate));
+
+        if(isDuplicate) {
+            return ApiResponse.onFailure(
+                    ErrorStatus.DUPLICATE_NAMEID.getCode(),
+                    ErrorStatus.DUPLICATE_NAMEID.getMessage(),
+                    UserConverter.toCheckNameIdResponseDTO(nameId, false)
+            );
+        }
+        return ApiResponse.onSuccess(UserConverter.toCheckNameIdResponseDTO(nameId, true));
     }
 
     // 닉네임 중복 검사
