@@ -5,6 +5,7 @@ import EatPic.spring.domain.greetingMessage.service.GreetingService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +23,8 @@ public class GreetingController {
   @Operation(summary = "홈화면 인사말 조회",
       description = "홈화면에 접근할 때, 요청되는 API")
   @GetMapping
-  public ApiResponse<GreetingResponse> getGreeting() {
-    GreetingResponse response = greetingService.getGreeting();
+  public ApiResponse<GreetingResponse> getGreeting(HttpServletRequest request) {
+    GreetingResponse response = greetingService.getGreeting(request);
     return ApiResponse.onSuccess(response);
   }
 

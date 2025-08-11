@@ -10,6 +10,7 @@ import EatPic.spring.domain.reaction.service.ReactionService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,16 +27,18 @@ public class BookmarkController {
             summary = "카드 저장",
             description = "해당 카드를 저장합니다.")
     @PostMapping("/{cardId}")
-    public ApiResponse<BookmarkResponseDTO.BookmarkResponseDto> saveBookmark(@PathVariable("cardId") Long cardId) {
-        return ApiResponse.onSuccess(bookmarkService.saveBookmark(cardId));
+    public ApiResponse<BookmarkResponseDTO.BookmarkResponseDto> saveBookmark(HttpServletRequest request,
+                                                                             @PathVariable("cardId") Long cardId) {
+        return ApiResponse.onSuccess(bookmarkService.saveBookmark(request,cardId));
     }
 
     @Operation(
             summary = "카드 저장 취소",
             description = "해당 카드의 저장을 취소합니다.")
     @DeleteMapping("/{cardId}")
-    public ApiResponse<BookmarkResponseDTO.BookmarkResponseDto> deleteBookmark(@PathVariable("cardId") Long cardId) {
-        return ApiResponse.onSuccess(bookmarkService.deleteBookmark(cardId));
+    public ApiResponse<BookmarkResponseDTO.BookmarkResponseDto> deleteBookmark(HttpServletRequest request,
+                                                                               @PathVariable("cardId") Long cardId) {
+        return ApiResponse.onSuccess(bookmarkService.deleteBookmark(request, cardId));
     }
 
 }

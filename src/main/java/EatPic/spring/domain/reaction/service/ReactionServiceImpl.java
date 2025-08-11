@@ -15,6 +15,8 @@ import EatPic.spring.domain.user.repository.UserBadgeRepository;
 import EatPic.spring.domain.user.repository.UserFollowRepository;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserBadgeService;
+import EatPic.spring.domain.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,15 +32,15 @@ public class ReactionServiceImpl implements ReactionService {
     private final ReactionRepository reactionRepository;
     private final UserFollowRepository userFollowRepository;
     private final UserBadgeService userBadgeService;
-
+    private final UserService userService;
     // findBy~ 자주 사용 -> 하나의 메서드로
     private User getUser(Long userId){
         return userRepository.findUserById(userId);
     }
 
     @Override
-    public ReactionResponseDTO.ReactionHandleResponseDto handleReaction(Long cardId, ReactionType reactionType) {
-        User user = userRepository.findUserById(1L); //todo: 로그인한 사용자로 수정
+    public ReactionResponseDTO.ReactionHandleResponseDto handleReaction(HttpServletRequest request, Long cardId, ReactionType reactionType) {
+        User user = userService.getLoginUser(request);
         Card card = cardRepository.findCardById(cardId);
 
         Reaction reaction = Reaction.builder().user(user).card(card).reactionType(reactionType).build();
@@ -62,8 +64,8 @@ public class ReactionServiceImpl implements ReactionService {
     }
 
     @Override
-    public ReactionResponseDTO.CardReactionUserListDto getCardUsersByReactionType(Long cardId, ReactionType reactionType, Integer page, Integer size){
-        User me = userRepository.findUserById(1L);
+    public ReactionResponseDTO.CardReactionUserListDto getCardUsersByReactionType(HttpServletRequest request,Long cardId, ReactionType reactionType, Integer page, Integer size){
+        User me = userService.getLoginUser(request);
 
         Page<User> userPage = reactionRepository.findUsersByCardAndReactionType(cardId, reactionType, PageRequest.of(page,size));
 
