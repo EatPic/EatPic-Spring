@@ -1,6 +1,7 @@
 package EatPic.spring.domain.user.controller;
 
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
+import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,13 @@ public class UserRestController {
     @Tag(name = "User", description = "사용자 관련 API")
     public ApiResponse<UserResponseDTO.UserBlockResponseDto> blockUser(HttpServletRequest request,@PathVariable Long userId) {
         return ApiResponse.onSuccess(userService.blockUser(request,userId));
+    }
+
+    @Operation(summary = "프로필 이미지 수정", description = "마이페이지에서 본인의 프로필 이미지 수정 API")
+    @PatchMapping("/setting/profile-image")
+    @Tag(name = "User", description = "사용자 프로필 이미지 수정 API")
+    public ApiResponse<UserResponseDTO.ProfileDto> updateUserProfileImage(HttpServletRequest request) {
+        return ApiResponse.onSuccess(userService)
     }
 
 }
