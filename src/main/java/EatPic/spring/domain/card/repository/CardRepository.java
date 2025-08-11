@@ -33,8 +33,25 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 
   List<Card> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
 
-  Slice<Card> findByIsDeletedFalseAndIsSharedTrueOrderByIdDesc(Pageable pageable);
-  Slice<Card> findByIsDeletedFalseAndIsSharedTrueAndIdLessThanOrderByIdDesc(Long cursor, Pageable pageable);
+  @Query("""
+SELECT c
+FROM Card c
+WHERE c.isDeleted = false
+  AND c.isShared = true
+  AND c.user.id <> :loginUserId
+  AND c.user.id NOT IN (
+      SELECT ub.blockedUser.id
+      FROM UserBlock ub
+      WHERE ub.user.id = :loginUserId
+  )
+  AND (:cursor IS NULL OR c.id < :cursor)
+ORDER BY c.id DESC
+""")
+  Slice<Card> findFeedExcludeBlocked(
+          @Param("loginUserId") Long loginUserId,
+          @Param("cursor") Long cursor,
+          Pageable pageable
+  );
 
   Slice<Card> findByIsDeletedFalseAndUserIdOrderByIdDesc(Long userId, Pageable pageable);
   Slice<Card> findByIsDeletedFalseAndIsSharedTrueAndUserIdAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
