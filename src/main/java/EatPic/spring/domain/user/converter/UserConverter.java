@@ -83,10 +83,17 @@ public class UserConverter {
                 .build();
     }
 
-    public static UserResponseDTO.UserBlockResponseDto toUserBlockResponseDto(UserBlock userBlock) {
-        return UserResponseDTO.UserBlockResponseDto.builder()
+    public static UserResponseDTO.UserActionResponseDto toUserActionResponseDto(UserBlock userBlock) {
+        return UserResponseDTO.UserActionResponseDto.builder()
                 .userId(userBlock.getUser().getId())
                 .targetUserId(userBlock.getBlockedUser().getId())
+                .build();
+    }
+
+    public static UserResponseDTO.UserActionResponseDto toUserActionResponseDto(UserFollow userFollow) {
+        return UserResponseDTO.UserActionResponseDto.builder()
+                .userId(userFollow.getUser().getId())
+                .targetUserId(userFollow.getTargetUser().getId())
                 .build();
     }
 }

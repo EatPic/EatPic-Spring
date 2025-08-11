@@ -36,9 +36,11 @@ public class UserResponseDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class UserBlockResponseDto{
+    public static class UserActionResponseDto {
         Long userId;
         Long targetUserId;
     }
+
+
 
 }
