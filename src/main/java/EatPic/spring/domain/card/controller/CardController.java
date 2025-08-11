@@ -12,6 +12,8 @@ import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.CardService;
 import EatPic.spring.domain.comment.dto.CommentResponseDTO;
+import EatPic.spring.domain.user.entity.User;
+import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.ApiResponse;
 import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.GeneralException;
@@ -40,6 +42,7 @@ public class CardController {
 
   private final CardRepository cardRepository;
   private final CardService cardService;
+  private final UserService userService;
 
   @Operation(summary = "해당 카드 메모 보기", description = "특정 카드의 메모 내용을 반환합니다.")
   @GetMapping("/{cardId}/memo")
@@ -85,41 +88,56 @@ public class CardController {
 
   @GetMapping("/{cardId}")
   @Operation(summary = "카드 상세 조회 (홈화면에서)", description = "카드 ID를 기준으로 상세 정보를 조회하는 API")
-  public ApiResponse<CardDetailResponse> getCardDetail(@PathVariable Long cardId) {
-    Long userId = 1L; // 로그인 기능 구현 전 임시 사용자
-    return ApiResponse.onSuccess(cardService.getCardDetail(cardId, userId));
+  public ApiResponse<CardDetailResponse> getCardDetail(
+          HttpServletRequest request,
+          @PathVariable(name = "cardId") Long cardId
+  ) {
+
+    User user = userService.getLoginUser(request);
+    return ApiResponse.onSuccess(cardService.getCardDetail(cardId, user.getId()));
   }
 
   @GetMapping("/{cardId}/feed")
-  @Operation(summary = "카드 1개만 피드 조회 ", description = "카드 1개만 피드로 조회할 때 사용되는 상세 정보를 반환합니다.")
-  public ApiResponse<CardFeedResponse> getCardFeed(@PathVariable Long cardId) {
-    Long userId = 1L; // 추후 인증에서 가져올 예정
-    return ApiResponse.onSuccess(cardService.getCardFeed(cardId, userId));
+  @Operation(
+          summary = "카드 1개만 피드 조회 ",
+          description = "카드 1개만 피드로 조회할 때 사용되는 상세 정보를 반환합니다."
+  )
+  public ApiResponse<CardFeedResponse> getCardFeed(
+          HttpServletRequest request,
+          @Parameter(description = "카드 ID", required = true)
+          @PathVariable(name = "cardId") Long cardId
+
+  ) {
+    User user = userService.getLoginUser(request);
+    return ApiResponse.onSuccess(cardService.getCardFeed(cardId, user.getId()));
   }
+
 
   @DeleteMapping("/{cardId}")
   @Operation(summary = "카드 삭제", description = "카드를 소프트 삭제 처리합니다.")
-  public ApiResponse<Void> deleteCard(@PathVariable Long cardId) {
-    Long userId = 1L; // 로그인 인증 전 임시
-    cardService.deleteCard(cardId, userId);
+  public ApiResponse<Void> deleteCard(
+          HttpServletRequest request,
+          @PathVariable(name = "cardId") Long cardId) {
+    User user = userService.getLoginUser(request);
+    cardService.deleteCard(cardId, user.getId());
     return ApiResponse.onSuccess(null);
   }
 
   @Operation(summary = "오늘의 식사 카드 조회", description = "홈 진입 시, 오늘 등록된 식사 카드들을 조회합니다.")
   @GetMapping("/home/today-cards")
   public ApiResponse<List<TodayCardResponse>> getTodayCards(
-      //@AuthUser User user
+          HttpServletRequest request
   ) {
-    Long userId = 1L;
-    return ApiResponse.onSuccess(cardService.getTodayCards(userId));
+    User user = userService.getLoginUser(request);
+    return ApiResponse.onSuccess(cardService.getTodayCards(user.getId()));
   }
 
   @Operation(summary = "픽카드 수정", description = "카드의 메모, 레시피, 위치 정보 등을 수정합니다.")
   @PutMapping("/api/cards/{cardId}")
   public ResponseEntity<ApiResponse<CardDetailResponse>> updateCard(
-      @Parameter(description = "수정할 카드 ID", example = "12")
-      @PathVariable Long cardId,
-      @RequestBody CardUpdateRequest request)
+          @Parameter(description = "수정할 카드 ID", example = "12")
+          @PathVariable(name = "cardId") Long cardId,
+          @RequestBody CardUpdateRequest request)
   {
     Long userId = 1L;
     return ResponseEntity.ok(ApiResponse.onSuccess(cardService.updateCard(cardId, userId, request)));
@@ -129,18 +147,23 @@ public class CardController {
           summary = "피드 조회",
           description = "특정 사용자(null이면 전체 사용자)의 최근 7일 동안의 피드를 조회합니다.(전체, 본인의 경우 전체 피드를 조회합니다)")
   @GetMapping("/feeds")
-  public ApiResponse<CardResponse.PagedCardFeedResponseDto> getFeeds(HttpServletRequest request,
-                                                                     @RequestParam(required = false) Long userId,
-                                                                     @RequestParam(required = false) Long cursor,
-                                                                     @RequestParam(defaultValue = "15") int size) {
-    return ApiResponse.onSuccess(cardService.getCardFeedByCursor(request,userId,size,cursor));
+  public ApiResponse<CardResponse.PagedCardFeedResponseDto> getFeeds(
+          HttpServletRequest request,
+          @RequestParam(required = false) Long cursor,
+          @RequestParam(defaultValue = "15") int size) {
+
+    User user = userService.getLoginUser(request);
+    return ApiResponse.onSuccess(cardService.getCardFeedByCursor(request,user.getId(),size,cursor));
   }
 
 
   @Operation(summary = "추천 픽카드 조회", description = "홈화면 진입 시 추천 픽카드 최대 10개를 조회합니다.")
   @GetMapping("/recommended-cards")
-  public ApiResponse<List<RecommendCardResponse>> getRecommendedCards() {
-    return ApiResponse.onSuccess(cardService.getRecommendedCardPreviews());
+  public ApiResponse<List<RecommendCardResponse>> getRecommendedCards(
+          HttpServletRequest request
+  ) {
+    User user = userService.getLoginUser(request);
+    return ApiResponse.onSuccess(cardService.getRecommendedCardPreviews(user.getId()));
   }
 
 

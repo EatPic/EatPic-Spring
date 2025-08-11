@@ -354,7 +354,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<RecommendCardResponse> getRecommendedCardPreviews() {
+    public List<RecommendCardResponse> getRecommendedCardPreviews(Long userId) {
         List<Card> cards = cardRepository.findCardsWithReactionCountOver1();
 
         // 랜덤 셔플 후 최대 10개 추출
