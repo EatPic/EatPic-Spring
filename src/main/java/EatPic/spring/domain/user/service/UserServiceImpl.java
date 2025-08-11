@@ -131,8 +131,8 @@ public class UserServiceImpl implements UserService{
 
     // 팔로잉한 유저의 프로필 아이콘 목록 조회
     @Override
-    public UserResponseDTO.UserIconListResponseDto followingUserIconList(Long userId, int page, int size) {
-        User user = userRepository.findUserById(userId);
+    public UserResponseDTO.UserIconListResponseDto followingUserIconList(HttpServletRequest request,int page, int size) {
+        User user = getLoginUser(request);
         Page<UserFollow> followingPage = userFollowRepository.findByUser(user, PageRequest.of(page, size));
 
         return UserConverter.toUserIconListResponseDto(followingPage);
@@ -140,15 +140,15 @@ public class UserServiceImpl implements UserService{
 
     // 내 프로필 아이콘 조회
     @Override
-    public UserResponseDTO.ProfileDto getMyIcon() {
-        User me = userRepository.findUserById(1L);
+    public UserResponseDTO.ProfileDto getMyIcon(HttpServletRequest request) {
+        User me = getLoginUser(request);
         return UserConverter.toProfileDto(me,true);
     }
 
     // 유저 차단
     @Transactional
-    public UserResponseDTO.UserBlockResponseDto blockUser(Long targetUserId) {
-        User user = userRepository.findUserById(1L);
+    public UserResponseDTO.UserBlockResponseDto blockUser(HttpServletRequest request,Long targetUserId) {
+        User user = getLoginUser(request);
         User targetUser = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new ExceptionHandler(USER_NOT_FOUND));
 
@@ -160,5 +160,24 @@ public class UserServiceImpl implements UserService{
         userBlockRepository.save(userBlock);
 
         return UserConverter.toUserBlockResponseDto(userBlock);
+    }
+
+    // 이메일 중복 검사
+    public boolean isEmailDuplicate(String email){
+        return userRepository.existsByEmail(email);
+    }
+
+    // 유저 아이디 중복 검사
+    public boolean isnameIdDuplicate(String nameId){
+        return userRepository.existsByNameId(nameId);
+    }
+
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        Authentication authentication = jwtTokenProvider.extractAuthentication(request);
+        String email = authentication.getName();
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 }

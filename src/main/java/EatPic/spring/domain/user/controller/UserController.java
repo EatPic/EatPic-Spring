@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -44,5 +46,20 @@ public class UserController{
     public ApiResponse<UserInfoDTO> getMyInfo(HttpServletRequest request) {
         return ApiResponse.onSuccess(userService.getUserInfo(request));
     }
-}
 
+    // 이메일 중복 검사
+    @GetMapping("/check-email")
+    @Operation(summary = "이메일 중복 검사")
+    public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
+        boolean isDuplicate = userService.isEmailDuplicate(email);
+        return ResponseEntity.ok(Map.of("isDuplicate", isDuplicate));
+    }
+
+    // 유저 아이디 중복 검사
+    @GetMapping("/check-user-id")
+    @Operation(summary = "유저 아이디 중복 검사")
+    public ResponseEntity<Map<String, Boolean>> checkUserId(@RequestParam String nameId) {
+        boolean isDuplicate = userService.isnameIdDuplicate(nameId);
+        return ResponseEntity.ok(Map.of("isDuplicate", isDuplicate));
+    }
+}

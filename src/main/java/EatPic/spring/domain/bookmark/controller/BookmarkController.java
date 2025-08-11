@@ -10,14 +10,15 @@ import EatPic.spring.domain.reaction.service.ReactionService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/community")
-@Tag(name = "Bookmark", description = "반응 관련 API")
+@RequestMapping("/api/bookmarks")
+@Tag(name = "Bookmark", description = "카드 저장 관련 API")
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
@@ -25,17 +26,19 @@ public class BookmarkController {
     @Operation(
             summary = "카드 저장",
             description = "해당 카드를 저장합니다.")
-    @PostMapping("/cards/{cardId}/bookmark")
-    public ApiResponse<BookmarkResponseDTO.BookmarkResponseDto> saveBookmark(@PathVariable("cardId") Long cardId) {
-        return ApiResponse.onSuccess(bookmarkService.saveBookmark(cardId));
+    @PostMapping("/{cardId}")
+    public ApiResponse<BookmarkResponseDTO.BookmarkResponseDto> saveBookmark(HttpServletRequest request,
+                                                                             @PathVariable("cardId") Long cardId) {
+        return ApiResponse.onSuccess(bookmarkService.saveBookmark(request,cardId));
     }
 
     @Operation(
             summary = "카드 저장 취소",
             description = "해당 카드의 저장을 취소합니다.")
-    @DeleteMapping("/cards/{cardId}/bookmark")
-    public ApiResponse<BookmarkResponseDTO.BookmarkResponseDto> deleteBookmark(@PathVariable("cardId") Long cardId) {
-        return ApiResponse.onSuccess(bookmarkService.deleteBookmark(cardId));
+    @DeleteMapping("/{cardId}")
+    public ApiResponse<BookmarkResponseDTO.BookmarkResponseDto> deleteBookmark(HttpServletRequest request,
+                                                                               @PathVariable("cardId") Long cardId) {
+        return ApiResponse.onSuccess(bookmarkService.deleteBookmark(request, cardId));
     }
 
 }
