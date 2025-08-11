@@ -21,4 +21,6 @@ public interface UserFollowRepository extends JpaRepository<UserFollow,Long> {
         WHERE uf.user.id = :userId
     """)
     List<Long> findFollowingUserIds(@Param("userId") Long userId);
+
+    UserFollow findByUserAndTargetUser(User user, User target);
 }

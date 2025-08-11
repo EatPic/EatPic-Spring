@@ -23,14 +23,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
-import static EatPic.spring.global.common.code.status.ErrorStatus.USER_NOT_FOUND;
+import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,6 @@ public class UserServiceImpl implements UserService{
     private final UserBadgeService userBadgeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    //private final UserDetailsService userDetailsService;
 
     // 회원가입
     public SignupResponseDTO signup(SignupRequestDTO request) {
@@ -147,10 +145,15 @@ public class UserServiceImpl implements UserService{
 
     // 유저 차단
     @Transactional
-    public UserResponseDTO.UserBlockResponseDto blockUser(HttpServletRequest request,Long targetUserId) {
+    public UserResponseDTO.UserActionResponseDto blockUser(HttpServletRequest request, Long targetUserId) {
         User user = getLoginUser(request);
         User targetUser = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new ExceptionHandler(USER_NOT_FOUND));
+
+        if(userFollowRepository.existsByUserAndTargetUser(user,targetUser)){
+            UserFollow userFollow = UserFollow.builder().user(user).targetUser(targetUser).build();
+            userFollowRepository.delete(userFollow);
+        }
 
         UserBlock userBlock = UserBlock.builder()
                 .user(user)
@@ -159,7 +162,7 @@ public class UserServiceImpl implements UserService{
 
         userBlockRepository.save(userBlock);
 
-        return UserConverter.toUserBlockResponseDto(userBlock);
+        return UserConverter.toUserActionResponseDto(userBlock);
     }
 
     // 이메일 중복 검사
@@ -172,6 +175,12 @@ public class UserServiceImpl implements UserService{
         return userRepository.existsByNameId(nameId);
     }
 
+
+    // 닉네임 중복 검사
+    public boolean isNicknameDuplicate(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
     @Override
     public User getLoginUser(HttpServletRequest request) {
         Authentication authentication = jwtTokenProvider.extractAuthentication(request);
@@ -179,5 +188,36 @@ public class UserServiceImpl implements UserService{
 
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    }
+
+    @Override
+    public UserResponseDTO.UserActionResponseDto unfollowUser(HttpServletRequest request, Long targetUserId) {
+        User user = getLoginUser(request);
+        User target = userRepository.findUserById(targetUserId);
+
+        UserFollow prev = userFollowRepository.findByUserAndTargetUser(user,target);
+        if(prev == null) {
+            throw new ExceptionHandler(ErrorStatus.FOLLOW_NOT_EXISTS);
+        }
+
+        UserFollow follow = UserFollow.builder().user(user).targetUser(target).build();
+        userFollowRepository.delete(follow);
+        return UserConverter.toUserActionResponseDto(follow);
+    }
+
+    @Override
+    public UserResponseDTO.UserActionResponseDto followUser(HttpServletRequest request, Long targetUserId) {
+        User user = getLoginUser(request);
+        User target = userRepository.findUserById(targetUserId);
+
+        UserFollow prev = userFollowRepository.findByUserAndTargetUser(user,target);
+        UserFollow follow = UserFollow.builder().user(user).targetUser(target).build();
+        if(prev!=null && prev.getTargetUser().getId().equals(targetUserId)) {
+            throw new ExceptionHandler(FOLLOW_ALREADY_EXISTS);
+        }
+
+        userFollowRepository.save(follow);
+        return UserConverter.toUserActionResponseDto(follow);
+
     }
 }

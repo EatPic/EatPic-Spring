@@ -4,6 +4,8 @@ import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.user.dto.UserInfoDTO;
+import EatPic.spring.domain.user.dto.response.CheckEmailResponseDTO;
+import EatPic.spring.domain.user.dto.response.CheckNicknameResponseDTO;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
@@ -83,10 +85,34 @@ public class UserConverter {
                 .build();
     }
 
-    public static UserResponseDTO.UserBlockResponseDto toUserBlockResponseDto(UserBlock userBlock) {
-        return UserResponseDTO.UserBlockResponseDto.builder()
+    public static UserResponseDTO.UserActionResponseDto toUserActionResponseDto(UserBlock userBlock) {
+        return UserResponseDTO.UserActionResponseDto.builder()
                 .userId(userBlock.getUser().getId())
                 .targetUserId(userBlock.getBlockedUser().getId())
                 .build();
     }
+
+    public static UserResponseDTO.UserActionResponseDto toUserActionResponseDto(UserFollow userFollow) {
+        return UserResponseDTO.UserActionResponseDto.builder()
+                .userId(userFollow.getUser().getId())
+                .targetUserId(userFollow.getTargetUser().getId())
+                .build();
+    }
+
+    // 유저 아이디 중복 검사
+    public static CheckEmailResponseDTO toCheckEmailResponseDTO(String email, boolean isDuplicate){
+        return CheckEmailResponseDTO.builder()
+                .email(email)
+                .isDuplicate(isDuplicate)
+                .build();
+    }
+
+    // 닉네임 중복 검사
+    public static CheckNicknameResponseDTO toCheckNicknameResponseDto(String nickname, boolean isDuplicate) {
+        return CheckNicknameResponseDTO.builder()
+                .nickname(nickname)
+                .isDuplicate(isDuplicate)
+                .build();
+    }
+
 }
