@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckNicknameResponseDTO {
-    private String nickname;
+public class CheckEmailResponseDTO {
+    private String email;
     private boolean isDuplicate;
 }

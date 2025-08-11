@@ -4,6 +4,7 @@ import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.user.dto.UserInfoDTO;
+import EatPic.spring.domain.user.dto.response.CheckEmailResponseDTO;
 import EatPic.spring.domain.user.dto.response.CheckNicknameResponseDTO;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
@@ -98,6 +99,14 @@ public class UserConverter {
                 .build();
     }
 
+    // 유저 아이디 중복 검사
+    public static CheckEmailResponseDTO toCheckEmailResponseDTO(String email, boolean isDuplicate){
+        return CheckEmailResponseDTO.builder()
+                .email(email)
+                .isDuplicate(isDuplicate)
+                .build();
+    }
+
     // 닉네임 중복 검사
     public static CheckNicknameResponseDTO toCheckNicknameResponseDto(String nickname, boolean isDuplicate) {
         return CheckNicknameResponseDTO.builder()
@@ -105,4 +114,5 @@ public class UserConverter {
                 .isDuplicate(isDuplicate)
                 .build();
     }
+
 }

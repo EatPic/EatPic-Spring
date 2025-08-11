@@ -4,6 +4,7 @@ import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.response.CheckEmailResponseDTO;
 import EatPic.spring.domain.user.dto.response.CheckNicknameResponseDTO;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
@@ -53,9 +54,17 @@ public class UserController{
     // 이메일 중복 검사
     @GetMapping("/check-email")
     @Operation(summary = "이메일 중복 검사")
-    public ApiResponse<Map<String, Boolean>> checkEmail(@RequestParam String email) {
+    public ApiResponse<CheckEmailResponseDTO> checkEmail(@RequestParam String email) {
         boolean isDuplicate = userService.isEmailDuplicate(email);
-        return ApiResponse.onSuccess(Map.of("isDuplicate", isDuplicate));
+
+        if(isDuplicate) {
+            return ApiResponse.onFailure(
+                    ErrorStatus.DUPLICATE_EMAIL.getCode(),
+                    ErrorStatus.DUPLICATE_EMAIL.getMessage(),
+                    UserConverter.toCheckEmailResponseDTO(email, false)
+            );
+        }
+        return ApiResponse.onSuccess(UserConverter.toCheckEmailResponseDTO(email, true));
     }
 
     // 유저 아이디 중복 검사
@@ -79,7 +88,6 @@ public class UserController{
                     UserConverter.toCheckNicknameResponseDto(nickname, false)
             );
         }
-
         return ApiResponse.onSuccess(UserConverter.toCheckNicknameResponseDto(nickname, true));
     }
 }
