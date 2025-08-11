@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserRestController {
     private final UserService userService;
 
     @Operation(
             summary = "커뮤니티 상단 팔로잉 유저 아이콘",
             description = "페이지는 1부터 시작하며 total은 전체 항목 수 입니다.")
-    @GetMapping("/users")
+    @GetMapping("/icons/following")
     @Tag(name = "User", description = "사용자 관련 API")
     public ApiResponse<UserResponseDTO.UserIconListResponseDto> followingUsers(
                                       @RequestParam(defaultValue = "1") int page,
@@ -28,7 +28,7 @@ public class UserRestController {
 
     @Operation(
             summary = "커뮤니티 상단 팔로잉 유저 아이콘(나)")
-    @GetMapping("/me")
+    @GetMapping("/icons/me")
     @Tag(name = "User", description = "사용자 관련 API")
     public ApiResponse<UserResponseDTO.ProfileDto> myIcon() {
         return ApiResponse.onSuccess(userService.getMyIcon());
