@@ -316,11 +316,7 @@ public class CardServiceImpl implements CardService {
         Slice<Card> cardSlice;
         Pageable pageable = PageRequest.of(0, size);
         if(userId == null) { // 전체 선택
-            if (cursor == null) {
-                cardSlice = cardRepository.findByIsDeletedFalseAndIsSharedTrueOrderByIdDesc(pageable);
-            } else {
-                cardSlice = cardRepository.findByIsDeletedFalseAndIsSharedTrueAndIdLessThanOrderByIdDesc(cursor, pageable);
-            }
+            cardSlice = cardRepository.findFeedExcludeBlocked(me.getId(),cursor,pageable);
         }else if(userId.equals(me.getId())){ // 내 피드 조회
             // 전체 기록
             if(cursor == null){
