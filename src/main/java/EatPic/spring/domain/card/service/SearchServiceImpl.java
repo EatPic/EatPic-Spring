@@ -170,9 +170,7 @@ public class SearchServiceImpl implements SearchService {
                 })
                 .toList();
 
-        Long nextCursor = content.size() > limit
-                ? content.get(limit).getId()
-                : null;
+        Long nextCursor = content.size() > limit ? content.get(limit).getId() : null;
 
         boolean hasNext = content.size() > limit;
         if (hasNext) {
