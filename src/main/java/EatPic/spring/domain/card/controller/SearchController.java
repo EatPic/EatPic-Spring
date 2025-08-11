@@ -63,7 +63,6 @@ public class SearchController {
             @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
             @RequestParam(value = "cursor", required = false) Long cursor
     ) {
-        Long userId = 1L;
         SearchResponseDTO.GetHashtagListResponseDto result = searchService.getHashtagInAll(request, query, limit, cursor);
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
