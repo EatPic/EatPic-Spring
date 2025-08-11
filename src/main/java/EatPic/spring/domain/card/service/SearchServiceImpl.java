@@ -12,8 +12,10 @@ import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserFollowRepository;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;      // 자동으로 생성자 주입
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,10 +34,11 @@ public class SearchServiceImpl implements SearchService {
     private final UserRepository userRepository;
     private final UserFollowRepository userFollowRepository;
     private final HashtagRepository hashtagRepository;
+    private final UserService userService;
 
     // 탐색 탭에서 모든 유저 리스트 조회
     @Override
-    public SearchResponseDTO.GetCardListResponseDto getAllCards(int limit, Long cursor) {
+    public SearchResponseDTO.GetCardListResponseDto getAllCards(HttpServletRequest request, int limit, Long cursor) {
         // 유저 관련 처리는 이후에..
         // 페이징 처리 하기
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
@@ -57,8 +60,10 @@ public class SearchServiceImpl implements SearchService {
 
     // 검색 범위가 전체인 경우에서 계정 검색
     @Override
-    public SearchResponseDTO.GetAccountListResponseDto getAccountInAll(String query, int limit, Long cursor) {
-        // 유저 관련 처리는 이후에...
+    public SearchResponseDTO.GetAccountListResponseDto getAccountInAll(HttpServletRequest request, String query, int limit, Long cursor) {
+
+        User user = userService.getLoginUser(request);
+
         // 페이징 처리 하기
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         Slice<User> users = userRepository.searchAccountInAll(query, cursor, pageable);
@@ -81,10 +86,13 @@ public class SearchServiceImpl implements SearchService {
 
     // 검색범위가 유저가 팔로우한 사용자인 경우에서 계정 검색
     @Override
-    public SearchResponseDTO.GetAccountListResponseDto getAccountInFollow(String query, int limit, Long cursor, Long userId) {
+    public SearchResponseDTO.GetAccountListResponseDto getAccountInFollow(HttpServletRequest request, String query, int limit, Long cursor) {
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
+
+        User user = userService.getLoginUser(request);
+
         // loginUserId가 팔로우한 사람 중에서, query 조건으로
-        Slice<User> users = userRepository.searchAccountInFollow(query, cursor, pageable, userId);
+        Slice<User> users = userRepository.searchAccountInFollow(query, cursor, pageable, user.getId());
 
         if (users.isEmpty()) {
             throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND);
@@ -103,7 +111,10 @@ public class SearchServiceImpl implements SearchService {
 
     // 검색범위가 전체인 경우 해시태그 검색
     @Override
-    public SearchResponseDTO.GetHashtagListResponseDto getHashtagInAll(String query, int limit, Long cursor) {
+    public SearchResponseDTO.GetHashtagListResponseDto getHashtagInAll(HttpServletRequest request, String query, int limit, Long cursor) {
+
+        User user = userService.getLoginUser(request);
+
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         Slice<Hashtag> hashtags = hashtagRepository.searchHashtagInAll("%" + query + "%", cursor, pageable);
 
@@ -127,9 +138,12 @@ public class SearchServiceImpl implements SearchService {
 
     // 유저가 팔로우한 사용자인 경우에서 해시태그 검색
     @Override
-    public SearchResponseDTO.GetHashtagListResponseDto getHashtagInFollow(String query, int limit, Long cursor, Long userId) {
+    public SearchResponseDTO.GetHashtagListResponseDto getHashtagInFollow(HttpServletRequest request, String query, int limit, Long cursor) {
+
+        User user = userService.getLoginUser(request);
+
         // 팔로우한 유저 목록 조회
-        List<Long> followingUserIds = userFollowRepository.findFollowingUserIds(userId);
+        List<Long> followingUserIds = userFollowRepository.findFollowingUserIds(user.getId());
         if (followingUserIds == null || followingUserIds.isEmpty()) {
             throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND); // 팔로잉한 유저가 없는 경우
         }
@@ -158,7 +172,10 @@ public class SearchServiceImpl implements SearchService {
 
     // 해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회
     @Override
-    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(Long hashtagId, int limit, Long cursor) {
+    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(HttpServletRequest request, Long hashtagId, int limit, Long cursor) {
+
+        User user = userService.getLoginUser(request);
+
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         Slice<Card> cards = cardRepository.findCardsByHashtag(hashtagId, cursor, pageable);
 
