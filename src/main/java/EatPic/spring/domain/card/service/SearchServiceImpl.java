@@ -158,9 +158,9 @@ public class SearchServiceImpl implements SearchService {
 
     // 해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회
     @Override
-    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(String hashtag, int limit, Long cursor) {
+    public SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(Long hashtagId, int limit, Long cursor) {
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
-        Slice<Card> cards = cardRepository.findCardsByHashtag(hashtag, cursor, pageable);
+        Slice<Card> cards = cardRepository.findCardsByHashtag(hashtagId, cursor, pageable);
 
         List<SearchResponseDTO.GetCardResponseDto> content = cards.getContent().stream()
                 .map(card -> {

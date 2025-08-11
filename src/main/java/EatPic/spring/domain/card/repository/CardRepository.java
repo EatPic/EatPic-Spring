@@ -60,14 +60,14 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     SELECT c FROM CardHashtag ch
     JOIN ch.card c
     JOIN ch.hashtag h
-    WHERE h.hashtagName = :hashtag
+    WHERE h.id = :hashtagId
       AND (:cursor IS NULL OR c.id > :cursor)
       AND c.isDeleted = false
       AND c.isShared = true
     ORDER BY c.id ASC
 """)
   Slice<Card> findCardsByHashtag(
-          @Param("hashtag") String hashtag,
+          @Param("hashtagId") Long hashtagId,
           @Param("cursor") Long cursor,
           Pageable pageable
   );

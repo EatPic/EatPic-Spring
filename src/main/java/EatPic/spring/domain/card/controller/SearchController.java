@@ -79,13 +79,13 @@ public class SearchController {
     }
 
     @Operation(summary = "해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회", description = "해시태그 선택 시 카드 목록을 커서 페이징으로 조회")
-    @GetMapping("/all/hashtag-cards")
+    @GetMapping("/all/hashtag-cards/{hashtagId}")
     public ApiResponse<SearchResponseDTO.GetCardListResponseDto> getCardsByHashtag(
-            @RequestParam(value = "hashtag") String hashtag,
+            @RequestParam(value = "hashtagId") Long hashtagId,
             @RequestParam(value = "limit", defaultValue = "10") int limit,
             @RequestParam(value = "cursor", required = false) Long cursor
     ) {
-        SearchResponseDTO.GetCardListResponseDto result = searchService.getCardsByHashtag(hashtag, limit, cursor);
+        SearchResponseDTO.GetCardListResponseDto result = searchService.getCardsByHashtag(hashtagId, limit, cursor);
         return ApiResponse.onSuccess(result);
     }
 }
