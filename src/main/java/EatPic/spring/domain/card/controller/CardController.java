@@ -129,10 +129,11 @@ public class CardController {
           summary = "피드 조회",
           description = "특정 사용자(null이면 전체 사용자)의 최근 7일 동안의 피드를 조회합니다.(전체, 본인의 경우 전체 피드를 조회합니다)")
   @GetMapping("/feeds")
-  public ApiResponse<CardResponse.PagedCardFeedResponseDto> getFeeds(@RequestParam(required = false) Long userId,
+  public ApiResponse<CardResponse.PagedCardFeedResponseDto> getFeeds(HttpServletRequest request,
+                                                                     @RequestParam(required = false) Long userId,
                                                                      @RequestParam(required = false) Long cursor,
                                                                      @RequestParam(defaultValue = "15") int size) {
-    return ApiResponse.onSuccess(cardService.getCardFeedByCursor(userId,size,cursor));
+    return ApiResponse.onSuccess(cardService.getCardFeedByCursor(request,userId,size,cursor));
   }
 
 

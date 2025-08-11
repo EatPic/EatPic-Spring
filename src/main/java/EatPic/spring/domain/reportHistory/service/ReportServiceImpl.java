@@ -10,6 +10,7 @@ import EatPic.spring.domain.reportHistory.repository.ReportHistoryRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class ReportServiceImpl implements ReportService {
     private final CardRepository cardRepository;
 
     @Override
-    public ReportResponseDTO.ReportResultResponseDTO createReport(TargetType targetType, Long targetId, ReportType reportType) {
+    public ReportResponseDTO.ReportResultResponseDTO createReport(HttpServletRequest request, TargetType targetType, Long targetId, ReportType reportType) {
         User user = userRepository.findUserById(1L);// todo: 로그인 사용자
         validateTargetExists(targetType, targetId);
 

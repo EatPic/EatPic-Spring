@@ -11,9 +11,11 @@ import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.GeneralException;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +30,12 @@ public class BookmarkServiceImpl implements BookmarkService{
     private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
     private final CardRepository cardRepository;
+    private final UserService userService;
 
 
     @Override
-    public BookmarkResponseDTO.BookmarkResponseDto saveBookmark(Long cardId) {
-        User user = userRepository.findUserById(1L);
+    public BookmarkResponseDTO.BookmarkResponseDto saveBookmark(HttpServletRequest request, Long cardId) {
+        User user = userService.getLoginUser(request);
         Card card = cardRepository.findById(cardId).orElseThrow(()-> new GeneralException(CARD_NOT_FOUND));
 
         Bookmark bookmark = Bookmark.builder()
@@ -48,8 +51,8 @@ public class BookmarkServiceImpl implements BookmarkService{
     }
 
     @Override
-    public BookmarkResponseDTO.BookmarkResponseDto deleteBookmark(Long cardId) {
-        User user = userRepository.findUserById(1L);
+    public BookmarkResponseDTO.BookmarkResponseDto deleteBookmark(HttpServletRequest request,Long cardId) {
+        User user = userService.getLoginUser(request);
         Card card = cardRepository.findById(cardId).orElseThrow(()-> new GeneralException(CARD_NOT_FOUND));
 
         Bookmark bookmark = bookmarkRepository.findById(new BookmarkId(1L,cardId))

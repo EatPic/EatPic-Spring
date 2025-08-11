@@ -23,6 +23,7 @@ import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserBadgeService;
+import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.aws.s3.AmazonS3Manager;
 import EatPic.spring.domain.user.service.UserBadgeService;
 import EatPic.spring.global.common.code.status.ErrorStatus;
@@ -36,6 +37,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -64,6 +67,7 @@ public class CardServiceImpl implements CardService {
     private final BookmarkRepository bookmarkRepository;
     private final UserBadgeService userBadgeService;
     private final HashtagRepository hashtagRepository;
+    private final UserService userService;
 
     private void connectHashtagsToCard(Card card, List<String> hashtags, User user) {
         if (hashtags == null || hashtags.isEmpty()) return;
@@ -306,7 +310,8 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional(readOnly = true)
-    public CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(Long userId, int size, Long cursor) {
+    public CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(HttpServletRequest request, Long userId, int size, Long cursor) {
+        User me = userService.getLoginUser(request);
 
         Slice<Card> cardSlice;
         Pageable pageable = PageRequest.of(0, size);
@@ -316,7 +321,7 @@ public class CardServiceImpl implements CardService {
             } else {
                 cardSlice = cardRepository.findByIsDeletedFalseAndIsSharedTrueAndIdLessThanOrderByIdDesc(cursor, pageable);
             }
-        }else if(userId == 1L){ // 내 피드 조회 todo: 로그인 유저로
+        }else if(userId.equals(me.getId())){ // 내 피드 조회
             // 전체 기록
             if(cursor == null){
                 cardSlice = cardRepository.findByIsDeletedFalseAndUserIdOrderByIdDesc(userId,pageable);

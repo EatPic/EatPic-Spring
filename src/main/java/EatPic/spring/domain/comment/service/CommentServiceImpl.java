@@ -9,8 +9,11 @@ import EatPic.spring.domain.comment.entity.Comment;
 import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
+import EatPic.spring.domain.user.service.UserService;
+import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.GeneralException;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,11 +34,12 @@ public class CommentServiceImpl implements CommentService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final UserService userService;
 
     @Override
-    public Comment writeComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Long cardId) {
+    public Comment writeComment(HttpServletRequest request, CommentRequestDTO.WriteCommentDto writeCommentDto, Long cardId) {
         // 작성자
-        User user = userRepository.findUserById(1L);
+        User user = userService.getLoginUser(request);
         // 카드(피드)
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new ExceptionHandler(CARD_NOT_FOUND));
@@ -82,10 +86,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponseDTO.DeleteCommentResponseDTO deleteComments(Long commentId) {
+    public CommentResponseDTO.DeleteCommentResponseDTO deleteComments(HttpServletRequest request,Long commentId) {
+        User user = userService.getLoginUser(request);
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(()->new GeneralException(COMMENT_NOT_FOUND));
+        if(!comment.getUser().getId().equals(user.getId())){ // 자신이 작성한 댓글만 삭제 가능
+            throw new ExceptionHandler(_FORBIDDEN);
+        }
 
         List<Comment> childComments = commentRepository.findAllByParentComment(comment);
 
