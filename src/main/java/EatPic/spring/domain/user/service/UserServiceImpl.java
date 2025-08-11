@@ -161,4 +161,9 @@ public class UserServiceImpl implements UserService{
 
         return UserConverter.toUserBlockResponseDto(userBlock);
     }
+
+    // 이메일 중복 검사
+    public boolean isEmailDuplicate(String email){
+        return userRepository.existsByEmail(email);
+    }
 }
