@@ -54,5 +54,12 @@ public class UserController{
         boolean isDuplicate = userService.isEmailDuplicate(email);
         return ResponseEntity.ok(Map.of("isDuplicate", isDuplicate));
     }
-}
 
+    // 유저 아이디 중복 검사
+    @GetMapping("/check-user-id")
+    @Operation(summary = "유저 아이디 중복 검사")
+    public ResponseEntity<Map<String, Boolean>> checkUserId(@RequestParam String nameId) {
+        boolean isDuplicate = userService.isnameIdDuplicate(nameId);
+        return ResponseEntity.ok(Map.of("isDuplicate", isDuplicate));
+    }
+}

@@ -166,4 +166,9 @@ public class UserServiceImpl implements UserService{
     public boolean isEmailDuplicate(String email){
         return userRepository.existsByEmail(email);
     }
+
+    // 유저 아이디 중복 검사
+    public boolean isnameIdDuplicate(String nameId){
+        return userRepository.existsByNameId(nameId);
+    }
 }
