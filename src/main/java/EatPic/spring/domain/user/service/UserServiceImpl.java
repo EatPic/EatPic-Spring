@@ -151,6 +151,11 @@ public class UserServiceImpl implements UserService{
         User targetUser = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new ExceptionHandler(USER_NOT_FOUND));
 
+        if(userFollowRepository.existsByUserAndTargetUser(user,targetUser)){
+            UserFollow userFollow = UserFollow.builder().user(user).targetUser(targetUser).build();
+            userFollowRepository.delete(userFollow);
+        }
+
         UserBlock userBlock = UserBlock.builder()
                 .user(user)
                 .blockedUser(targetUser)
