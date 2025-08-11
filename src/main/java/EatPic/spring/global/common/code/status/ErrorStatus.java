@@ -53,11 +53,14 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 유저 관련 응답
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_001", "해당 유저는 존재하지 않는 유저입니다."),
+    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_002", "사용자가 없습니다."),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "USER_003", "비밀번호가 불일치합니다."),
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST, "USER_004", "유효하지 않은 토큰입니다."),
     CARD_DELETE_FORBIDDEN(HttpStatus.FORBIDDEN, "USER_005", "해당 카드를 삭제할 권한이 없습니다."),
-    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_404", "사용자가 없습니다."),
-    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "USER_401", "비밀번호가 불일치합니다."),
-    INVALID_TOKEN(HttpStatus.BAD_REQUEST, "USER_403", "유효하지 않은 토큰입니다."),
-    DUPLICATE_JOIN_REQUEST(HttpStatus.BAD_REQUEST, "USER_400", "해당 이메일로 이미 가입된 사용자가 존재합니다.");
+    DUPLICATE_JOIN_REQUEST(HttpStatus.BAD_REQUEST, "USER_006", "해당 이메일로 이미 가입된 사용자가 존재합니다."),
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "USER_007", "이미 사용중인 이메일입니다."),
+    DUPLICATE_NAMEID(HttpStatus.BAD_REQUEST, "USER_008", "이미 사용중인 아이디입니다."),
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "USER_009", "이미 사용중인 닉네임입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

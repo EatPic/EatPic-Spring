@@ -4,6 +4,7 @@ import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.response.CheckNicknameResponseDTO;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
@@ -173,7 +174,7 @@ public class UserServiceImpl implements UserService{
     }
 
     // 닉네임 중복 검사
-    public boolean isNicknameDuplicate(String nickname){
+    public boolean isNicknameDuplicate(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
 }

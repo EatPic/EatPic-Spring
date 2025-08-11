@@ -2,6 +2,7 @@ package EatPic.spring.domain.user.service;
 
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
+import EatPic.spring.domain.user.dto.response.CheckNicknameResponseDTO;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;

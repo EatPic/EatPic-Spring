@@ -1,12 +1,17 @@
 package EatPic.spring.domain.user.controller;
 
+import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.response.CheckNicknameResponseDTO;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
+import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.ApiResponse;
+import EatPic.spring.global.common.code.ErrorReasonDTO;
+import EatPic.spring.global.common.code.status.ErrorStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@RestControllerAdvice
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class UserController{
@@ -66,8 +72,17 @@ public class UserController{
     // 닉네임 중복 검사
     @GetMapping("/check-nickname")
     @Operation(summary = "닉네임 중복 검사")
-    public ApiResponse<Map<String, Boolean>> checkNickname(@RequestParam String nickname) {
+    public ApiResponse<CheckNicknameResponseDTO> checkNickname(@RequestParam String nickname) {
         boolean isDuplicate = userService.isNicknameDuplicate(nickname);
-        return ApiResponse.onSuccess(Map.of("isDuplicate", isDuplicate));
+
+        if(isDuplicate) {
+            return ApiResponse.onFailure(
+                    ErrorStatus.DUPLICATE_NICKNAME.getCode(),
+                    ErrorStatus.DUPLICATE_NICKNAME.getMessage(),
+                    UserConverter.toCheckNicknameResponseDto(nickname, false)
+            );
+        }
+
+        return ApiResponse.onSuccess(UserConverter.toCheckNicknameResponseDto(nickname, true));
     }
 }
