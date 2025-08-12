@@ -15,12 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface CardService {
-  CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, Long userId, MultipartFile cardImageFile);
+  CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, User user, MultipartFile cardImageFile);
   CardDetailResponse getCardDetail(Long cardId, Long userId);
   CardFeedResponse getCardFeed(Long cardId, Long userId);
   void deleteCard(Long cardId, Long userId);
   List<TodayCardResponse> getTodayCards(Long userId);
-  CardDetailResponse updateCard(Long cardId, Long userId, CardUpdateRequest request);
+  CardDetailResponse updateCard(Long cardId, User user, CardUpdateRequest request);
   CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(HttpServletRequest request, Long userId, int size, Long cursor);
   List<RecommendCardResponse> getRecommendedCardPreviews(Long userId);
 }

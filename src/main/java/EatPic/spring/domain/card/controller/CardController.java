@@ -46,6 +46,7 @@ public class CardController {
   @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드를 생성할 때 호출되는 api")
   public ApiResponse<CreateCardResponse> createCard(
+        HttpServletRequest req,
           @RequestParam("request") String requestJson,
           @RequestPart(value = "cardImageFile", required = false) MultipartFile cardImageFile) {
 
@@ -57,12 +58,13 @@ public class CardController {
       throw new GeneralException(ErrorStatus.REQUEST_BODY_INVALID);
     }
 
-    Long userId = 1L;
+    //Long userId = 1L;
+    User user = userService.getLoginUser(req);
 
     if (cardImageFile == null || cardImageFile.isEmpty()) {
       throw new GeneralException(ErrorStatus.IMAGE_REQUIRED);
     }
-    CardResponse.CreateCardResponse response = cardService.createNewCard(request, userId, cardImageFile);
+    CardResponse.CreateCardResponse response = cardService.createNewCard(request, user, cardImageFile);
     return ApiResponse.onSuccess(response);
   }
 
@@ -115,12 +117,13 @@ public class CardController {
   @Operation(summary = "픽카드 수정", description = "카드의 메모, 레시피, 위치 정보 등을 수정합니다.")
   @PutMapping("/api/cards/{cardId}")
   public ResponseEntity<ApiResponse<CardDetailResponse>> updateCard(
+          HttpServletRequest req,
           @Parameter(description = "수정할 카드 ID", example = "12")
           @PathVariable(name = "cardId") Long cardId,
           @RequestBody CardUpdateRequest request)
   {
-    Long userId = 1L;
-    return ResponseEntity.ok(ApiResponse.onSuccess(cardService.updateCard(cardId, userId, request)));
+    User user = userService.getLoginUser(req);
+    return ResponseEntity.ok(ApiResponse.onSuccess(cardService.updateCard(cardId, user, request)));
   }
 
   @Operation(
