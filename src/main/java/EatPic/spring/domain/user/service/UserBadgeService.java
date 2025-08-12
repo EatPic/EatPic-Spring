@@ -34,14 +34,14 @@ public class UserBadgeService {
   private final ReactionRepository reactionRepository;
 
   // 홈화면 뱃지 리스트 조회
-  public List<HomeBadgeResponse> getUserBadgesForHome(Long userId) {
-    User user = userRepository.findUserById(userId); // 로그인 적용할 때 바꾸기!! 인자 User로 받기!
+  @Transactional
+  public List<HomeBadgeResponse> getUserBadgesForHome(User user) {
     List<UserBadge> userBadges = userBadgeRepository.findByUser(user);
     return UserBadgeConverter.toHomeBadgeDTOList(userBadges);
   }
 
-  public BadgeDetailResponseDTO getBadgeDetail(Long userId, Long userBadgeId) {
-    User user = userRepository.findUserById(userId);
+  @Transactional
+  public BadgeDetailResponseDTO getBadgeDetail(User user, Long userBadgeId) {
     UserBadge userBadge = userBadgeRepository.findByUser_IdAndUserBadgeId(user.getId(), userBadgeId)
         .orElseThrow(() -> new ExceptionHandler(ErrorStatus._BAD_REQUEST));
     return UserBadgeConverter.toBadgeDetailResponse(userBadge);

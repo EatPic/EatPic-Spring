@@ -7,6 +7,7 @@ import EatPic.spring.domain.user.service.UserService;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -25,25 +26,34 @@ public class NotificationController {
 
   @GetMapping("/recent")
   @Operation(summary = "최근 알림 목록 조회 (7일 이내)", description = "현재 로그인한 사용자의 최근 알림을 조회합니다.")
-  public ApiResponse<List<RecentNotificationResponse>> getRecentNotifications() {
-    Long userId = 1L; //Long userId = userDetails.getUser().getId(); //로그인 구현 시 이렇게 바꾸기
+  public ApiResponse<List<RecentNotificationResponse>> getRecentNotifications(
+      HttpServletRequest request
+  ) {
+    User user = userService.getLoginUser(request);
+    //Long userId = 1L; //Long userId = userDetails.getUser().getId(); //로그인 구현 시 이렇게 바꾸기
     //User user = userDetails.getUser(); //아니면 이렇게 해서 객체 자체를 넘기기 (이게 일반적인 방법)
-    return ApiResponse.onSuccess(notificationService.getRecentNotifications(userId));
+    return ApiResponse.onSuccess(notificationService.getRecentNotifications(user));
   }
 
   @PostMapping("/check")
   @Operation(summary = "알림 확인 시간 업데이트", description = "사용자가 알림 화면에 들어가면 마지막 확인 시간을 업데이트합니다.")
-  public ApiResponse<Void> checkNotifications() {
-    Long userId = 1L; // 로그인 기능 구현 전 임시 사용자
-    notificationService.checkNotifications(userId);
+  public ApiResponse<Void> checkNotifications(
+      HttpServletRequest request
+  ) {
+    User user = userService.getLoginUser(request);
+    //Long userId = 1L; // 로그인 기능 구현 전 임시 사용자
+    notificationService.checkNotifications(user);
     return ApiResponse.onSuccess(null);
   }
 
   @GetMapping("/unread-status")
   @Operation(summary = "새 알림 여부 확인", description = "최근 알림 생성 시각과 마지막 확인 시각을 비교하여 새 알림 여부를 반환합니다.")
-  public ApiResponse<Map<String, Boolean>> getUnreadStatus() {
-    Long userId = 1L; // 로그인 기능 구현 전 임시 사용자
-    boolean isUnread = notificationService.isUnreadNotification(userId);
+  public ApiResponse<Map<String, Boolean>> getUnreadStatus(
+      HttpServletRequest request
+  ) {
+    User user = userService.getLoginUser(request);
+    //Long userId = 1L; // 로그인 기능 구현 전 임시 사용자
+    boolean isUnread = notificationService.isUnreadNotification(user);
     return ApiResponse.onSuccess(Map.of("isUnread", isUnread));
   }
 

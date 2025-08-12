@@ -4,6 +4,7 @@ import EatPic.spring.domain.calendar.dto.CalendarDayResponse;
 import EatPic.spring.domain.card.entity.Card;
 import EatPic.spring.domain.card.entity.Meal;
 import EatPic.spring.domain.card.repository.CardRepository;
+import EatPic.spring.domain.user.entity.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -24,7 +25,9 @@ import org.springframework.stereotype.Service;
 public class CalendarService {
   private final CardRepository cardRepository;
 
-  public List<CalendarDayResponse> getCalendar(Long userId, int year, int month) {
+  public List<CalendarDayResponse> getCalendar(User user, int year, int month) {
+    Long userId = user.getId();
+
     // 현재 월과 이전 월 구하기
     YearMonth currentMonth = YearMonth.of(year, month);
     YearMonth previousMonth = currentMonth.minusMonths(1);
