@@ -16,6 +16,8 @@ import java.util.List;
 
 public interface CardService {
   CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, User user, MultipartFile cardImageFile);
+  CardResponse.CreateCardResponse createNewCardReq(HttpServletRequest request, CardCreateRequest.CreateCardRequest cardCreateRequest,  User user);
+  CardResponse.CreateCardResponse createNewCardImage(HttpServletRequest request, MultipartFile cardImageFile, User user);
   CardDetailResponse getCardDetail(Long cardId, Long userId);
   CardFeedResponse getCardFeed(Long cardId, Long userId);
   void deleteCard(Long cardId, Long userId);

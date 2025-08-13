@@ -24,32 +24,36 @@ public class CardCreateRequest {
   public static class CreateCardRequest {
 
     @JsonProperty("isShared")
+    @Schema(description = "피드 공개 여부 (true = 공개, false = 비공개)", example = "true")
     private Boolean isShared;
 
-    @JsonProperty("latitude")
+    @JsonProperty("locationText")
+    @Schema(description = "장소 이름 텍스트", example = "서울특별시 성북구 정릉동")
+    private String locationText;
+
+    @Schema(description = "위도", example = "37.5665")
     private BigDecimal latitude;
 
-    @JsonProperty("longitude")
+    @Schema(description = "경도", example = "126.9780")
     private BigDecimal longitude;
 
-    // 파일(cardImageFile)을 별도로
-//    @JsonProperty("cardImageUrl")
-//    private String cardImageUrl;
+    @Schema(description = "레시피 내용", example = "야채, 아보카도, 소스 조합으로 구성된 샐러드입니다.")
+    private String recipe;
 
-    @JsonProperty("recipeUrl")
+    @Schema(description = "레시피 링크 URL", example = "https://example.com/recipe/123")
     private String recipeUrl;
 
-    @JsonProperty("memo")
+    @Schema(description = "나의 메모", example = "오늘은 샐러드를 먹었습니다~ 아보카도를 많이 넣었어요")
     private String memo;
-
-    @JsonProperty("recipe")
-    private String recipe;
 
     @JsonProperty("meal")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @Schema(description = "식사 유형 (Enum: BREAKFAST, LUNCH, DINNER 등)", example = "LUNCH")
     private Meal meal; // Enum 매핑 시 대소문자 주의
 
-    private List<String> hashtags; // 사용자가 선택/생성한 해시태그 목록 (이름 기준)
+    @JsonProperty("hashtags")
+    @Schema(description = "사용자가 선택/생성한 해시태그 목록 (이름 기준)", example = "[\"샐러드\", \"건강식\"]")
+    private List<String> hashtags; // 해시태그 목록
   }
 
 

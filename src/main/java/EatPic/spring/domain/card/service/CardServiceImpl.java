@@ -20,6 +20,7 @@ import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.hashtag.entity.Hashtag;
 import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserBadgeService;
@@ -200,6 +201,113 @@ public class CardServiceImpl implements CardService {
                 .memo(savedCard.getMemo())
                 .recipe(savedCard.getRecipe())
                 .meal(savedCard.getMeal())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public CardResponse.CreateCardResponse createNewCardReq(HttpServletRequest request, CardCreateRequest.CreateCardRequest cardCreateRequest,  User user) {
+
+        Long userId = user.getId();
+
+        // 오늘 날짜 00:00부터 23:59:59까지 범위 계산
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        // 같은 날짜, 같은 meal 타입 카드 중복 확인
+        boolean existsSameMealCard = cardRepository.existsByUserIdAndMealAndCreatedAtBetween(
+                userId,
+                cardCreateRequest.getMeal(),
+                startOfDay,
+                endOfDay
+        );
+
+        if (existsSameMealCard) {
+            throw new ExceptionHandler(ErrorStatus.DUPLICATE_MEAL_CARD);
+        }
+
+        // 이미지 URL은 따로 업로드 API에서 처리하므로 null로 둠
+        Card newCard = Card.builder()
+                .isShared(cardCreateRequest.getIsShared())
+                .latitude(cardCreateRequest.getLatitude())
+                .longitude(cardCreateRequest.getLongitude())
+                .cardImageUrl(null)  // 이미지 없이 저장
+                .recipeUrl(cardCreateRequest.getRecipeUrl())
+                .memo(cardCreateRequest.getMemo())
+                .recipe(cardCreateRequest.getRecipe())
+                .meal(cardCreateRequest.getMeal())
+                .user(user)
+                .build();
+
+        Card savedCard = cardRepository.save(newCard);
+
+        // 해시태그 연결 처리
+        connectHashtagsToCard(newCard, cardCreateRequest.getHashtags(), user);
+
+        // 뱃지 획득 부분 처리 (기존과 동일)
+        userBadgeService.checkAndAssignBadges(user, ConditionType.CARD_UPLOAD, 1);
+
+        if (savedCard.hasLocation()) {
+            userBadgeService.checkAndAssignBadges(user, ConditionType.LOCATION_INCLUDED, 1);
+        }
+
+        if (savedCard.containsHashtag("혼밥")) {
+            userBadgeService.checkAndAssignBadges(user, ConditionType.HASHTAG_USAGE_ALONE, 1);
+        }
+
+        if (savedCard.hasRecipeUrl()) {
+            userBadgeService.checkAndAssignBadges(user, ConditionType.RECIPE_SHARED, 1);
+        }
+
+        if (cardRepository.existsByUserAndCreatedAtBetweenAndMeal(user, startOfDay, endOfDay, Meal.BREAKFAST) &&
+                cardRepository.existsByUserAndCreatedAtBetweenAndMeal(user, startOfDay, endOfDay, Meal.LUNCH) &&
+                cardRepository.existsByUserAndCreatedAtBetweenAndMeal(user, startOfDay, endOfDay, Meal.DINNER)) {
+
+            userBadgeService.checkAndAssignBadges(user, ConditionType.FULL_DAY_MEALS, 1);
+        }
+
+        userBadgeService.checkAndAssignBadges(user, ConditionType.CONSECUTIVE_DAYS, 1);
+        userBadgeService.checkAndAssignBadges(user, ConditionType.WEEKLY_DAYS, 1);
+
+        log.info("새 카드 생성 완료 (이미지 없음) - ID: {}", savedCard.getId());
+
+        return CardResponse.CreateCardResponse.builder()
+                .newcardId(savedCard.getId())
+                .isShared(savedCard.getIsShared())
+                .latitude(savedCard.getLatitude())
+                .longitude(savedCard.getLongitude())
+                .cardImageUrl(null)  // 이미지 URL 없음
+                .recipeUrl(savedCard.getRecipeUrl())
+                .memo(savedCard.getMemo())
+                .recipe(savedCard.getRecipe())
+                .meal(savedCard.getMeal())
+                .build();
+    }
+
+    @Override
+    public CardResponse.CreateCardResponse createNewCardImage(HttpServletRequest request, MultipartFile cardImage, User user) {
+        String newCardImageUrl = null;
+        if (cardImage != null && !cardImage.isEmpty()) {
+            String uuid = UUID.randomUUID().toString();
+            String keyName = "newcards/" + uuid + "_" + cardImage.getOriginalFilename();
+
+            try {
+                newCardImageUrl = s3Manager.uploadFile(keyName, cardImage);
+            } catch (Exception e) {
+                throw new GeneralException(ErrorStatus.FILE_UPLOAD_FAILED);
+            }
+
+            // 프로필 이미지 URL 업데이트
+            user.setProfileImageUrl(newCardImageUrl);
+
+            // 유저 정보 DB 저장
+            userRepository.save(user);
+        }
+
+        // 업데이트 결과를 DTO로 반환
+        return CardResponse.CreateCardResponse.builder()
+                .cardImageUrl(newCardImageUrl)
                 .build();
     }
 
