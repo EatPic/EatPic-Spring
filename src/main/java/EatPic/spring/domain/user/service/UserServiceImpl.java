@@ -46,17 +46,17 @@ public class UserServiceImpl implements UserService{
     public SignupResponseDTO signup(SignupRequestDTO request) {
         // 이메일 중복 검사
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            throw new ExceptionHandler(ErrorStatus.DUPLICATE_EMAIL);
         }
 
         // 닉네임 중복 검사
         if (userRepository.existsByNickname(request.getNickname())) {
-            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
+            throw new ExceptionHandler(ErrorStatus.DUPLICATE_NICKNAME);
         }
 
         // 아이디 중복 검사
         if (userRepository.existsByNameId(request.getNameId())) {
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+            throw new ExceptionHandler(ErrorStatus.DUPLICATE_NAMEID);
         }
 
         // 저장
@@ -77,16 +77,7 @@ public class UserServiceImpl implements UserService{
         userBadgeService.initializeUserBadges(savedUser);
 
         // DTO로 응답 생성
-        return SignupResponseDTO.builder()
-                .role(request.getRole())
-                .userId(savedUser.getId())
-                .email(savedUser.getEmail())
-                .nameId(savedUser.getNameId())
-                .nickname(savedUser.getNickname())
-                .marketingAgreed(savedUser.getMarketingAgreed())
-                .notificationAgreed(savedUser.getNotificationAgreed())
-                .message("회원가입이 완료되었습니다.")
-                .build();
+        return UserConverter.toSignupResponseDTO(savedUser);
     }
 
     // 로그인
