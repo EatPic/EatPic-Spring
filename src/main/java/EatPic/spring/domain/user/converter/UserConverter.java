@@ -12,6 +12,19 @@ import org.springframework.data.domain.Page;
 
 public class UserConverter {
 
+    // 이메일 회원가입
+    public static SignupResponseDTO toSignupResponseDTO(User user) {
+        return SignupResponseDTO.builder()
+                .role(user.getRole())
+                .userId(user.getId())
+                .email(user.getEmail())
+                .nameId(user.getNameId())
+                .nickname(user.getNickname())
+                .marketingAgreed(user.getMarketingAgreed())
+                .notificationAgreed(user.getNotificationAgreed())
+                .build();
+    }
+
     public static LoginResponseDTO toLoginResultDTO(User user, String accessToken, String refreshToken) {
         return LoginResponseDTO.builder()
                 .role(user.getRole())
@@ -119,5 +132,4 @@ public class UserConverter {
                 .isDuplicate(isDuplicate)
                 .build();
     }
-
 }

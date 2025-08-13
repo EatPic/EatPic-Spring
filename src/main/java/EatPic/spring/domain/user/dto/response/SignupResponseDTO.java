@@ -16,6 +16,5 @@ public class SignupResponseDTO {
     private String nickname;             // 닉네임
     private Boolean marketingAgreed;     // 마케팅 수신 동의 여부
     private Boolean notificationAgreed;  // 알림 수신 동의 여부
-    private String message;              // 예: "회원가입이 완료되었습니다."
 }
 
