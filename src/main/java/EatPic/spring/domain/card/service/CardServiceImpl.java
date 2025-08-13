@@ -98,9 +98,9 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, Long userId, MultipartFile cardImageFile) {
+    public CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, User user, MultipartFile cardImageFile) {
 
-        User user = userRepository.findUserById(userId);
+        Long userId = user.getId();
 
         // 오늘 날짜 00:00부터 23:59:59까지 범위 계산
         LocalDate today = LocalDate.now();
@@ -284,11 +284,11 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public CardDetailResponse updateCard(Long cardId, Long userId, CardUpdateRequest request) {
+    public CardDetailResponse updateCard(Long cardId, User user, CardUpdateRequest request) {
         Card card = cardRepository.findById(cardId)
             .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
 
-        if (!card.getUser().getId().equals(userId)) {
+        if (!card.getUser().getId().equals(user.getId())) {
             throw new ExceptionHandler(ErrorStatus.CARD_UPDATE_FORBIDDEN);
         }
 

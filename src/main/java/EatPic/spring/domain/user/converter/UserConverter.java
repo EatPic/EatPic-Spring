@@ -4,10 +4,7 @@ import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.reaction.dto.ReactionResponseDTO;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.user.dto.UserInfoDTO;
-import EatPic.spring.domain.user.dto.response.CheckEmailResponseDTO;
-import EatPic.spring.domain.user.dto.response.CheckNicknameResponseDTO;
-import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
-import EatPic.spring.domain.user.dto.response.UserResponseDTO;
+import EatPic.spring.domain.user.dto.response.*;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.mapping.UserBlock;
 import EatPic.spring.domain.user.mapping.UserFollow;
@@ -99,10 +96,18 @@ public class UserConverter {
                 .build();
     }
 
-    // 유저 아이디 중복 검사
+    // 이메일 중복 검사
     public static CheckEmailResponseDTO toCheckEmailResponseDTO(String email, boolean isDuplicate){
         return CheckEmailResponseDTO.builder()
                 .email(email)
+                .isDuplicate(isDuplicate)
+                .build();
+    }
+
+    // 이메일 중복 검사
+    public static CheckNameIdResponseDTO toCheckNameIdResponseDTO(String nameId, boolean isDuplicate){
+        return new CheckNameIdResponseDTO().builder()
+                .nameId(nameId)
                 .isDuplicate(isDuplicate)
                 .build();
     }
