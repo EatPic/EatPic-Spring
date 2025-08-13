@@ -72,10 +72,10 @@ public class CardServiceImpl implements CardService {
     private void connectHashtagsToCard(Card card, List<String> hashtags, User user) {
         if (hashtags == null || hashtags.isEmpty()) return;
         for (String hashtagName : hashtags) {
-            // ① 이미 존재하는 해시태그 찾기
+            // 이미 존재하는 해시태그 찾기
             Hashtag hashtag = hashtagRepository.findByHashtagName(hashtagName)
                     .orElseGet(() -> {
-                        // ② 없으면 새로 생성 & 저장
+                        // 없으면 새로 생성 & 저장
                         Hashtag newHashtag = Hashtag.builder()
                                 .hashtagName(hashtagName)
                                 .user(user)
@@ -83,7 +83,7 @@ public class CardServiceImpl implements CardService {
                         return hashtagRepository.save(newHashtag);
                     });
 
-            // ③ CardHashtag 저장
+            // CardHashtag 저장
             CardHashtag cardHashtag = CardHashtag.builder()
                     .card(card)
                     .hashtag(hashtag)
@@ -100,7 +100,6 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, Long userId, MultipartFile cardImageFile) {
 
-        // 아직 유저 관련 처리 안했음
         User user = userRepository.findUserById(userId);
 
         // 오늘 날짜 00:00부터 23:59:59까지 범위 계산
@@ -133,8 +132,6 @@ public class CardServiceImpl implements CardService {
                 // S3 업로드 시 예외 발생 가능성 있음, try-catch로 처리
                 cardImageUrl = s3Manager.uploadFile(keyName, cardImageFile);
             } catch (Exception e) {
-                log.error("S3 파일 업로드 실패", e);
-                // 적절한 커스텀 예외 또는 공통 예외로 감싸서 던짐
                 throw new GeneralException(ErrorStatus.FILE_UPLOAD_FAILED);
             }
         }

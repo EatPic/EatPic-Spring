@@ -15,6 +15,7 @@ import EatPic.spring.domain.user.repository.UserFollowRepository;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.repository.UserBlockRepository;
 import EatPic.spring.global.common.code.status.ErrorStatus;
+import EatPic.spring.global.common.exception.GeneralException;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import EatPic.spring.global.config.jwt.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,8 +27,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import EatPic.spring.global.aws.s3.*;
 
 import java.util.Collections;
+import java.util.UUID;
 
 import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
@@ -41,6 +45,10 @@ public class UserServiceImpl implements UserService{
     private final UserBadgeService userBadgeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+
+    // s3 설정
+    private final AmazonS3Manager s3Manager;
 
     // 회원가입
     public SignupResponseDTO signup(SignupRequestDTO request) {
@@ -220,4 +228,34 @@ public class UserServiceImpl implements UserService{
         return UserConverter.toUserActionResponseDto(follow);
 
     }
+
+    @Override
+    public UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage) {
+        User user = userService.getLoginUser(request);
+
+        String profileImageUrl = null;
+        if (profileImage != null && !profileImage.isEmpty()) {
+            String uuid = UUID.randomUUID().toString();
+            String keyName = "userProfiles/" + uuid + "_" + profileImage.getOriginalFilename();
+
+            try {
+                profileImageUrl = s3Manager.uploadFile(keyName, profileImage);
+            } catch (Exception e) {
+                throw new GeneralException(ErrorStatus.FILE_UPLOAD_FAILED);
+            }
+
+            // 프로필 이미지 URL 업데이트
+            user.setProfileImageUrl(profileImageUrl);
+
+            // 유저 정보 DB 저장
+            userRepository.save(user);
+        }
+
+        // 업데이트 결과를 DTO로 반환
+        return UserResponseDTO.ProfileDto.builder()
+                .userId(user.getId())
+                .profileImageUrl(profileImageUrl) // 새 URL
+                .build();
+    }
+
 }
