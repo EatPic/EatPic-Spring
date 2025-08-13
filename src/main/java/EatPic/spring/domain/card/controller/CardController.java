@@ -57,8 +57,6 @@ public class CardController {
     } catch (JsonProcessingException e) {
       throw new GeneralException(ErrorStatus.REQUEST_BODY_INVALID);
     }
-
-    //Long userId = 1L;
     User user = userService.getLoginUser(req);
 
     if (cardImageFile == null || cardImageFile.isEmpty()) {
