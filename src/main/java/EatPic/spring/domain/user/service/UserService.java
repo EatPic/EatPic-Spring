@@ -8,6 +8,7 @@ import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
     // UserCommandService
@@ -25,6 +26,8 @@ public interface UserService {
     UserResponseDTO.UserActionResponseDto followUser(HttpServletRequest request, Long targetUserId);
     UserResponseDTO.UserActionResponseDto unfollowUser(HttpServletRequest request, Long targetUserId);
     User getLoginUser(HttpServletRequest request);
+
+    UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage, User user);
 }
 
 
