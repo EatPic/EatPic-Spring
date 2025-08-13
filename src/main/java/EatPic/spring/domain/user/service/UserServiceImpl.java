@@ -45,7 +45,6 @@ public class UserServiceImpl implements UserService{
     private final UserBadgeService userBadgeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserService userService;
 
     // s3 설정
     private final AmazonS3Manager s3Manager;
@@ -230,8 +229,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage) {
-        User user = userService.getLoginUser(request);
+    public UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage,User user) {
 
         String profileImageUrl = null;
         if (profileImage != null && !profileImage.isEmpty()) {

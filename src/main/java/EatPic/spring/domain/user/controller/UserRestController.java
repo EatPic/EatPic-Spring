@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,13 +58,13 @@ public class UserRestController {
         return ApiResponse.onSuccess(userService.unfollowUser(request,userId));
     }
 
+    @PatchMapping(value = "/setting/{userId}/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "프로필 이미지 수정", description = "마이페이지에서 본인의 프로필 이미지를 수정합니다.")
-    @PatchMapping("/setting/profile-image")
     public ApiResponse<UserResponseDTO.ProfileDto> updateUserProfileImage(
             HttpServletRequest request,
-            @RequestPart("profileImage") MultipartFile profileImage) {
+            @RequestPart(value = "profileImage") MultipartFile profileImage) {
 
-        UserResponseDTO.ProfileDto updatedProfile = userService.updateUserProfileImage(request, profileImage);
+        UserResponseDTO.ProfileDto updatedProfile = userService.updateUserProfileImage(request, profileImage, userService.getLoginUser(request));
         return ApiResponse.onSuccess(updatedProfile);
     }
 

@@ -27,7 +27,7 @@ public interface UserService {
     UserResponseDTO.UserActionResponseDto unfollowUser(HttpServletRequest request, Long targetUserId);
     User getLoginUser(HttpServletRequest request);
 
-    UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage);
+    UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage, User user);
 }
 
 
