@@ -23,7 +23,7 @@ public class ReactionRestController {
 
     @Operation(
             summary = "카드 반응 작성/수정/삭제",
-            description = "카드에 반응을 작성합니다. 기존에 작성한 반응이 존재하고 같은 반응을 요청하면 해당 반응이 삭제됩니다")
+            description = "카드에 반응을 작성합니다. 기존에 작성한 반응이 존재하고 같은 반응을 요청하면 해당 반응이 삭제됩니다.")
     @PostMapping("/{cardId}/{reactionType}")
     public ApiResponse<ReactionResponseDTO.ReactionHandleResponseDto> handleReaction(HttpServletRequest request,
                                                                                      @PathVariable("cardId") Long cardId,
