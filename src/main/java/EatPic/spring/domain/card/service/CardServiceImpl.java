@@ -32,10 +32,7 @@ import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -309,9 +306,9 @@ public class CardServiceImpl implements CardService {
     @Transactional(readOnly = true)
     public CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(HttpServletRequest request, Long userId, int size, Long cursor) {
         User me = userService.getLoginUser(request);
-
         Slice<Card> cardSlice;
         Pageable pageable = PageRequest.of(0, size);
+
         if(userId == null) { // 전체 선택
             cardSlice = cardRepository.findFeedExcludeBlocked(me.getId(),cursor,pageable);
         }else if(userId.equals(me.getId())){ // 내 피드 조회
@@ -335,14 +332,46 @@ public class CardServiceImpl implements CardService {
                 throw new ExceptionHandler(NO_RECENT_CARDS);
             }
         }
+
         if(cardSlice.isEmpty()){
             throw new ExceptionHandler(CARD_NOT_FOUND);
         }
+
+        List<Long> cardIds = cardSlice.stream().map(Card::getId).toList();
+
+        Map<Long, List<CardHashtag>> hashtagsMap = cardHashtagRepository.findByCardIdIn(cardIds).stream()
+                .collect(Collectors.groupingBy(ch -> ch.getCard().getId()));
+
+        Map<Long, Reaction> reactionMap = reactionRepository.findByCardIdInAndUserId(cardIds, me.getId()).stream()
+                .collect(Collectors.toMap(r -> r.getCard().getId(), r -> r));
+
+        Map<Long, Integer> reactionCountMap = reactionRepository.countByCardIdIn(cardIds).stream()
+                .collect(Collectors.toMap(
+                        r -> (Long) r[0], // cardId
+                        r -> ((Long) r[1]).intValue() // count
+                ));
+
+        Map<Long, Integer> commentCountMap = commentRepository.countByCardIdIn(cardIds).stream()
+                .collect(Collectors.toMap(
+                        r -> (Long) r[0],
+                        r -> ((Long) r[1]).intValue()
+                ));
+
+        Set<Long> bookmarkedCardIds = bookmarkRepository.findCardIdsByUserIdAndCardIdIn(me.getId(), cardIds);
+
         List<CardFeedResponse> feedList = cardSlice.stream()
-                .map(card -> getCardFeed(card.getId(),userId))
+                .map(card -> CardConverter.toFeedResponse(
+                        card,
+                        hashtagsMap.getOrDefault(card.getId(), Collections.emptyList()),
+                        card.getUser(),
+                        reactionMap.get(card.getId()),// 로그인 유저가 작성한 반응
+                        reactionCountMap.getOrDefault(card.getId(), 0),
+                        commentCountMap.getOrDefault(card.getId(), 0),
+                        bookmarkedCardIds.contains(card.getId())
+                ))
                 .toList();
 
-        return CardConverter.toPagedCardFeedResponseDTto(userId,cardSlice,feedList);
+        return CardConverter.toPagedCardFeedResponseDTto(userId, cardSlice, feedList);
     }
 
     @Override

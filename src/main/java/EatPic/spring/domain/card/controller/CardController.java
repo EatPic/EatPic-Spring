@@ -132,11 +132,10 @@ public class CardController {
   @GetMapping("/feeds")
   public ApiResponse<CardResponse.PagedCardFeedResponseDto> getFeeds(
           HttpServletRequest request,
+          @RequestParam(required = false) Long userId,
           @RequestParam(required = false) Long cursor,
           @RequestParam(defaultValue = "15") int size) {
-
-    User user = userService.getLoginUser(request);
-    return ApiResponse.onSuccess(cardService.getCardFeedByCursor(request,user.getId(),size,cursor));
+    return ApiResponse.onSuccess(cardService.getCardFeedByCursor(request,userId,size,cursor));
   }
 
 

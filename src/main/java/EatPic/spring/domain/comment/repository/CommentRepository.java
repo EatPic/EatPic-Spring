@@ -5,6 +5,8 @@ import EatPic.spring.domain.comment.entity.Comment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -21,5 +23,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     int countAllByCard(Card card);
 
     int countByCardId(Long cardId);
+
+    @Query("SELECT c.card.id, COUNT(c) FROM Comment c WHERE c.card.id IN :cardIds GROUP BY c.card.id")
+    List<Object[]> countByCardIdIn(@Param("cardIds") List<Long> cardIds);
 
 }
