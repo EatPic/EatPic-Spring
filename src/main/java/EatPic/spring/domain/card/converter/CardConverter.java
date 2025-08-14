@@ -103,6 +103,7 @@ public class CardConverter {
                 .user(CardResponse.CardFeedUserDTO.builder()
                         .userId(writer.getId())
                         .nickname(writer.getNickname())
+                        .nameId(writer.getNameId())
                         .profileImageUrl(writer.getProfileImageUrl())
                         .build())
                 .reactionCount(totalReactionCount)
