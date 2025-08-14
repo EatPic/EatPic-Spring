@@ -33,10 +33,13 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Controller
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/cards")
@@ -48,50 +51,15 @@ public class CardController {
   //픽카드 생성하기 부분에서 같은 날짜에, 같은 mealtype으로 픽카드 등록되지 않도록 수정해야함
   @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "픽카드 생성하기 (픽카드 기록 + 이미지 작성)", description = "기록 부분 string으로 받아서 JSON 파싱을 합니다.")
-  public ApiResponse<CreateCardResponse> createCard(
+  public ApiResponse<CardResponse.CreateCardResponse> createCard(
         HttpServletRequest req,
-          @RequestPart("request") String requestJson,
-          @RequestPart(value = "cardImageFile", required = false) MultipartFile cardImageFile) {
-
-    CardCreateRequest.CreateCardRequest request;
-    try {
-      ObjectMapper objectMapper = new ObjectMapper();
-      request = objectMapper.readValue(requestJson, CardCreateRequest.CreateCardRequest.class);
-
-    } catch (JsonProcessingException e) {
-      throw new GeneralException(ErrorStatus.REQUEST_BODY_INVALID);
-    }
-    User user = userService.getLoginUser(req);
-
-//    if (cardImageFile == null || cardImageFile.isEmpty()) {
-//      throw new GeneralException(ErrorStatus.IMAGE_REQUIRED);
-//    }
-    CardResponse.CreateCardResponse response = cardService.createNewCard(request, user, cardImageFile);
-    return ApiResponse.onSuccess(response);
-  }
-
-  // 기록 따로
-  @PostMapping(value = "/request")
-  @Operation(summary = "픽카드 생성하기 (픽카드 기록 작성)", description = "픽카드 생성할 때 필요한 내용 (픽카드 이미지 제외)을 호출하는 API")
-  public ApiResponse<CreateCardResponse> createCardReq(
-          HttpServletRequest request,
-          @RequestBody @Valid CardCreateRequest.CreateCardRequest cardCreateRequest
+        @RequestPart(value = "cardImageFile", required = false) MultipartFile cardImageFile,
+        @Valid @RequestPart(value = "request") CardCreateRequest.CreateCardRequest request
   ) {
-    User user = userService.getLoginUser(request);
+  User user = userService.getLoginUser(req);
 
-    CreateCardResponse response = cardService.createNewCardReq(request, cardCreateRequest, user);
+    CardResponse.CreateCardResponse response = cardService.createNewCard(req, request, user, cardImageFile);
     return ApiResponse.onSuccess(response);
-  }
-
-  // 픽카드 이미지 따로
-  @PostMapping(value = "/card-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @Operation(summary = "픽카드 생성하기 (픽카드 이미지 작성)", description = "픽카드 생성할 때 픽카드 이미지를 호출하는 API")
-  public ApiResponse<CreateCardResponse> createCardImage(
-          HttpServletRequest request,
-          @RequestPart(value = "cardImage") MultipartFile cardImage) {
-
-    CreateCardResponse newCardImage = cardService.createNewCardImage(request, cardImage, userService.getLoginUser(request));
-    return ApiResponse.onSuccess(newCardImage);
   }
 
   @GetMapping("/{cardId}")
