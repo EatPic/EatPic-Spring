@@ -126,8 +126,8 @@ public class CardController {
   @GetMapping("/feeds")
   public ApiResponse<CardResponse.PagedCardFeedResponseDto> getFeeds(
           HttpServletRequest request,
-          @RequestParam(required = false) Long userId,
-          @RequestParam(required = false) Long cursor,
+          @RequestParam(value = "userId", required = false) Long userId,
+          @RequestParam(value = "cursor", required = false) Long cursor,
           @RequestParam(defaultValue = "15") int size) {
     return ApiResponse.onSuccess(cardService.getCardFeedByCursor(request,userId,size,cursor));
   }
