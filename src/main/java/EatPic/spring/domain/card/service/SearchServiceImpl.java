@@ -8,6 +8,7 @@ import EatPic.spring.domain.card.repository.HashtagRepository;
 import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.hashtag.entity.Hashtag;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
+import EatPic.spring.domain.reaction.service.ReactionService;
 import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserFollowRepository;
@@ -24,6 +25,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,8 @@ public class SearchServiceImpl implements SearchService {
     private final UserFollowRepository userFollowRepository;
     private final HashtagRepository hashtagRepository;
     private final UserService userService;
+    private final CardServiceImpl cardService;
+    private final ReactionService reactionService;
 
     // 탐색 탭에서 모든 유저 리스트 조회
     @Override
@@ -44,16 +49,20 @@ public class SearchServiceImpl implements SearchService {
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         Slice<Card> cards = cardRepository.findByCursor(cursor, pageable);
 
+        List<Long> cardIds = cards.stream().map(Card::getId).toList();
+        Map<Long, Integer> commentCountMap = cardService.getCommentCountMap(cardIds);
+        Map<Long, Integer> reactionCountMap = cardService.getReactionCountMap(cardIds);
+
         List<SearchResponseDTO.GetCardResponseDto> result = cards.getContent().stream()
                 .map(card -> CardConverter.toGetCardResponseDto(
                         card,
-                        commentRepository.countAllByCard(card),
-                        reactionRepository.countAllReactionByCard(card)
+                        commentCountMap.getOrDefault(card.getId(), 0),
+                        reactionCountMap.getOrDefault(card.getId(), 0)
                 ))
                 .toList();
 
-        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getId();
         boolean hasNext = cards.hasNext();
+        Long nextCursor = hasNext ? cards.getContent().get(cards.getContent().size() - 1).getId() : null;
 
         return new SearchResponseDTO.GetCardListResponseDto(result, nextCursor, result.size(), hasNext);
     }
@@ -77,8 +86,8 @@ public class SearchServiceImpl implements SearchService {
                 .map(UserConverter::toAccountDto)
                 .toList();
 
-        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getUserId();
         boolean hasNext = users.hasNext();
+        Long nextCursor = hasNext ? users.getContent().get(users.getContent().size() - 1).getId() : null;
 
         return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
 
@@ -102,8 +111,8 @@ public class SearchServiceImpl implements SearchService {
                 .map(UserConverter::toAccountDto)
                 .toList();
 
-        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getUserId();
         boolean hasNext = users.hasNext();
+        Long nextCursor = hasNext ? users.getContent().get(users.getContent().size() - 1).getId() : null;
 
         return new SearchResponseDTO.GetAccountListResponseDto(result, nextCursor, result.size(), hasNext);
 
@@ -130,8 +139,8 @@ public class SearchServiceImpl implements SearchService {
             throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND);
 
         }
-        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getHashtagId();
         boolean hasNext = hashtags.hasNext();
+        Long nextCursor = hasNext ? hashtags.getContent().get(hashtags.getContent().size() - 1).getId() : null;
 
         return new SearchResponseDTO.GetHashtagListResponseDto(result, nextCursor, result.size(), hasNext);
     }
@@ -164,8 +173,8 @@ public class SearchServiceImpl implements SearchService {
             throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND);
         }
 
-        Long nextCursor = result.isEmpty() ? null : result.get(result.size() - 1).getHashtagId();
         boolean hasNext = hashtags.hasNext();
+        Long nextCursor = hasNext ? hashtags.getContent().get(hashtags.getContent().size() - 1).getId() : null;
 
         return new SearchResponseDTO.GetHashtagListResponseDto(result, nextCursor, result.size(), hasNext);
     }
