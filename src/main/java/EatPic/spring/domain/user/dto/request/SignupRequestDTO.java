@@ -41,7 +41,8 @@ public class SignupRequestDTO {
     @AssertTrue(message = "개인정보 처리방침에 동의해야 합니다.")
     private Boolean privacyPolicyAgreed;       // (필수) 개인정보 처리방침
 
+    @NotNull
     private Boolean marketingAgreed;           // (선택) 마케팅 수신 동의
-
+    @NotNull
     private Boolean notificationAgreed;        // (선택) 알림 수신 동의
 }

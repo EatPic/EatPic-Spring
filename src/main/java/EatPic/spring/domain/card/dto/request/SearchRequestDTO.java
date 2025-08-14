@@ -1,6 +1,7 @@
 package EatPic.spring.domain.card.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,9 +14,11 @@ public class SearchRequestDTO {
     @NoArgsConstructor
     public static class GetCardRequestDto {
         @Schema(description = "가져올 픽카드 개수")
+        @NotNull
         private int limit;
 
         @Schema(description = "커서")
+        @NotNull
         private Long cursor;
     }
 

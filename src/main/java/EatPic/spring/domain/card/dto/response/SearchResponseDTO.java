@@ -2,6 +2,7 @@ package EatPic.spring.domain.card.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,12 +18,15 @@ public class SearchResponseDTO {
     @AllArgsConstructor
     public static class GetCardResponseDto {
         @JsonProperty("card_id")
+        @NotNull
         private Long id;
 
         @JsonProperty("card_image_url")
+        @NotNull
         private String cardImageUrl;
-
+        @NotNull
         private int commentCount;
+        @NotNull
         private int reactionCount;
     }
 
@@ -32,10 +36,12 @@ public class SearchResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetCardListResponseDto {
-
+        @NotNull
         private List<GetCardResponseDto> cards;
         private Long nextCursor;
+        @NotNull
         private int size;
+        @NotNull
         private boolean hasNext;
     }
 
@@ -46,15 +52,19 @@ public class SearchResponseDTO {
     @AllArgsConstructor
     public static class GetAccountResponseDto {
         @JsonProperty("user_id")
+        @NotNull
         private Long userId;
 
         @JsonProperty("name_id")
+        @NotNull
         private String nameId;             // 유저 아이디
 
         @JsonProperty("nickname")
+        @NotNull
         private String nickname;           // 유저 닉네임
 
         @JsonProperty("profile_image_url")
+        @NotNull
         private String profileImageUrl;     // 프사
     }
 
@@ -66,7 +76,9 @@ public class SearchResponseDTO {
     public static class GetAccountListResponseDto {
         private List<GetAccountResponseDto> accounts;
         private Long nextCursor;
+        @NotNull
         private int size;
+        @NotNull
         private boolean hasNext;
     }
 
@@ -77,12 +89,15 @@ public class SearchResponseDTO {
     @AllArgsConstructor
     public static class GetHashtagResponseDto {
         @JsonProperty("hashtag_id")
+        @NotNull
         private Long hashtagId;
 
         @JsonProperty("hashtag_name")
+        @NotNull
         private String hashtagName;
 
         @JsonProperty("card_count")
+        @NotNull
         private Long card_count;
     }
 
@@ -92,9 +107,12 @@ public class SearchResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetHashtagListResponseDto {
+        @NotNull
         private List<GetHashtagResponseDto> hashtags;
         private Long nextCursor;
+        @NotNull
         private int size;
+        @NotNull
         private boolean hasNext;
     }
 }

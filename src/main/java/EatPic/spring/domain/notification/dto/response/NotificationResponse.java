@@ -3,6 +3,8 @@ package EatPic.spring.domain.notification.dto.response;
 import EatPic.spring.domain.notification.entity.NotificationType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,24 +23,31 @@ public class NotificationResponse {
   public static class RecentNotificationResponse {
 
     @Schema(description = "알림 ID", example = "1")
+    @NotNull
     private Long notificationId;
 
     @Schema(description = "알림 타입", example = "LIKE")
+    @NotNull
     private NotificationType type;
 
     @Schema(description = "알림 메시지", example = "sososo 님이 회원님의 식사 기록을 좋아합니다.")
+    @NotNull
     private String message;
 
     @Schema(description = "알림 생성 시각", example = "2025-07-09T01:05:00")
+    @NotNull
     private LocalDateTime createdAt;
 
     @Schema(description = "알림 읽음 여부", example = "false")
+    @NotNull
     private boolean isRead;
 
     @Schema(description = "리소스 ID (카드 ID)", example = "6")
+    @NotNull
     private Long resourceId;
 
     @Schema(description = "알림 보낸 사용자 정보")
+    @NotNull
     private NotificationUserDTO user;
 
     @Schema(description = "해당 카드 이미지 URL (LIKE, COMMENT 타입인 경우에만 사용)", example = "https://cdn.eatpic.com/cards/123.jpg")
@@ -56,12 +65,15 @@ public class NotificationResponse {
   public static class NotificationUserDTO {
 
     @Schema(description = "보낸 유저 ID", example = "123")
+    @NotNull
     private Long userId;
 
     @Schema(description = "닉네임", example = "잇콩")
+    @NotNull
     private String nickname;
 
     @Schema(description = "프로필 이미지 URL", example = "https://cdn.eatpic.com/profile/123.jpg")
+    @NotNull
     private String profileImageUrl;
   }
 
