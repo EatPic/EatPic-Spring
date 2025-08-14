@@ -33,13 +33,15 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 
   List<Card> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
 
-  @Query("""
-SELECT c
+@Query("""
+SELECT DISTINCT c
 FROM Card c
+JOIN FETCH c.user u
+LEFT JOIN FETCH c.cardHashtags ch
 WHERE c.isDeleted = false
   AND c.isShared = true
-  AND c.user.id <> :loginUserId
-  AND c.user.id NOT IN (
+  AND u.id <> :loginUserId
+  AND u.id NOT IN (
       SELECT ub.blockedUser.id
       FROM UserBlock ub
       WHERE ub.user.id = :loginUserId

@@ -5,6 +5,8 @@ import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.reaction.entity.ReactionId;
 import EatPic.spring.domain.reaction.entity.ReactionType;
 import EatPic.spring.domain.user.entity.User;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +31,10 @@ public interface ReactionRepository extends JpaRepository<Reaction, ReactionId> 
 
     long countByCardAndReactionType(Card card, ReactionType reactionType);
 
+    // 카드별 작성 반응
+    List<Reaction> findByCardIdInAndUserId(List<Long> cardIds, Long userId);
+
+    @Query("SELECT r.card.id, COUNT(r) FROM Reaction r WHERE r.card.id IN :cardIds GROUP BY r.card.id")
+    List<Object[]> countByCardIdIn(@Param("cardIds") List<Long> cardIds);
 
 }

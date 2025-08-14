@@ -15,4 +15,6 @@ public interface CardHashtagRepository extends JpaRepository<CardHashtag, Long> 
 
   List<CardHashtag> findByHashtag(Hashtag hashtag);      // Hashtag 객체
   List<CardHashtag> findByHashtagId(Long hashtagId);      // Hashtag의 PK값
+
+  List<CardHashtag> findByCardIdIn(List<Long> cardIds);
 }
