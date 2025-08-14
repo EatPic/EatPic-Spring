@@ -128,7 +128,7 @@ public class CardController {
           HttpServletRequest request,
           @RequestParam(value = "userId", required = false) Long userId,
           @RequestParam(value = "cursor", required = false) Long cursor,
-          @RequestParam(defaultValue = "15") int size) {
+          @RequestParam(value = "size", defaultValue = "15") int size) {
     return ApiResponse.onSuccess(cardService.getCardFeedByCursor(request,userId,size,cursor));
   }
 

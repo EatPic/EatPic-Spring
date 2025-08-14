@@ -126,6 +126,7 @@ public class CardResponse {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // JSON 변환 시 포맷 지정
+    @Schema(description = "날짜/시간", example = "2025-08-09T08:17:29")
     private LocalDateTime datetime;
 
     @Schema(description = "식사 종류", example = "LUNCH")
