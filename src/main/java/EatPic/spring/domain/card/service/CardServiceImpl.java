@@ -345,17 +345,8 @@ public class CardServiceImpl implements CardService {
         Map<Long, Reaction> reactionMap = reactionRepository.findByCardIdInAndUserId(cardIds, me.getId()).stream()
                 .collect(Collectors.toMap(r -> r.getCard().getId(), r -> r));
 
-        Map<Long, Integer> reactionCountMap = reactionRepository.countByCardIdIn(cardIds).stream()
-                .collect(Collectors.toMap(
-                        r -> (Long) r[0], // cardId
-                        r -> ((Long) r[1]).intValue() // count
-                ));
-
-        Map<Long, Integer> commentCountMap = commentRepository.countByCardIdIn(cardIds).stream()
-                .collect(Collectors.toMap(
-                        r -> (Long) r[0],
-                        r -> ((Long) r[1]).intValue()
-                ));
+        Map<Long, Integer> reactionCountMap = getReactionCountMap(cardIds);
+        Map<Long, Integer> commentCountMap = getCommentCountMap(cardIds);
 
         Set<Long> bookmarkedCardIds = bookmarkRepository.findCardIdsByUserIdAndCardIdIn(me.getId(), cardIds);
 
@@ -389,4 +380,20 @@ public class CardServiceImpl implements CardService {
             ))
             .toList();
     }
+
+    public Map<Long, Integer> getReactionCountMap(List<Long> cardIds){
+        return  reactionRepository.countByCardIdIn(cardIds).stream()
+                .collect(Collectors.toMap(
+                        r -> (Long) r[0], // cardId
+                        r -> ((Long) r[1]).intValue() // count
+                ));
+    }
+    public Map<Long, Integer> getCommentCountMap(List<Long> cardIds){
+        return  commentRepository.countByCardIdIn(cardIds).stream()
+                .collect(Collectors.toMap(
+                        r -> (Long) r[0], // cardId
+                        r -> ((Long) r[1]).intValue() // count
+                ));
+    }
+
 }
