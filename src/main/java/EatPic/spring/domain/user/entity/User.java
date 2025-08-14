@@ -93,5 +93,9 @@ public class User extends BaseEntity {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
 }
 

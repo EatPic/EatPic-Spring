@@ -2,6 +2,7 @@ package EatPic.spring.domain.user.service;
 
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
+import EatPic.spring.domain.user.dto.request.UserRequest;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
@@ -27,7 +28,9 @@ public interface UserService {
     UserResponseDTO.UserActionResponseDto unfollowUser(HttpServletRequest request, Long targetUserId);
     User getLoginUser(HttpServletRequest request);
 
+    // 마이페이지 업데이트 관련 서비스
     UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage, User user);
+    UserResponseDTO.ProfileDto updateIntroduce(HttpServletRequest request, UserRequest.UpdateUserInroduceRequest introduce, User user);
 }
 
 

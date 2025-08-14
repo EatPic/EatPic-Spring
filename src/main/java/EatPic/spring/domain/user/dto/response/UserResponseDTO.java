@@ -18,6 +18,7 @@ public class UserResponseDTO {
         private String profileImageUrl;
         private String nameId;
         private String nickname;
+        private String introduce;
         private Boolean isFollowing;
     }
 
