@@ -177,6 +177,9 @@ public class CardResponse {
     @Schema(description = "작성자 유저 ID", example = "5")
     private Long userId;
 
+    @Schema(description = "아이디", example= "naniianiida")
+    private String nameId;
+
     @Schema(description = "닉네임", example = "잇콩")
     private String nickname;
 
