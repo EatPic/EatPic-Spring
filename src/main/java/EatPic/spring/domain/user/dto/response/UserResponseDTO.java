@@ -1,5 +1,6 @@
 package EatPic.spring.domain.user.dto.response;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,11 +15,18 @@ public class UserResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ProfileDto {
+        @NotNull
         private Long userId;
+        @NotNull
         private String profileImageUrl;
+        @NotNull
         private String nameId;
+        @NotNull
         private String nickname;
+      
+        @NotNull
         private String introduce;
+      
         private Boolean isFollowing;
     }
 
@@ -27,8 +35,11 @@ public class UserResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UserIconListResponseDto{
+        @NotNull
         private int page;
+        @NotNull
         private int size;
+        @NotNull
         private int total;
         private List<ProfileDto> userIconList;
     }
@@ -38,7 +49,9 @@ public class UserResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UserActionResponseDto {
+        @NotNull
         Long userId;
+        @NotNull
         Long targetUserId;
     }
 

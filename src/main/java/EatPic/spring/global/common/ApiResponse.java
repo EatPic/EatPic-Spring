@@ -5,6 +5,7 @@ import EatPic.spring.global.common.code.status.SuccessStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,10 +14,14 @@ import lombok.Getter;
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
 public class ApiResponse<T> {
     @JsonProperty("isSuccess")
+    @NotNull
     private final Boolean isSuccess;
+    @NotNull
     private final String code;
+    @NotNull
     private final String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotNull
     private T result;
 
     public static <T> ApiResponse<T> onSuccess(T result){

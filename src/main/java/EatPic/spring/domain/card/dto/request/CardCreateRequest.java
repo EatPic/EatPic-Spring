@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,34 +26,43 @@ public class CardCreateRequest {
 
     @JsonProperty("isShared")
     @Schema(description = "피드 공개 여부 (true = 공개, false = 비공개)", example = "true")
+    @NotNull
     private Boolean isShared;
 
     @JsonProperty("locationText")
     @Schema(description = "장소 이름 텍스트", example = "서울특별시 성북구 정릉동")
+    @NotNull
     private String locationText;
 
     @Schema(description = "위도", example = "37.5665")
+    @NotNull
     private BigDecimal latitude;
 
     @Schema(description = "경도", example = "126.9780")
+    @NotNull
     private BigDecimal longitude;
 
     @Schema(description = "레시피 내용", example = "야채, 아보카도, 소스 조합으로 구성된 샐러드입니다.")
+    @NotNull
     private String recipe;
 
     @Schema(description = "레시피 링크 URL", example = "https://example.com/recipe/123")
+    @NotNull
     private String recipeUrl;
 
     @Schema(description = "나의 메모", example = "오늘은 샐러드를 먹었습니다~ 아보카도를 많이 넣었어요")
+    @NotNull
     private String memo;
 
     @JsonProperty("meal")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Schema(description = "식사 유형 (Enum: BREAKFAST, LUNCH, DINNER 등)", example = "LUNCH")
+    @NotNull
     private Meal meal; // Enum 매핑 시 대소문자 주의
 
     @JsonProperty("hashtags")
     @Schema(description = "사용자가 선택/생성한 해시태그 목록 (이름 기준)", example = "[\"샐러드\", \"건강식\"]")
+    @NotNull
     private List<String> hashtags; // 해시태그 목록
   }
 
@@ -65,24 +75,31 @@ public class CardCreateRequest {
   public static class CardUpdateRequest {
 
     @Schema(description = "나의 메모", example = "오늘은 샐러드를 먹었습니다~ 아보카도를 많이 넣었어요")
+    @NotNull
     private String memo;
 
     @Schema(description = "레시피 내용", example = "야채, 아보카도, 소스 조합으로 구성된 샐러드입니다.")
+    @NotNull
     private String recipe;
 
     @Schema(description = "레시피 링크 URL", example = "https://example.com/recipe/123")
+    @NotNull
     private String recipeUrl;
 
     @Schema(description = "위도", example = "37.5665")
+    @NotNull
     private BigDecimal latitude;
 
     @Schema(description = "경도", example = "126.9780")
+    @NotNull
     private BigDecimal longitude;
 
     @Schema(description = "장소 이름 텍스트", example = "서울특별시 성북구 정릉동")
+    @NotNull
     private String locationText;
 
     @Schema(description = "피드 공개 여부 (true = 공개, false = 비공개)", example = "true")
+    @NotNull
     private Boolean isShared;
 
   }

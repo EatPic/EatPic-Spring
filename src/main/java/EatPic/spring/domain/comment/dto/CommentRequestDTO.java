@@ -1,6 +1,7 @@
 package EatPic.spring.domain.comment.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ public class CommentRequestDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class WriteCommentDto{
-
+        @NotNull
         private Long parentCommentId;
 
         @NotBlank(message = "내용은 필수입니다.")

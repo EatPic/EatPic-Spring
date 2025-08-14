@@ -1,6 +1,7 @@
 package EatPic.spring.domain.user.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,18 +20,23 @@ public class UserBadgeResponse {
   public static class HomeBadgeResponse {
 
     @Schema(description = "뱃지 ID", example = "1")
+    @NotNull
     private Long userBadgeId;
 
     @Schema(description = "뱃지 이름", example = "공유잼")
+    @NotNull
     private String badgeName;
 
     @Schema(description = "뱃지 이미지 URL", example = "https://cdn.eatpic.com/badges/badge_1.jpg")
+    @NotNull
     private String badgeImageUrl;
 
     @Schema(description = "진행률 (0~100)", example = "70")
+    @NotNull
     private int progressRate;
 
     @Schema(description = "뱃지 획득 여부", example = "true")
+    @NotNull
     private boolean isAchieved;
 
 
