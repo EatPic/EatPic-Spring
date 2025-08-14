@@ -90,7 +90,8 @@ EatPic Spring은 이러한 모바일 서비스의 **백엔드**를 담당하는
 
 ## 📁 프로젝트 구조
 
-`textsrc/
+```
+src/
 ├── main/
 │   └── java/
 │       └── EatPic/
@@ -118,7 +119,8 @@ EatPic Spring은 이러한 모바일 서비스의 **백엔드**를 담당하는
 ├── .github/                               # CI/CD 및 워크플로우
 ├── gradle/                                # 빌드 스크립트 관련 파일
 ├── Dockerfile                             # Docker 환경 설정
-├── .gitignore`
+├── .gitignore
+```
 
 ## 🗂️ 주요 폴더 설명
 
@@ -149,6 +151,5 @@ EatPic Spring은 이러한 모바일 서비스의 **백엔드**를 담당하는
 
 ## 👤 EatPic Spring
 
-| <img src="https://avatars.githubusercontent.com/u/145183497?v=4" width="150" height="150"/> | <img src="https://avatars.githubusercontent.com/u/186535028?v=4" width="150" height="150"/> | <img src=”https://avatars.githubusercontent.com/u/154819055?v=4" width="150" height="150"/> | <img src="https://github.com/ye-zin" width="150" height="150"/> |
 | --- | --- | --- | --- |
 | 김이안<br/>[@2anizirong](https://github.com/2anizirong) | 김준호<br/>[@kjhh2605](https://github.com/kjhh2605) | 윤해민<br/>[@hamtorygoals](https://github.com/hamtorygoals) | 박예진<br/>[@ye-zin](https://github.com/ye-zin) |
