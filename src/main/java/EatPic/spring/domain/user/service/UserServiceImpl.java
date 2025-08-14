@@ -4,6 +4,7 @@ import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
+import EatPic.spring.domain.user.dto.request.UserRequest;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
@@ -219,6 +220,7 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    // 유저 프로필 이미지 업데이트
     @Override
     public UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage,User user) {
 
@@ -247,4 +249,17 @@ public class UserServiceImpl implements UserService{
                 .build();
     }
 
+    // 유저 소개 업데이트
+    @Override
+    public UserResponseDTO.ProfileDto updateIntroduce(HttpServletRequest request, UserRequest.UpdateUserInroduceRequest introduce, User user) {
+
+        user.setIntroduce(introduce.getIntroduce()); // introduce 부분만 변경
+
+        userRepository.save(user);
+
+        return UserResponseDTO.ProfileDto.builder()
+                .userId(user.getId())
+                .introduce(user.getIntroduce())
+                .build();
+    }
 }
