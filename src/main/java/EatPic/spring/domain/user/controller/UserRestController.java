@@ -1,5 +1,6 @@
 package EatPic.spring.domain.user.controller;
 
+import EatPic.spring.domain.user.dto.request.UserRequest;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.service.UserService;
@@ -68,4 +69,14 @@ public class UserRestController {
         return ApiResponse.onSuccess(updatedProfile);
     }
 
+    @PatchMapping(value = "/setting/introduce")
+    @Operation(summary = "유저 소개를 수정", description = "마이페이지에서 본인의 소개를 수정합니다.")
+    public ApiResponse<UserResponseDTO.ProfileDto> updateUserIntroduce(
+            HttpServletRequest request,
+            @RequestBody UserRequest.UpdateUserInroduceRequest introduce
+    ) {
+        User user = userService.getLoginUser(request);
+        UserResponseDTO.ProfileDto updatedProfile = userService.updateIntroduce(request, introduce, user);
+        return ApiResponse.onSuccess(updatedProfile);
+    }
 }

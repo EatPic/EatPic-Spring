@@ -2,8 +2,10 @@ package EatPic.spring.domain.card.dto.response;
 
 import EatPic.spring.domain.card.entity.Meal;
 import EatPic.spring.domain.hashtag.entity.Hashtag;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 
@@ -147,14 +150,11 @@ public class CardResponse {
     @Schema(description = "카드 이미지 URL", example = "https://cdn.eatpic.com/cards/123.jpg")
     @NotNull
     private String imageUrl;
-
-    @Schema(description = "식사 날짜", example = "2025-07-01")
-    @NotNull
-    private LocalDate date;
-
-    @Schema(description = "식사 시간", example = "13:10")
-    @NotNull
-    private LocalTime time;
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // JSON 변환 시 포맷 지정
+    @Schema(description = "날짜/시간", example = "2025-08-09T08:17:29")
+    private LocalDateTime datetime;
 
     @Schema(description = "식사 종류", example = "LUNCH")
     @NotNull
@@ -218,6 +218,9 @@ public class CardResponse {
     @Schema(description = "작성자 유저 ID", example = "5")
     @NotNull
     private Long userId;
+
+    @Schema(description = "아이디", example= "naniianiida")
+    private String nameId;
 
     @Schema(description = "닉네임", example = "잇콩")
     @NotNull

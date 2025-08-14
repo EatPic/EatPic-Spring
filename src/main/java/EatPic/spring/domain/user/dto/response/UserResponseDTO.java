@@ -23,7 +23,10 @@ public class UserResponseDTO {
         private String nameId;
         @NotNull
         private String nickname;
+      
         @NotNull
+        private String introduce;
+      
         private Boolean isFollowing;
     }
 
