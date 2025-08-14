@@ -1,5 +1,8 @@
 # 🫛 EatPic
 
+
+
+
 ## 프로젝트 설명
 
 **EatPic**은 *사진 한 장으로 편리하게 식사 기록*을 할 수 있는 **식사 기록 & 커뮤니티 서비스**입니다.
@@ -21,6 +24,10 @@
 
 EatPic Spring은 이러한 모바일 서비스의 **백엔드**를 담당하는 Spring Boot 기반 서버 애플리케이션입니다.
 
+
+
+
+
 ## 🌐 Git Convention : GitHub Flow
 
 - **브랜치 종류** : **`main`**, **`feature`**
@@ -38,6 +45,10 @@ EatPic Spring은 이러한 모바일 서비스의 **백엔드**를 담당하는
     예: **`feature/1-user-authentication`**
     
 - 기능 개발과 관련된 버그 수정은 feature 브랜치 내에서 마무리한 뒤, **main 브랜치로 PR**을 올립니다.
+
+
+
+
 
 ## 📝 Git Convention : Commit
 
@@ -84,9 +95,16 @@ EatPic Spring은 이러한 모바일 서비스의 **백엔드**를 담당하는
     `textFixes: #12`
     
 
+
+
+
 ## **🚀 서비스 아키텍처 다이어그램**
 
-![image.png](attachment:3f3acf4f-d9f4-4fcd-802d-58fec86a7cf9:image.png)
+<img width="2008" height="1056" alt="아키텍처" src="https://github.com/user-attachments/assets/426181a8-663a-4105-a2f6-720fac3c4b10" />
+
+
+
+
 
 ## 📁 프로젝트 구조
 
@@ -103,7 +121,7 @@ src/
 │               │   ├── card/
 │               │   ├── comment/
 │               │   ├── greetingMessage/
-│               │   ├── hashtag/entity/
+│               │   ├── hashtag/
 │               │   ├── notification/
 │               │   ├── reaction/
 │               │   ├── reportHistory/
@@ -122,6 +140,10 @@ src/
 ├── .gitignore
 ```
 
+
+
+
+
 ## 🗂️ 주요 폴더 설명
 
 - **domain/**: 각 서비스 기능별 엔티티 및 로직 관리 (badge, bookmark, calendar 등)
@@ -130,6 +152,10 @@ src/
 - **.github/**: GitHub Actions 및 자동화 설정
 - **gradle/**: 빌드/의존성 관리
 - **Dockerfile**: 컨테이너 배포 환경 설정
+
+
+
+
 
 ## 🗄️ 데이터베이스 설계 규칙
 
@@ -147,9 +173,13 @@ src/
 - **파일 저장 원칙**
     - 이미지/파일을 DB에 직접 저장하지 않음
     - 대신 **URL** 또는 **UUID**로 경로·식별자를 관리
+
+
     
+
 
 ## 👤 EatPic Spring
 
+| <img src="https://avatars.githubusercontent.com/u/145183497?v=4" width="150" height="150"/> | <img src="https://avatars.githubusercontent.com/u/186535028?v=4" width="150" height="150"/> | <img src="https://avatars.githubusercontent.com/u/154819055?v=4" width="150" height="150"/> | <img src="https://avatars.githubusercontent.com/u/204146452?v=4" width="150" height="150"/> |
 | --- | --- | --- | --- |
 | 김이안<br/>[@2anizirong](https://github.com/2anizirong) | 김준호<br/>[@kjhh2605](https://github.com/kjhh2605) | 윤해민<br/>[@hamtorygoals](https://github.com/hamtorygoals) | 박예진<br/>[@ye-zin](https://github.com/ye-zin) |
