@@ -20,6 +20,7 @@ import EatPic.spring.domain.comment.repository.CommentRepository;
 import EatPic.spring.domain.hashtag.entity.Hashtag;
 import EatPic.spring.domain.reaction.entity.Reaction;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
+import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserRepository;
 import EatPic.spring.domain.user.service.UserBadgeService;
@@ -92,10 +93,9 @@ public class CardServiceImpl implements CardService {
     // s3 설정
     private final AmazonS3Manager s3Manager;
 
-
     @Override
     @Transactional
-    public CardResponse.CreateCardResponse createNewCard(CardCreateRequest.CreateCardRequest request, User user, MultipartFile cardImageFile) {
+    public CardResponse.CreateCardResponse createNewCard(HttpServletRequest req, CardCreateRequest.CreateCardRequest request, User user, MultipartFile cardImageFile) {
 
         Long userId = user.getId();
 
