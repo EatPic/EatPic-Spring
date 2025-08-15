@@ -3,6 +3,7 @@ package EatPic.spring.domain.card.service;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.CardDeleteResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.RecommendCardResponse;
@@ -19,7 +20,7 @@ public interface CardService {
   CardResponse.CreateCardResponse createNewCard(HttpServletRequest req, CardCreateRequest.CreateCardRequest request, User user, MultipartFile cardImageFile);
   CardDetailResponse getCardDetail(Long cardId, Long userId);
   CardFeedResponse getCardFeed(Long cardId, Long userId);
-  void deleteCard(Long cardId, Long userId);
+  CardDeleteResponse deleteCard(Long cardId, Long userId);
   List<TodayCardResponse> getTodayCards(Long userId);
   CardDetailResponse updateCard(Long cardId, User user, CardUpdateRequest request);
   CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(HttpServletRequest request, Long userId, int size, Long cursor);

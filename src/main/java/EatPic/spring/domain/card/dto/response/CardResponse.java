@@ -279,6 +279,22 @@ public class CardResponse {
 
   }
 
+  @Builder
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Schema(title = "CardDeleteResponse: 카드 삭제 응답 dto")
+  public static class CardDeleteResponse {
+    @Schema(description = "카드 ID", example = "12")
+    @NotNull
+    private Long cardId;
+
+    @Schema(description = "카드 삭제 성공 메세지", example = "카드 삭제 성공")
+    @NotNull
+    private String successMessage;
+
+  }
+
 
 
 }
