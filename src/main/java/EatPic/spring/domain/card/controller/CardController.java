@@ -3,6 +3,7 @@ package EatPic.spring.domain.card.controller;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.CardDeleteResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CreateCardResponse;
@@ -91,12 +92,12 @@ public class CardController {
 
   @DeleteMapping("/{cardId}")
   @Operation(summary = "카드 삭제", description = "카드를 소프트 삭제 처리합니다.")
-  public ApiResponse<Void> deleteCard(
+  public ApiResponse<CardDeleteResponse> deleteCard(
           HttpServletRequest request,
           @PathVariable(name = "cardId") Long cardId) {
     User user = userService.getLoginUser(request);
-    cardService.deleteCard(cardId, user.getId());
-    return ApiResponse.onSuccess(null);
+    CardDeleteResponse response = cardService.deleteCard(cardId, user.getId());
+    return ApiResponse.onSuccess(response);
   }
 
   @Operation(summary = "오늘의 식사 카드 조회", description = "홈 진입 시, 오늘 등록된 식사 카드들을 조회합니다.")
@@ -109,7 +110,7 @@ public class CardController {
   }
 
   @Operation(summary = "픽카드 수정", description = "카드의 메모, 레시피, 위치 정보 등을 수정합니다.")
-  @PutMapping("/api/cards/{cardId}")
+  @PutMapping("/{cardId}")
   public ResponseEntity<ApiResponse<CardDetailResponse>> updateCard(
           HttpServletRequest req,
           @Parameter(description = "수정할 카드 ID", example = "12")

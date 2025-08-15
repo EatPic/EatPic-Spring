@@ -32,6 +32,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
   Optional<Card> findByIdAndIsDeletedFalse(Long id);
 
   List<Card> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
+  List<Card> findAllByUserAndIsDeletedFalseAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
 
 @Query("""
 SELECT DISTINCT c

@@ -6,6 +6,7 @@ import EatPic.spring.domain.card.converter.CardConverter;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.request.CardCreateRequest.CardUpdateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.CardDeleteResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.RecommendCardResponse;
@@ -203,7 +204,7 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public CardDetailResponse getCardDetail(Long cardId, Long userId) {
-        Card selectedCard = cardRepository.findById(cardId)
+        Card selectedCard = cardRepository.findByIdAndIsDeletedFalse(cardId) // 삭제된 카드는 불러올 수 없도록 변경
             .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
 
         // 1. 해당 카드의 작성 날짜
@@ -235,7 +236,7 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public CardFeedResponse getCardFeed(Long cardId, Long userId) {
-        Card card = cardRepository.findById(cardId)
+        Card card = cardRepository.findByIdAndIsDeletedFalse(cardId) // 삭제된 카드는 불러올 수 없도록 변경
             .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
 
         List<CardHashtag> hashtags = cardHashtagRepository.findByCard(card); // 해당 카드의 해시태그들 조회
@@ -252,8 +253,8 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public void deleteCard(Long cardId, Long userId) {
-        Card card = cardRepository.findByIdAndIsDeletedFalse(cardId)
+    public CardDeleteResponse deleteCard(Long cardId, Long userId) {
+        Card card = cardRepository.findByIdAndIsDeletedFalse(cardId)  // 삭제되지 않은 카드로 찾기!! 모든 카드 id로 조회할 때, 이 함수 쓰기
             .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
 
         if (!card.getUser().getId().equals(userId)) {
@@ -261,6 +262,7 @@ public class CardServiceImpl implements CardService {
         }
 
         card.softDelete(); // isDeleted = true, deletedAt = now()
+        return CardConverter.toCardDeleteResponse(card);
     }
 
     @Override
@@ -268,7 +270,7 @@ public class CardServiceImpl implements CardService {
     public List<TodayCardResponse> getTodayCards(Long userId) {
         User user = userRepository.findUserById(userId);
         LocalDate today = LocalDate.now();
-        List<Card> todayCards = cardRepository.findAllByUserAndCreatedAtBetween(
+        List<Card> todayCards = cardRepository.findAllByUserAndIsDeletedFalseAndCreatedAtBetween( // 삭제된 카드는 조회되지 않도록 변경
             user,
             today.atStartOfDay(),
             today.plusDays(1).atStartOfDay()
@@ -282,7 +284,7 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public CardDetailResponse updateCard(Long cardId, User user, CardUpdateRequest request) {
-        Card card = cardRepository.findById(cardId)
+        Card card = cardRepository.findByIdAndIsDeletedFalse(cardId) // 삭제된 카드는 불러올 수 없도록 변경
             .orElseThrow(() -> new ExceptionHandler(ErrorStatus.CARD_NOT_FOUND));
 
         if (!card.getUser().getId().equals(user.getId())) {

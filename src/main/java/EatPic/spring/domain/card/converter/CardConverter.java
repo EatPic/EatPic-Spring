@@ -2,6 +2,7 @@ package EatPic.spring.domain.card.converter;
 
 import EatPic.spring.domain.card.dto.request.CardCreateRequest;
 import EatPic.spring.domain.card.dto.response.CardResponse;
+import EatPic.spring.domain.card.dto.response.CardResponse.CardDeleteResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardDetailResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedResponse;
 import EatPic.spring.domain.card.dto.response.CardResponse.CardFeedUserDTO;
@@ -149,5 +150,12 @@ public class CardConverter {
                 .hashtagName(hashtag.getHashtagName())
                 .card_count(cardCount)
                 .build();
+    }
+
+    public static CardDeleteResponse toCardDeleteResponse(Card card) {
+        return CardDeleteResponse.builder()
+            .cardId(card.getId())
+            .successMessage("카드 삭제 성공")
+            .build();
     }
 }
