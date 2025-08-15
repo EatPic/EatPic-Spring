@@ -64,7 +64,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 팔로우 관련 응답
     FOLLOW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "FOLLOW_001", "이미 팔로잉 중입니다"),
-    FOLLOW_NOT_EXISTS(HttpStatus.BAD_REQUEST, "FOLLOW_002", "팔로우 기록이 없습니다");
+    FOLLOW_NOT_EXISTS(HttpStatus.BAD_REQUEST, "FOLLOW_002", "팔로우 기록이 없습니다"),
+
+    // 약관 관련 응답
+    TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "TERM_001", "해당 약관을 찾을 수 없습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;
