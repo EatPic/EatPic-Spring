@@ -127,10 +127,34 @@ public class SearchServiceImpl implements SearchService {
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         Slice<Hashtag> hashtags = hashtagRepository.searchHashtagInAll("%" + query + "%", cursor, pageable);
 
+        return getGetHashtagListResponseDto(hashtags);
+    }
+    // 유저가 팔로우한 사용자인 경우에서 해시태그 검색
+    @Override
+    public SearchResponseDTO.GetHashtagListResponseDto getHashtagInFollow(HttpServletRequest request, String query, int limit, Long cursor) {
+
+        User user = userService.getLoginUser(request);
+
+        // 팔로우한 유저 목록 조회
+        List<Long> followingUserIds = userFollowRepository.findFollowingUserIds(user.getId());
+        if (followingUserIds == null || followingUserIds.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND); // 팔로잉한 유저가 없는 경우
+        }
+
+        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
+        Slice<Hashtag> hashtags = hashtagRepository.searchHashtagInFollow(query, followingUserIds, cursor, pageable);
+
+        return getGetHashtagListResponseDto(hashtags);
+    }
+
+    private SearchResponseDTO.GetHashtagListResponseDto getGetHashtagListResponseDto(Slice<Hashtag> hashtags) {
+        List<Long> hashtagsIds = hashtags.stream().map(Hashtag::getId).toList();
+        Map<Long,Long> cardCountByHashtagMap = getMapCardCountByHashtag(hashtagsIds);
+
         List<SearchResponseDTO.GetHashtagResponseDto> result = hashtags.getContent().stream()
                 .map(hashtag -> CardConverter.toHashtagDto(
                         hashtag,
-                        cardRepository.countCardsByHashtag(hashtag.getId())
+                        cardCountByHashtagMap.getOrDefault(hashtag.getId(),0L)
                 ))
                 .filter(dto -> dto.getCard_count() > 0)  // 카드가 없는 해시태그는 제외
                 .toList();
@@ -145,39 +169,6 @@ public class SearchServiceImpl implements SearchService {
         return new SearchResponseDTO.GetHashtagListResponseDto(result, nextCursor, result.size(), hasNext);
     }
 
-    // 유저가 팔로우한 사용자인 경우에서 해시태그 검색
-    @Override
-    public SearchResponseDTO.GetHashtagListResponseDto getHashtagInFollow(HttpServletRequest request, String query, int limit, Long cursor) {
-
-        User user = userService.getLoginUser(request);
-
-        // 팔로우한 유저 목록 조회
-        List<Long> followingUserIds = userFollowRepository.findFollowingUserIds(user.getId());
-        if (followingUserIds == null || followingUserIds.isEmpty()) {
-            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND); // 팔로잉한 유저가 없는 경우
-        }
-
-        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
-
-        Slice<Hashtag> hashtags = hashtagRepository.searchHashtagInFollow(query, followingUserIds, cursor, pageable);
-
-        List<SearchResponseDTO.GetHashtagResponseDto> result = hashtags.getContent().stream()
-                .map(hashtag -> CardConverter.toHashtagDto(
-                        hashtag,
-                        cardRepository.countCardsByHashtag(hashtag.getId())
-                ))
-                .filter(dto -> dto.getCard_count() > 0)
-                .toList();
-
-        if (result.isEmpty()) {
-            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND);
-        }
-
-        boolean hasNext = hashtags.hasNext();
-        Long nextCursor = hasNext ? hashtags.getContent().get(hashtags.getContent().size() - 1).getId() : null;
-
-        return new SearchResponseDTO.GetHashtagListResponseDto(result, nextCursor, result.size(), hasNext);
-    }
 
     // 해시태그 선택 시 해당 해시태그가 포함된 픽카드 리스트 조회
     @Override
@@ -188,10 +179,14 @@ public class SearchServiceImpl implements SearchService {
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         Slice<Card> cards = cardRepository.findCardsByHashtag(hashtagId, cursor, pageable);
 
+        List<Long> cardIds = cards.stream().map(Card::getId).toList();
+        Map<Long, Integer> commentCountMap = cardService.getCommentCountMap(cardIds);
+        Map<Long, Integer> reactionCountMap = cardService.getReactionCountMap(cardIds);
+
         List<SearchResponseDTO.GetCardResponseDto> content = cards.getContent().stream()
                 .map(card -> {
-                    int commentCount = commentRepository.countByCardId(card.getId());
-                    int reactionCount = reactionRepository.countByCardId(card.getId());
+                    int commentCount = commentCountMap.getOrDefault(card.getId(), 0);
+                    int reactionCount = reactionCountMap.getOrDefault(card.getId(), 0);
                     return CardConverter.toCardResponseDto(card, commentCount, reactionCount);
                 })
                 .toList();
@@ -204,5 +199,13 @@ public class SearchServiceImpl implements SearchService {
         }
 
         return new SearchResponseDTO.GetCardListResponseDto(content, nextCursor, content.size(), hasNext);
+    }
+
+    private Map<Long, Long> getMapCardCountByHashtag(List<Long> hashtagIds){
+        List<Object[]> counts = cardRepository.countCardsByHashtagIds(hashtagIds);
+        return counts.stream().collect(Collectors.toMap(
+                        row -> (Long) row[0],   // hashtagId
+                        row -> (Long) row[1]    // count
+                ));
     }
 }

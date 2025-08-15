@@ -37,12 +37,10 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 @Query("""
 SELECT DISTINCT c
 FROM Card c
-JOIN FETCH c.user u
-LEFT JOIN FETCH c.cardHashtags ch
 WHERE c.isDeleted = false
   AND c.isShared = true
-  AND u.id <> :loginUserId
-  AND u.id NOT IN (
+  AND c.user.id <> :loginUserId
+  AND c.user.id NOT IN (
       SELECT ub.blockedUser.id
       FROM UserBlock ub
       WHERE ub.user.id = :loginUserId
@@ -101,5 +99,15 @@ ORDER BY c.id DESC
       AND c.isShared = true
 """)
   Long countCardsByHashtag(@Param("hashtagId") Long hashtagId);
+
+  @Query("""
+    SELECT ch.hashtag.id, COUNT(ch.card.id)
+    FROM CardHashtag ch
+    WHERE ch.hashtag.id IN :hashtagIds
+      AND ch.card.isDeleted = false
+      AND ch.card.isShared = true
+    GROUP BY ch.hashtag.id
+    """)
+  List<Object[]> countCardsByHashtagIds(@Param("hashtagIds") List<Long> hashtagIds);
 
 }
