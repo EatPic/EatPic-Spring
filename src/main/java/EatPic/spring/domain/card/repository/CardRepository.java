@@ -110,8 +110,8 @@ ORDER BY c.id DESC
     """)
   List<Object[]> countCardsByHashtagIds(@Param("hashtagIds") List<Long> hashtagIds);
 
-  Slice<Card> findByUserIdAndIsSharedTrueAndIsDeletedFalsOrderByIdDesc(Long userId, Pageable pageable);
-  Slice<Card> findByUserIdAndIsSharedTrueAndIsDeletedFalsAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
+  Slice<Card> findByUserIdAndIsSharedTrueAndIsDeletedFalseOrderByIdDesc(Long userId, Pageable pageable);
+  Slice<Card> findByUserIdAndIsSharedTrueAndIsDeletedFalseAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
 
   @Query("""
   select count(c)
