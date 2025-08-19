@@ -15,7 +15,6 @@ public class CommentRequestDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class WriteCommentDto{
-        @NotNull
         private Long parentCommentId;
 
         @NotBlank(message = "내용은 필수입니다.")
