@@ -19,6 +19,7 @@ public class UserResponseDTO {
         private Long userId;
         @NotNull
         private String profileImageUrl;
+
         @NotNull
         private String nameId;
         @NotNull

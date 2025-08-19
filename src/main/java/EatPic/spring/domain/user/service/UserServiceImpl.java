@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService{
 
     // 팔로잉한 유저의 프로필 아이콘 목록 조회
     @Override
-    public UserResponseDTO.UserIconListResponseDto followingUserIconList(HttpServletRequest request,int page, int size) {
+    public UserResponseDTO.UserIconListResponseDto followingUserIconList(HttpServletRequest request, int page, int size) {
         User user = getLoginUser(request);
         Page<UserFollow> followingPage = userFollowRepository.findByUser(user, PageRequest.of(page, size));
 

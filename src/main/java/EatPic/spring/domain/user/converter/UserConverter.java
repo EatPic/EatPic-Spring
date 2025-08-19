@@ -65,6 +65,7 @@ public class UserConverter {
                 .isFollowing(true)
                 .build();
     }
+
     // todo: 두개 비슷함 -> 합치기
     public static UserResponseDTO.ProfileDto toProfileDto(User user, Boolean isFollowing){
         return UserResponseDTO.ProfileDto.builder()
