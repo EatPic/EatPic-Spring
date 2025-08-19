@@ -60,6 +60,8 @@ public class UserConverter {
                 .userId(user.getId())
                 .profileImageUrl(user.getProfileImageUrl())
                 .nameId(user.getNameId())
+                .nickname(user.getNickname())
+                .introduce(user.getIntroduce())
                 .isFollowing(true)
                 .build();
     }
