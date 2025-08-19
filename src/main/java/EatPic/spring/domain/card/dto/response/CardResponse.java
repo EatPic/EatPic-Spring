@@ -297,7 +297,7 @@ public class CardResponse {
   @Getter
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class profileCardListDTO{
+  public static class ProfileCardListDTO{
     private Long userId;
     private boolean hasNext;
     private Long nextCursor;
