@@ -54,7 +54,7 @@ public class BookmarkServiceImpl implements BookmarkService{
         User user = userService.getLoginUser(request);
         Card card = cardRepository.findById(cardId).orElseThrow(()-> new GeneralException(CARD_NOT_FOUND));
 
-        Bookmark bookmark = bookmarkRepository.findById(new BookmarkId(1L,cardId))
+        Bookmark bookmark = bookmarkRepository.findById(new BookmarkId(user.getId(),cardId))
                 .orElseThrow(() -> new GeneralException(BOOKMARK_NOT_FOUND));
 
         bookmarkRepository.delete(bookmark);
