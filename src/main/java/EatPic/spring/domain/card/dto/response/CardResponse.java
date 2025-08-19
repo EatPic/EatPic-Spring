@@ -83,13 +83,10 @@ public class CardResponse {
     @NotNull
     private String imageUrl;
 
-    @Schema(description = "식사 날짜", example = "2025-07-01")
-    @NotNull
-    private LocalDate date;
-
-    @Schema(description = "식사 시간", example = "10:10")
-    @NotNull
-    private LocalTime time;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // JSON 변환 시 포맷 지정
+    @Schema(description = "날짜/시간", example = "2025-08-09T08:17:29")
+    private LocalDateTime datetime;
 
     @Schema(description = "식사 종류", example = "BREAKFAST")
     @NotNull
