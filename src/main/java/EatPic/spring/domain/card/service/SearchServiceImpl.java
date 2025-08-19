@@ -10,6 +10,7 @@ import EatPic.spring.domain.hashtag.entity.Hashtag;
 import EatPic.spring.domain.reaction.repository.ReactionRepository;
 import EatPic.spring.domain.reaction.service.ReactionService;
 import EatPic.spring.domain.user.converter.UserConverter;
+import EatPic.spring.domain.user.entity.FollowStatus;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.repository.UserFollowRepository;
 import EatPic.spring.domain.user.repository.UserRepository;
@@ -18,14 +19,10 @@ import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;      // 자동으로 생성자 주입
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -207,5 +204,48 @@ public class SearchServiceImpl implements SearchService {
                         row -> (Long) row[0],   // hashtagId
                         row -> (Long) row[1]    // count
                 ));
+    }
+
+    @Override
+    public SearchResponseDTO.GetAccountListResponseDtoWithFollow getFollowList(HttpServletRequest request, Long userId, FollowStatus status, String query, int limit, Long cursor) {
+
+        User me = userService.getLoginUser(request);
+
+        // 페이징 처리 하기
+        Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
+        Slice<User> users = new SliceImpl<>(Collections.emptyList(), pageable, false);
+        switch(status){
+            case FOLLOWED -> { // 해당 유저를 팔로우한 사람 목록
+                users = userRepository.searchAccountNotInFollow(query, cursor, pageable, userId);
+            }
+            case FOLLOWING -> { // 해당 유저가 팔로우한 사람 목록
+                users = userRepository.searchAccountInFollow(query, cursor, pageable, userId);
+            }
+        }
+
+        // 검색 결과가 없으면 예외 발생
+        if (users.isEmpty()) {
+            throw new ExceptionHandler(ErrorStatus._NO_RESULTS_FOUND);
+        }
+
+        List<Long> targetUserIds = users.getContent().stream()
+                .map(User::getId)
+                .toList();
+        // 내가 팔로우한 유저 목록
+        Set<Long> alreadyFollowedIdSet = new HashSet<>(userFollowRepository.findFollowingUserIds(me.getId()));
+
+
+
+        List<SearchResponseDTO.GetAccountResponseDtoWithFollow> result = users.getContent().stream()
+                .map(user -> UserConverter.toAccountDtoWithFollow(
+                        user,
+                        alreadyFollowedIdSet.contains(user.getId()))
+                ).toList();
+
+
+        boolean hasNext = users.hasNext();
+        Long nextCursor = hasNext ? users.getContent().get(users.getContent().size() - 1).getId() : null;
+
+        return new SearchResponseDTO.GetAccountListResponseDtoWithFollow(result, nextCursor, result.size(), hasNext);
     }
 }

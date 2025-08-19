@@ -1,6 +1,7 @@
 package EatPic.spring.domain.card.service;
 
 import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
+import EatPic.spring.domain.user.entity.FollowStatus;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface SearchService {
@@ -10,4 +11,5 @@ public interface SearchService {
     SearchResponseDTO.GetHashtagListResponseDto getHashtagInFollow(HttpServletRequest request, String query, int limit, Long cursor);
     SearchResponseDTO.GetHashtagListResponseDto getHashtagInAll(HttpServletRequest request, String query, int limit, Long cursor);
     SearchResponseDTO.GetCardListResponseDto getCardsByHashtag(HttpServletRequest request, Long hashtagId, int limit, Long cursor);
+    SearchResponseDTO.GetAccountListResponseDtoWithFollow getFollowList(HttpServletRequest request, Long userId, FollowStatus status, String query, int limit, Long cursor);
 }
