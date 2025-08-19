@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService{
     public UserResponseDTO.DetailProfileDto getProfile(HttpServletRequest request, Long userId) {
         User me = getLoginUser(request);
 
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findById(userId).orElseThrow(()-> new ExceptionHandler(USER_NOT_FOUND));
         Boolean isFollowing = userFollowRepository.existsByUserAndTargetUser(me, user);
         Long totalCard = cardRepository.countByUserIdAndIsDeletedFalseAndIsSharedTrue(userId);
         Long totalFollower = userFollowRepository.countUserFollowByTargetUser(user);

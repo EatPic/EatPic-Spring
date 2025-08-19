@@ -257,9 +257,9 @@ public class CardServiceImpl implements CardService {
         Pageable pageable = PageRequest.of(0, size);
 
         if (cursor == null) {
-            cardSlice = cardRepository.findByUserIdAndIsSharedTrueOrderByIdDesc(userId, pageable);
+            cardSlice = cardRepository.findByUserIdAndIsSharedTrueAndIsDeletedFalsOrderByIdDesc(userId, pageable);
         } else {
-            cardSlice = cardRepository.findByUserIdAndIsSharedTrueAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
+            cardSlice = cardRepository.findByUserIdAndIsSharedTrueAndIsDeletedFalsAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
         }
         return CardConverter.toProfileCardList(userId, cardSlice);
     }
