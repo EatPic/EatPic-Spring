@@ -165,8 +165,8 @@ public class CardConverter {
                 .build();
     }
 
-    public static CardResponse.profileCardListDTO toProfileCardList(Long userId, Slice<Card> cardList) {
-        return CardResponse.profileCardListDTO.builder()
+    public static CardResponse.ProfileCardListDTO toProfileCardList(Long userId, Slice<Card> cardList) {
+        return CardResponse.ProfileCardListDTO.builder()
                 .hasNext(cardList.hasNext())
                 .nextCursor(cardList.hasNext() ? cardList.getContent().get(cardList.getContent().size() - 1).getId() : null)
                 .userId(userId)
