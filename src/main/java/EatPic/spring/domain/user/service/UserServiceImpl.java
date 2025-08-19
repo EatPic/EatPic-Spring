@@ -222,7 +222,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResponseDTO.UserActionResponseDto followUser(HttpServletRequest request, Long targetUserId) {
         User user = getLoginUser(request);
+        if(user.getId().equals(targetUserId)) {
+            throw new ExceptionHandler(FOLLOW_FORBBIDEN);
+        }
+
         User target = userRepository.findUserById(targetUserId);
+
 
         UserFollow prev = userFollowRepository.findByUserAndTargetUser(user,target);
         UserFollow follow = UserFollow.builder().user(user).targetUser(target).build();
