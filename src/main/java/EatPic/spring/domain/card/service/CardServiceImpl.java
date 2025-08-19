@@ -252,7 +252,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardResponse.profileCardListDTO getProfileCardList(Long userId, int size, Long cursor) {
+    public CardResponse.ProfileCardListDTO getProfileCardList(Long userId, int size, Long cursor) {
         Slice<Card> cardSlice;
         Pageable pageable = PageRequest.of(0, size);
 
