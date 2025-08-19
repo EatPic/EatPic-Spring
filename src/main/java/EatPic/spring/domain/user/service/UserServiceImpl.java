@@ -1,5 +1,6 @@
 package EatPic.spring.domain.user.service;
 
+import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService{
     private final UserFollowRepository userFollowRepository;
     private final UserBlockRepository userBlockRepository;
     private final UserBadgeService userBadgeService;
+    private final CardRepository cardRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -187,6 +189,19 @@ public class UserServiceImpl implements UserService{
 
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    }
+
+    @Override
+    public UserResponseDTO.DetailProfileDto getProfile(HttpServletRequest request, Long userId) {
+        User me = getLoginUser(request);
+
+        User user = userRepository.findUserById(userId);
+        Boolean isFollowing = userFollowRepository.existsByUserAndTargetUser(me, user);
+        Long totalCard = cardRepository.countByUserIdAndIsDeletedFalseAndIsSharedTrue(userId);
+        Long totalFollower = userFollowRepository.countUserFollowByTargetUser(user);
+        Long totalFollowing = userFollowRepository.countUserFollowByUser(user);
+
+        return UserConverter.toDetailProfileDto(user, isFollowing,totalCard,totalFollower,totalFollowing);
     }
 
     @Override

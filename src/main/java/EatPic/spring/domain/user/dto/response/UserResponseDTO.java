@@ -48,6 +48,31 @@ public class UserResponseDTO {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class DetailProfileDto {
+        @NotNull
+        private Long userId;
+        @NotNull
+        private String profileImageUrl;
+        @NotNull
+        private String nameId;
+        @NotNull
+        private String nickname;
+        @NotNull
+        private Boolean isFollowing;
+        @NotNull
+        private String introduce;
+        @NotNull
+        private Long totalCard;
+        @NotNull
+        private Long totalFollower;
+        @NotNull
+        private Long totalFollowing;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class UserActionResponseDto {
         @NotNull
         Long userId;

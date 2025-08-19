@@ -252,6 +252,19 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public CardResponse.profileCardListDTO getProfileCardList(Long userId, int size, Long cursor) {
+        Slice<Card> cardSlice;
+        Pageable pageable = PageRequest.of(0, size);
+
+        if (cursor == null) {
+            cardSlice = cardRepository.findByUserIdAndIsSharedTrueOrderByIdDesc(userId, pageable);
+        } else {
+            cardSlice = cardRepository.findByUserIdAndIsSharedTrueAndIdLessThanOrderByIdDesc(userId, cursor, pageable);
+        }
+        return CardConverter.toProfileCardList(userId, cardSlice);
+    }
+
+    @Override
     @Transactional
     public CardDeleteResponse deleteCard(Long cardId, Long userId) {
         Card card = cardRepository.findByIdAndIsDeletedFalse(cardId)  // 삭제되지 않은 카드로 찾기!! 모든 카드 id로 조회할 때, 이 함수 쓰기

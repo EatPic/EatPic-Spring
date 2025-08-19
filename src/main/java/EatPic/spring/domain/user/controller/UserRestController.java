@@ -79,4 +79,12 @@ public class UserRestController {
         UserResponseDTO.ProfileDto updatedProfile = userService.updateIntroduce(request, introduce, user);
         return ApiResponse.onSuccess(updatedProfile);
     }
+
+    @Operation(summary = "유저 프로필 조회")
+    @PostMapping("/profile/{userId}")
+    @Tag(name = "User", description = "사용자 관련 API")
+    public ApiResponse<UserResponseDTO.DetailProfileDto> getProfile(HttpServletRequest request,
+                                                                    @PathVariable Long userId) {
+        return ApiResponse.onSuccess(userService.getProfile(request,userId));
+    }
 }

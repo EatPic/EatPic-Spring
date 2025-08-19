@@ -110,4 +110,17 @@ ORDER BY c.id DESC
     """)
   List<Object[]> countCardsByHashtagIds(@Param("hashtagIds") List<Long> hashtagIds);
 
+  Slice<Card> findByUserIdAndIsSharedTrueOrderByIdDesc(Long userId, Pageable pageable);
+  Slice<Card> findByUserIdAndIsSharedTrueAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
+
+  @Query("""
+  select count(c)
+  from Card c
+  where c.isDeleted = false
+    and c.isShared = true
+    and c.user.id = :userId
+""")
+  Long countByUserIdAndIsDeletedFalseAndIsSharedTrue(@Param("userId") Long userId);
+
+
 }
