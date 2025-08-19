@@ -3,6 +3,7 @@ package EatPic.spring.domain.card.controller;
 import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.card.service.SearchServiceImpl;
+import EatPic.spring.domain.user.entity.FollowStatus;
 import EatPic.spring.global.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -88,6 +89,20 @@ public class SearchController {
             @RequestParam(value = "cursor", required = false) Long cursor
     ) {
         SearchResponseDTO.GetCardListResponseDto result = searchService.getCardsByHashtag(request, hashtagId, limit, cursor);
+        return ApiResponse.onSuccess(result);
+    }
+
+    @Operation(summary = "해당 유저 팔로우 목록 조회", description = "팔로우 - 해시태그 검색 api")
+    @GetMapping("/followList")
+    public ApiResponse<SearchResponseDTO.GetAccountListResponseDtoWithFollow> searchFollowList(
+            HttpServletRequest request,
+            @RequestParam(value = "follow status")FollowStatus status,
+            @RequestParam(value = "userId")Long userId,
+            @RequestParam(value = "query") String query,
+            @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
+            @RequestParam(value = "cursor", required = false) Long cursor
+    ) {
+        SearchResponseDTO.GetAccountListResponseDtoWithFollow result = searchService.getFollowList(request,userId,status,query,limit,cursor);
         return ApiResponse.onSuccess(result);
     }
 }

@@ -1,5 +1,6 @@
 package EatPic.spring.domain.user.service;
 
+import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.*;
@@ -9,6 +10,7 @@ import EatPic.spring.domain.user.dto.request.UserRequest;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
+import EatPic.spring.domain.user.entity.FollowStatus;
 import EatPic.spring.domain.user.entity.User;
 import EatPic.spring.domain.user.entity.UserStatus;
 import EatPic.spring.domain.user.mapping.UserBlock;
@@ -22,8 +24,7 @@ import EatPic.spring.global.common.exception.handler.ExceptionHandler;
 import EatPic.spring.global.config.jwt.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,8 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import EatPic.spring.global.aws.s3.*;
 
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
 import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
@@ -282,4 +282,5 @@ public class UserServiceImpl implements UserService{
                 .introduce(user.getIntroduce())
                 .build();
     }
+
 }

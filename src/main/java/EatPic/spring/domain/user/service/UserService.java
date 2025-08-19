@@ -1,5 +1,6 @@
 package EatPic.spring.domain.user.service;
 
+import EatPic.spring.domain.card.dto.response.SearchResponseDTO;
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.request.UserRequest;
@@ -7,6 +8,7 @@ import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
+import EatPic.spring.domain.user.entity.FollowStatus;
 import EatPic.spring.domain.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;

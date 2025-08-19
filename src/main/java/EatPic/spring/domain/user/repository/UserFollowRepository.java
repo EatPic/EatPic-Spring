@@ -26,4 +26,6 @@ public interface UserFollowRepository extends JpaRepository<UserFollow,Long> {
 
     Long countUserFollowByTargetUser(User targetUser);
     Long countUserFollowByUser(User user);
+
+
 }

@@ -69,6 +69,7 @@ ORDER BY c.id DESC
   @Query("""
     SELECT c FROM Card c
     JOIN Reaction r ON r.card = c
+    WHERE c.isDeleted = false 
     GROUP BY c
     HAVING COUNT(r) >= 1
 """)

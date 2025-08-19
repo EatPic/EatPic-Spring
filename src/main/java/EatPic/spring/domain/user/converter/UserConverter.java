@@ -10,6 +10,8 @@ import EatPic.spring.domain.user.mapping.UserBlock;
 import EatPic.spring.domain.user.mapping.UserFollow;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public class UserConverter {
 
     // 이메일 회원가입
@@ -112,6 +114,17 @@ public class UserConverter {
                 .profileImageUrl(user.getProfileImageUrl())
                 .build();
     }
+
+    public static SearchResponseDTO.GetAccountResponseDtoWithFollow toAccountDtoWithFollow(User user, boolean isFollowed) {
+        return SearchResponseDTO.GetAccountResponseDtoWithFollow.builder()
+                .userId(user.getId())
+                .nameId(user.getNameId())
+                .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
+                .isFollowed(isFollowed)
+                .build();
+    }
+
 
     public static UserResponseDTO.UserActionResponseDto toUserActionResponseDto(UserBlock userBlock) {
         return UserResponseDTO.UserActionResponseDto.builder()

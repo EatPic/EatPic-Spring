@@ -68,6 +68,32 @@ public class SearchResponseDTO {
         private String profileImageUrl;     // 프사
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetAccountResponseDtoWithFollow{
+        @JsonProperty("user_id")
+        @NotNull
+        private Long userId;
+
+        @JsonProperty("name_id")
+        @NotNull
+        private String nameId;             // 유저 아이디
+
+        @JsonProperty("nickname")
+        @NotNull
+        private String nickname;           // 유저 닉네임
+
+        @JsonProperty("profile_image_url")
+        @NotNull
+        private String profileImageUrl;     // 프사
+
+        @JsonProperty("isFollowed")
+        @NotNull
+        private boolean isFollowed;
+    }
+
     // 탐색하기 검색창에서 검색 범위가 전체일 때 계정 검색하기 (계정 여러 개 리스트로..)
     @Builder
     @Getter
@@ -75,6 +101,19 @@ public class SearchResponseDTO {
     @AllArgsConstructor
     public static class GetAccountListResponseDto {
         private List<GetAccountResponseDto> accounts;
+        private Long nextCursor;
+        @NotNull
+        private int size;
+        @NotNull
+        private boolean hasNext;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetAccountListResponseDtoWithFollow {
+        private List<GetAccountResponseDtoWithFollow> accounts;
         private Long nextCursor;
         @NotNull
         private int size;
