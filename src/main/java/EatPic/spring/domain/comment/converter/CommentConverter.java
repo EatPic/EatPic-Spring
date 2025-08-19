@@ -10,9 +10,10 @@ import org.springframework.data.domain.Slice;
 import java.util.List;
 
 public class CommentConverter {
-    public static Comment WriteCommentDtoToComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Card card, User user) {
+    public static Comment WriteCommentDtoToComment(CommentRequestDTO.WriteCommentDto writeCommentDto, Card card, User user, Comment parentComment) {
         return Comment.builder()
                 .card(card)
+                .parentComment(parentComment)
                 .user(user)
                 .content(writeCommentDto.getContent())
                 .build();
@@ -24,6 +25,7 @@ public class CommentConverter {
                 .parentCommentId(comment.getParentComment()==null?null:comment.getParentComment().getId())
                 .cardId(comment.getCard().getId())
                 .content(comment.getContent())
+                .userId(comment.getUser().getId())
                 .build();
     }
 

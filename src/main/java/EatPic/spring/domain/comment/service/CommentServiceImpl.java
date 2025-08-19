@@ -43,8 +43,8 @@ public class CommentServiceImpl implements CommentService {
         // 카드(피드)
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new ExceptionHandler(CARD_NOT_FOUND));
-
-        Comment comment = CommentConverter.WriteCommentDtoToComment(writeCommentDto,card,user);
+        Comment parentComment = writeCommentDto.getParentCommentId()!=null?commentRepository.findById(writeCommentDto.getParentCommentId()).orElseThrow(()->new ExceptionHandler(COMMENT_NOT_FOUND)) : null;
+        Comment comment = CommentConverter.WriteCommentDtoToComment(writeCommentDto,card,user, parentComment);
         commentRepository.save(comment);
 
         return comment;
