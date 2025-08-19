@@ -143,5 +143,13 @@ public class CardController {
     return ApiResponse.onSuccess(cardService.getRecommendedCardPreviews(user.getId()));
   }
 
+  @GetMapping("/profile/{userId}")
+  @Operation(summary = "프로필 화면 피드 미리보기", description = "공유한 카드의 번호와 이미지 url 조회 API")
+  public ApiResponse<CardResponse.ProfileCardListDTO> getProfileCardsList(@PathVariable Long userId,
+                                                                          @RequestParam(required = false) Long cursor,
+                                                                          @RequestParam(defaultValue = "15") int size) {
+    return ApiResponse.onSuccess(cardService.getProfileCardList(userId, size, cursor));
+  }
+
 
 }

@@ -27,6 +27,7 @@ public interface UserService {
     UserResponseDTO.UserActionResponseDto followUser(HttpServletRequest request, Long targetUserId);
     UserResponseDTO.UserActionResponseDto unfollowUser(HttpServletRequest request, Long targetUserId);
     User getLoginUser(HttpServletRequest request);
+    UserResponseDTO.DetailProfileDto getProfile(HttpServletRequest request,Long userId);
 
     // 마이페이지 업데이트 관련 서비스
     UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage, User user);

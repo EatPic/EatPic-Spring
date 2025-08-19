@@ -1,5 +1,6 @@
 package EatPic.spring.domain.user.service;
 
+import EatPic.spring.domain.card.repository.CardRepository;
 import EatPic.spring.domain.user.converter.UserConverter;
 import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService{
     private final UserFollowRepository userFollowRepository;
     private final UserBlockRepository userBlockRepository;
     private final UserBadgeService userBadgeService;
+    private final CardRepository cardRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -190,6 +192,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UserResponseDTO.DetailProfileDto getProfile(HttpServletRequest request, Long userId) {
+        User me = getLoginUser(request);
+
+        User user = userRepository.findById(userId).orElseThrow(()-> new ExceptionHandler(USER_NOT_FOUND));
+        Boolean isFollowing = userFollowRepository.existsByUserAndTargetUser(me, user);
+        Long totalCard = cardRepository.countByUserIdAndIsDeletedFalseAndIsSharedTrue(userId);
+        Long totalFollower = userFollowRepository.countUserFollowByTargetUser(user);
+        Long totalFollowing = userFollowRepository.countUserFollowByUser(user);
+
+        return UserConverter.toDetailProfileDto(user, isFollowing,totalCard,totalFollower,totalFollowing);
+    }
+
+    @Override
     public UserResponseDTO.UserActionResponseDto unfollowUser(HttpServletRequest request, Long targetUserId) {
         User user = getLoginUser(request);
         User target = userRepository.findUserById(targetUserId);
@@ -207,7 +222,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResponseDTO.UserActionResponseDto followUser(HttpServletRequest request, Long targetUserId) {
         User user = getLoginUser(request);
+        if(user.getId().equals(targetUserId)) {
+            throw new ExceptionHandler(FOLLOW_FORBBIDEN);
+        }
+
         User target = userRepository.findUserById(targetUserId);
+
 
         UserFollow prev = userFollowRepository.findByUserAndTargetUser(user,target);
         UserFollow follow = UserFollow.builder().user(user).targetUser(target).build();

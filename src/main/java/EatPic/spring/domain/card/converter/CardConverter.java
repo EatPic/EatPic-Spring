@@ -157,4 +157,23 @@ public class CardConverter {
             .successMessage("카드 삭제 성공")
             .build();
     }
+
+    public static CardResponse.ProfileCardDTO toProfileCardDto(Card card){
+        return CardResponse.ProfileCardDTO.builder()
+                .cardId(card.getId())
+                .cardImageUrl(card.getCardImageUrl())
+                .build();
+    }
+
+    public static CardResponse.ProfileCardListDTO toProfileCardList(Long userId, Slice<Card> cardList) {
+        List<Card> list = cardList.getContent();
+        return CardResponse.ProfileCardListDTO.builder()
+                .hasNext(cardList.hasNext())
+                .nextCursor(cardList.hasNext() ? list.get(list.size() - 1).getId() : null)
+                .userId(userId)
+                .cardsList(cardList.getContent().stream()
+                        .map(CardConverter::toProfileCardDto)
+                        .toList())
+                .build();
+    }
 }

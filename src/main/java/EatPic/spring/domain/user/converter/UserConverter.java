@@ -63,7 +63,6 @@ public class UserConverter {
                 .isFollowing(true)
                 .build();
     }
-    // todo: 두개 비슷함 -> 합치기
     public static UserResponseDTO.ProfileDto toProfileDto(User user, Boolean isFollowing){
         return UserResponseDTO.ProfileDto.builder()
                 .userId(user.getId())
@@ -71,6 +70,25 @@ public class UserConverter {
                 .nameId(user.getNameId())
                 .nickname(user.getNickname())
                 .isFollowing(isFollowing)
+                .build();
+    }
+    public static UserResponseDTO.DetailProfileDto toDetailProfileDto(
+            User user,
+            Boolean isFollowing,
+            Long totalCard,
+            Long totalFollower,
+            Long totalFollowing) {
+
+        return UserResponseDTO.DetailProfileDto.builder()
+                .userId(user.getId())
+                .profileImageUrl(user.getProfileImageUrl())
+                .nameId(user.getNameId())
+                .nickname(user.getNickname())
+                .isFollowing(isFollowing)
+                .introduce(user.getIntroduce())
+                .totalCard(totalCard)
+                .totalFollower(totalFollower)
+                .totalFollowing(totalFollowing)
                 .build();
     }
 
