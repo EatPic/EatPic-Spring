@@ -92,13 +92,14 @@ public class SearchController {
         return ApiResponse.onSuccess(result);
     }
 
-    @Operation(summary = "해당 유저 팔로우 목록 조회", description = "팔로우 - 해시태그 검색 api")
+    @Operation(summary = "해당 유저 팔로잉,팔로워 검색", description = "FOLLOWING은 유저(userId)가 팔로우 중인 목록을, FOLLOWED는 유저를 팔로우하는 목록을 반환합니다." +
+            "<br> query가 null일 경우 임의의 팔로잉/팔로워 목록을 반환합니다")
     @GetMapping("/followList")
     public ApiResponse<SearchResponseDTO.GetAccountListResponseDtoWithFollow> searchFollowList(
             HttpServletRequest request,
             @RequestParam(value = "follow status")FollowStatus status,
             @RequestParam(value = "userId")Long userId,
-            @RequestParam(value = "query") String query,
+            @RequestParam(value = "query", required = false) String query,
             @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
             @RequestParam(value = "cursor", required = false) Long cursor
     ) {

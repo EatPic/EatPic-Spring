@@ -39,11 +39,28 @@ public interface UserRepository extends JpaRepository<User,Long> {
     JOIN UserFollow uf ON u.id = uf.targetUser.id
     WHERE uf.user.id = :loginUserId
       AND (:cursor IS NULL OR u.id > :cursor)
-      AND (LOWER(u.nameId) LIKE LOWER(CONCAT(:query, '%'))
-           OR LOWER(u.nickname) LIKE LOWER(CONCAT(:query, '%')))
+      AND (:query IS NULL OR 
+        LOWER(u.nameId) LIKE LOWER(CONCAT(:query, '%'))
+        OR LOWER(u.nickname) LIKE LOWER(CONCAT(:query, '%')))
     ORDER BY u.id ASC
 """)
     Slice<User> searchAccountInFollow(@Param("query") String query,
+                                      @Param("cursor") Long cursor,
+                                      Pageable pageable,
+                                      @Param("loginUserId") Long userId);
+
+    @Query("""
+    SELECT u
+    FROM User u
+    JOIN UserFollow uf ON u.id = uf.user.id
+    WHERE uf.targetUser.id = :loginUserId
+      AND (:cursor IS NULL OR u.id > :cursor)
+      AND (:query IS NULL OR
+       LOWER(u.nameId) LIKE LOWER(CONCAT(:query, '%'))
+       OR LOWER(u.nickname) LIKE LOWER(CONCAT(:query, '%')))
+    ORDER BY u.id ASC
+""")
+    Slice<User> searchAccountInFollower(@Param("query") String query,
                                       @Param("cursor") Long cursor,
                                       Pageable pageable,
                                       @Param("loginUserId") Long userId);
@@ -74,19 +91,5 @@ public interface UserRepository extends JpaRepository<User,Long> {
 //                                      @Param("loginUserId") Long userId);
 
 
-    @Query("""
-    SELECT u
-    FROM User u
-    WHERE u.id NOT IN (
-        SELECT uf.targetUser.id
-        FROM UserFollow uf
-        WHERE uf.user.id = :loginUserId
-    )
-    AND (:cursor IS NULL OR u.id > :cursor)
-    AND u.nickname LIKE %:query%
-    ORDER BY u.id ASC
-    """)
-    Slice<User> searchAccountNotInFollow(@Param("query") String query,
-            @Param("cursor") Long cursor, Pageable pageable, @Param("loginUserId") Long userId);
 
 }

@@ -211,12 +211,16 @@ public class SearchServiceImpl implements SearchService {
 
         User me = userService.getLoginUser(request);
 
+        if(query == null){
+
+        }
+
         // 페이징 처리 하기
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         Slice<User> users = new SliceImpl<>(Collections.emptyList(), pageable, false);
         switch(status){
             case FOLLOWED -> { // 해당 유저를 팔로우한 사람 목록
-                users = userRepository.searchAccountNotInFollow(query, cursor, pageable, userId);
+                users = userRepository.searchAccountInFollower(query, cursor, pageable, userId);
             }
             case FOLLOWING -> { // 해당 유저가 팔로우한 사람 목록
                 users = userRepository.searchAccountInFollow(query, cursor, pageable, userId);
@@ -234,12 +238,10 @@ public class SearchServiceImpl implements SearchService {
         // 내가 팔로우한 유저 목록
         Set<Long> alreadyFollowedIdSet = new HashSet<>(userFollowRepository.findFollowingUserIds(me.getId()));
 
-
-
         List<SearchResponseDTO.GetAccountResponseDtoWithFollow> result = users.getContent().stream()
                 .map(user -> UserConverter.toAccountDtoWithFollow(
                         user,
-                        alreadyFollowedIdSet.contains(user.getId()))
+                        alreadyFollowedIdSet.contains(user.getId())) // 내 기준 팔로우 여부 표시
                 ).toList();
 
 
