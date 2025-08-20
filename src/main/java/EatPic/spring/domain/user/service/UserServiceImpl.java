@@ -31,6 +31,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import EatPic.spring.global.aws.s3.*;
@@ -40,7 +41,7 @@ import java.util.*;
 import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
@@ -96,6 +97,7 @@ public class UserServiceImpl implements UserService{
 
     // 로그인
     @Override
+    @Transactional(readOnly = false)
     public LoginResponseDTO loginUser(LoginRequestDTO request){
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(()-> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
@@ -247,6 +249,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
     public User getLoginUser(HttpServletRequest request) {
         Authentication authentication = jwtTokenProvider.extractAuthentication(request);
         String email = authentication.getName();
