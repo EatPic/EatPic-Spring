@@ -211,10 +211,6 @@ public class SearchServiceImpl implements SearchService {
 
         User me = userService.getLoginUser(request);
 
-        if(query == null){
-
-        }
-
         // 페이징 처리 하기
         Pageable pageable = PageRequest.of(0, limit + 1, Sort.by("id").ascending());
         Slice<User> users = new SliceImpl<>(Collections.emptyList(), pageable, false);

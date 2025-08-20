@@ -40,8 +40,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     WHERE uf.user.id = :loginUserId
       AND (:cursor IS NULL OR u.id > :cursor)
       AND (:query IS NULL OR 
-        LOWER(u.nameId) LIKE LOWER(CONCAT(:query, '%'))
-        OR LOWER(u.nickname) LIKE LOWER(CONCAT(:query, '%')))
+        (LOWER(u.nameId) LIKE LOWER(CONCAT(:query, '%'))
+        OR LOWER(u.nickname) LIKE LOWER(CONCAT(:query, '%'))))
     ORDER BY u.id ASC
 """)
     Slice<User> searchAccountInFollow(@Param("query") String query,
@@ -56,8 +56,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     WHERE uf.targetUser.id = :loginUserId
       AND (:cursor IS NULL OR u.id > :cursor)
       AND (:query IS NULL OR
-       LOWER(u.nameId) LIKE LOWER(CONCAT(:query, '%'))
-       OR LOWER(u.nickname) LIKE LOWER(CONCAT(:query, '%')))
+       (LOWER(u.nameId) LIKE LOWER(CONCAT(:query, '%'))
+       OR LOWER(u.nickname) LIKE LOWER(CONCAT(:query, '%'))))
     ORDER BY u.id ASC
 """)
     Slice<User> searchAccountInFollower(@Param("query") String query,
