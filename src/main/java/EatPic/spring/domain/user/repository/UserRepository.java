@@ -1,9 +1,11 @@
 package EatPic.spring.domain.user.repository;
 
 import EatPic.spring.domain.user.entity.User;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -17,6 +19,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     boolean existsByNameId(String nameId);
 
+    // 비관적 락이 적용된 사용자 조회 메서드
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(String email); // 로그인 시, 이메일로 유저 찾기
 
     User findUserById(Long id);

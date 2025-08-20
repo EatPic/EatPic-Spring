@@ -5,6 +5,7 @@ import EatPic.spring.domain.user.dto.*;
 import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.request.UserRequest;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
+import EatPic.spring.domain.user.dto.response.RefreshTokenResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
@@ -23,6 +24,7 @@ public interface UserService {
     boolean isEmailDuplicate(String email);
     boolean isnameIdDuplicate(String nameId);
     boolean isNicknameDuplicate(String nickname);
+    RefreshTokenResponseDTO reissueRefreshToken(HttpServletRequest request);
 
     // UserQueryService
     UserInfoDTO getUserInfo(HttpServletRequest request);
