@@ -93,4 +93,11 @@ public class UserController{
         }
         return ApiResponse.onSuccess(UserConverter.toCheckNicknameResponseDto(nickname, true));
     }
+
+    // refresh token 재발급이요 진짜 제발 되길 바라요 제발요
+    @GetMapping("/user/refresh")
+    @Operation(summary = "refreshToken 재발급", security = {@SecurityRequirement(name = "JWT TOKEN")})
+    public ApiResponse<RefreshTokenResponseDTO> reissueRefreshToken(HttpServletRequest request) {
+        return ApiResponse.onSuccess(userService.reissueRefreshToken(request));
+    }
 }

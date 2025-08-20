@@ -55,6 +55,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(email)
+                .claim("tokenType", "accessToken")
                 .claim(ROLES, roles) // 🔹 roles 클레임 추가
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenValidity()))
@@ -66,6 +67,7 @@ public class JwtTokenProvider {
     public String generateRefreshToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("tokenType", "refreshToken")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getRefreshTokenValidity()))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -73,7 +75,7 @@ public class JwtTokenProvider {
     }
 
 
-    // WT 토큰이 유효한지 검증
+    // JWT 토큰이 유효한지 검증
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
@@ -126,9 +128,64 @@ public class JwtTokenProvider {
     // getAuthentication 메소드를 이용해서 Spring Security의 Authentication 객체로 변환
     public Authentication extractAuthentication(HttpServletRequest request){
         String accessToken = resolveToken(request);
-        if(accessToken == null || !validateToken(accessToken)) {
+        if(accessToken == null || !validateAccessToken(accessToken)) {
             throw new ExceptionHandler(ErrorStatus.INVALID_TOKEN);
         }
         return getAuthentication(accessToken);
+    }
+
+    // accessToken 유효성 검증
+    public boolean validateAccessToken(String accessToken){
+        try{
+            Claims claims = Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+
+            String type = claims.get("tokenType", String.class);
+
+            return "accessToken".equals(type) && claims.getExpiration().after(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    // refreshToken 유효성 검증
+    public boolean validateRefreshToken(String refreshToken) {
+        try{
+            Claims claims = Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(refreshToken)
+                    .getBody();
+
+            String type = claims.get("tokenType", String.class);
+
+            return "refreshToken".equals(type) && claims.getExpiration().after(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    // token의 email 꺼내기
+    public String getSubject(String token) {
+        return Jwts.parser()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    // token 만료 시간
+    public long getExpriedTime(String token) {
+        Date exp = Jwts.parser()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+        return exp.getTime();
     }
 }

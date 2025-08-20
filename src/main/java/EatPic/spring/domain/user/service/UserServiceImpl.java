@@ -6,6 +6,7 @@ import EatPic.spring.domain.user.dto.request.LoginRequestDTO;
 import EatPic.spring.domain.user.dto.request.SignupRequestDTO;
 import EatPic.spring.domain.user.dto.request.UserRequest;
 import EatPic.spring.domain.user.dto.response.LoginResponseDTO;
+import EatPic.spring.domain.user.dto.response.RefreshTokenResponseDTO;
 import EatPic.spring.domain.user.dto.response.SignupResponseDTO;
 import EatPic.spring.domain.user.dto.response.UserResponseDTO;
 import EatPic.spring.domain.user.entity.User;
@@ -18,6 +19,7 @@ import EatPic.spring.domain.user.repository.UserBlockRepository;
 import EatPic.spring.global.common.code.status.ErrorStatus;
 import EatPic.spring.global.common.exception.GeneralException;
 import EatPic.spring.global.common.exception.handler.ExceptionHandler;
+import EatPic.spring.global.config.Properties.JwtProperties;
 import EatPic.spring.global.config.jwt.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,7 @@ public class UserServiceImpl implements UserService{
     private final UserBadgeService userBadgeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProperties jwtProperties;
 
     // s3 설정
     private final AmazonS3Manager s3Manager;
@@ -124,6 +127,72 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
         return UserConverter.toUserInfoDTO(user);
+    }
+
+    // refreshToken 재발급
+    @Override
+    public RefreshTokenResponseDTO reissueRefreshToken(HttpServletRequest request){
+        // refresh token 추출
+        String requestRefreshToken = jwtTokenProvider.resolveToken(request);
+
+        // 토큰이 없으면 예외 발생
+        if (!jwtTokenProvider.validateRefreshToken(requestRefreshToken)){
+            throw new ExceptionHandler(ErrorStatus.INVALID_TOKEN);
+        }
+
+        // 토큰에서 이메일 추출, 사용자 정보 조회
+        final String email = jwtTokenProvider.getSubject(requestRefreshToken);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ExceptionHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // 저장된 refresh token과 요청으로 들어온 token의 일치 여부 확인
+        final String storedRefreshToken = user.getRefreshToken();
+
+        if (!requestRefreshToken.equals(user.getRefreshToken())) {
+            throw new ExceptionHandler(ErrorStatus.INVALID_TOKEN);
+        }
+
+//        if (storedRefreshToken == null || !storedRefreshToken.equals(requestRefreshToken)) {
+//            throw new ExceptionHandler(ErrorStatus.INVALID_TOKEN);
+//        }
+
+        // access token 재발급
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                user.getEmail(), null,
+                //Collections.emptyList()
+                Collections.singleton(() -> user.getRole().name())
+        );
+
+        String newAccessToken = jwtTokenProvider.generateToken(authentication);
+
+        // refresh token 재발급 필요 여부 확인
+        // access -> 30시간, refresh -> 5일
+        // 재발급 임계일 설정 -> 3일
+        boolean needReissueRefreshToken = ExpireWithinDays(requestRefreshToken, 3);
+        String oldRefreshToken = storedRefreshToken;
+
+        if (needReissueRefreshToken) {
+            oldRefreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
+            user.updateRefreshToken(oldRefreshToken);
+            userRepository.save(user);
+        }
+
+        // long accessExpiredtime = System.currentTimeMillis() + jwtProperties.getAccessTokenValidity();
+
+        return RefreshTokenResponseDTO.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(oldRefreshToken)
+                .accessTokenExpiresIn(jwtProperties.getAccessTokenValidity())
+                .build();
+    }
+
+    // refreshToken이 유효 기간 이내에 만료되는지 체크
+    private boolean ExpireWithinDays(String jwt, int days) {
+        long isRemained = jwtTokenProvider.getExpriedTime(jwt) - System.currentTimeMillis();
+        long threshold = days * 24L * 60L * 60L * 1000L;
+
+        return isRemained <= threshold;
     }
 
     // 팔로잉한 유저의 프로필 아이콘 목록 조회
