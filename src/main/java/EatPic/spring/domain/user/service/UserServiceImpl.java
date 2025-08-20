@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService{
     private final AmazonS3Manager s3Manager;
 
     // 회원가입
+    @Transactional(readOnly = false)
     public SignupResponseDTO signup(SignupRequestDTO request) {
         // 이메일 중복 검사
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -272,6 +273,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional(readOnly = false)
     public UserResponseDTO.UserActionResponseDto unfollowUser(HttpServletRequest request, Long targetUserId) {
         User user = getLoginUser(request);
         User target = userRepository.findUserById(targetUserId);
@@ -287,6 +289,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional(readOnly = false)
     public UserResponseDTO.UserActionResponseDto followUser(HttpServletRequest request, Long targetUserId) {
         User user = getLoginUser(request);
         if(user.getId().equals(targetUserId)) {
@@ -309,6 +312,7 @@ public class UserServiceImpl implements UserService{
 
     // 유저 프로필 이미지 업데이트
     @Override
+    @Transactional(readOnly = false)
     public UserResponseDTO.ProfileDto updateUserProfileImage(HttpServletRequest request, MultipartFile profileImage,User user) {
 
         String profileImageUrl = null;
@@ -338,6 +342,7 @@ public class UserServiceImpl implements UserService{
 
     // 유저 소개 업데이트
     @Override
+    @Transactional(readOnly = false)
     public UserResponseDTO.ProfileDto updateIntroduce(HttpServletRequest request, UserRequest.UpdateUserInroduceRequest introduce, User user) {
 
         user.setIntroduce(introduce.getIntroduce()); // introduce 부분만 변경
