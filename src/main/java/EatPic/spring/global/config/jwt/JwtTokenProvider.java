@@ -45,7 +45,7 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        // 🔹 권한이 비어 있으면 DB에서 사용자 role을 읽어 보정 (임시 해결)
+        // 권한이 비어 있으면 DB에서 사용자 role을 읽어 보정 (임시 해결)
         if (roles.isEmpty()) {
             var user = userRepository.findByEmail(email).orElse(null);
             if (user != null && user.getRole() != null) {
@@ -74,37 +74,39 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    // JWT 토큰에서 Claims 객체를 추출하는 핵심 메소드
+    public Claims getClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException | IllegalArgumentException e) {
+            return null; // 유효하지 않은 토큰일 경우 null 반환
+        }
+    }
 
     // JWT 토큰이 유효한지 검증
     public boolean validateToken(String token) {
-        try {
-            Jwts.parser()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
+        return getClaims(token) != null;
     }
 
     // JWT 토큰에서 인증 정보를 추출해서 Spring Security의 Authentication 객체로 변환
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parser()  // parserBuilder() 사용
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims = getClaims(token);
+        if (claims == null) {
+            return null;
+        }
 
         String email = claims.getSubject();
 
         @SuppressWarnings("unchecked")
         List<String> roleStrings = claims.get(ROLES) instanceof List
                 ? (List<String>) claims.get(ROLES)
-                : java.util.Collections.emptyList();
+                : Collections.emptyList();
 
         List<SimpleGrantedAuthority> authorities = roleStrings.stream()
-                // hasRole("ADMIN")를 쓰면 내부적으로 "ROLE_ADMIN"을 찾음 → 접두 보장
                 .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
                 .map(SimpleGrantedAuthority::new)
                 .toList();
@@ -112,8 +114,7 @@ public class JwtTokenProvider {
         org.springframework.security.core.userdetails.User principal =
                 new org.springframework.security.core.userdetails.User(email, "", authorities);
 
-        return new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                principal, null, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, null, authorities);
     }
 
     public static String resolveToken(HttpServletRequest request) {
@@ -125,7 +126,6 @@ public class JwtTokenProvider {
     }
 
     // HttpServletRequest 에서 토큰 값을 추출
-    // getAuthentication 메소드를 이용해서 Spring Security의 Authentication 객체로 변환
     public Authentication extractAuthentication(HttpServletRequest request){
         String accessToken = resolveToken(request);
         if(accessToken == null || !validateAccessToken(accessToken)) {
@@ -134,58 +134,40 @@ public class JwtTokenProvider {
         return getAuthentication(accessToken);
     }
 
-    // accessToken 유효성 검증
-    public boolean validateAccessToken(String accessToken){
-        try{
+    // token 유효성 검증
+    private boolean validateTokenType(String token, String expectedType) {
+        try {
             Claims claims = Jwts.parser()
                     .setSigningKey(getSigningKey())
                     .build()
-                    .parseClaimsJws(accessToken)
+                    .parseClaimsJws(token)
                     .getBody();
 
             String type = claims.get("tokenType", String.class);
-
-            return "accessToken".equals(type) && claims.getExpiration().after(new Date());
+            return expectedType.equals(type);
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    // accessToken 유효성 검증
+    public boolean validateAccessToken(String accessToken){
+        return validateTokenType(accessToken, "accessToken");
     }
 
     // refreshToken 유효성 검증
     public boolean validateRefreshToken(String refreshToken) {
-        try{
-            Claims claims = Jwts.parser()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(refreshToken)
-                    .getBody();
-
-            String type = claims.get("tokenType", String.class);
-
-            return "refreshToken".equals(type) && claims.getExpiration().after(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
+        return validateTokenType(refreshToken, "refreshToken");
     }
-
     // token의 email 꺼내기
     public String getSubject(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        Claims claims = getClaims(token);
+        return (claims != null) ? claims.getSubject() : null;
     }
 
     // token 만료 시간
-    public long getExpriedTime(String token) {
-        Date exp = Jwts.parser()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration();
-        return exp.getTime();
+    public long getExpiredTime(String token) {
+        Claims claims = getClaims(token);
+        return (claims != null) ? claims.getExpiration().getTime() : 0;
     }
 }

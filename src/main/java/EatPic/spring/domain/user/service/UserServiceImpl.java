@@ -153,10 +153,6 @@ public class UserServiceImpl implements UserService{
             throw new ExceptionHandler(ErrorStatus.INVALID_TOKEN);
         }
 
-//        if (storedRefreshToken == null || !storedRefreshToken.equals(requestRefreshToken)) {
-//            throw new ExceptionHandler(ErrorStatus.INVALID_TOKEN);
-//        }
-
         // access token 재발급
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user.getEmail(), null,
@@ -169,16 +165,14 @@ public class UserServiceImpl implements UserService{
         // refresh token 재발급 필요 여부 확인
         // access -> 30시간, refresh -> 5일
         // 재발급 임계일 설정 -> 3일
-        boolean needReissueRefreshToken = ExpireWithinDays(requestRefreshToken, 3);
-        String oldRefreshToken = storedRefreshToken;
+        boolean needReissueRefreshToken = expireWithinDays(requestRefreshToken, jwtProperties.getRefreshTokenReissueThresholdDays());
+        String oldRefreshToken = user.getRefreshToken();
 
         if (needReissueRefreshToken) {
             oldRefreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
             user.updateRefreshToken(oldRefreshToken);
             userRepository.save(user);
         }
-
-        // long accessExpiredtime = System.currentTimeMillis() + jwtProperties.getAccessTokenValidity();
 
         return RefreshTokenResponseDTO.builder()
                 .accessToken(newAccessToken)
@@ -188,9 +182,9 @@ public class UserServiceImpl implements UserService{
     }
 
     // refreshToken이 유효 기간 이내에 만료되는지 체크
-    private boolean ExpireWithinDays(String jwt, int days) {
-        long isRemained = jwtTokenProvider.getExpriedTime(jwt) - System.currentTimeMillis();
-        long threshold = days * 24L * 60L * 60L * 1000L;
+    private boolean expireWithinDays(String jwt, int days) {
+        long isRemained = jwtTokenProvider.getExpiredTime(jwt) - System.currentTimeMillis();
+        long threshold = (long) days * 24L * 60L * 60L * 1000L;
 
         return isRemained <= threshold;
     }
