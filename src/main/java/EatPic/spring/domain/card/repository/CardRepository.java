@@ -70,6 +70,7 @@ ORDER BY c.id DESC
     SELECT c FROM Card c
     JOIN Reaction r ON r.card = c
     WHERE c.isDeleted = false 
+      AND c.isShared = true 
     GROUP BY c
     HAVING COUNT(r) >= 1
 """)
