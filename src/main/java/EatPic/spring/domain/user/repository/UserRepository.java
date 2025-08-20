@@ -22,14 +22,16 @@ public interface UserRepository extends JpaRepository<User,Long> {
     User findUserById(Long id);
 
     @Query("""
-    SELECT u FROM User u
-    WHERE (u.nameId LIKE %:query% OR u.nickname LIKE %:query%)
+    SELECT u
+    FROM User u
+    WHERE (LOWER(u.nameId) LIKE LOWER(CONCAT(:query, '%'))
+           OR LOWER(u.nickname) LIKE LOWER(CONCAT(:query, '%')))
       AND (:cursor IS NULL OR u.id > :cursor)
     ORDER BY u.id ASC
 """)
     Slice<User> searchAccountInAll(@Param("query") String query,
-                                   @Param("cursor") Long cursor, Pageable pageable);
-
+                                   @Param("cursor") Long cursor,
+                                   Pageable pageable);
 
     @Query("""
     SELECT u
@@ -37,13 +39,39 @@ public interface UserRepository extends JpaRepository<User,Long> {
     JOIN UserFollow uf ON u.id = uf.targetUser.id
     WHERE uf.user.id = :loginUserId
       AND (:cursor IS NULL OR u.id > :cursor)
-      AND (u.nameId LIKE %:query% OR u.nickname LIKE %:query%)
+      AND (LOWER(u.nameId) LIKE LOWER(CONCAT(:query, '%'))
+           OR LOWER(u.nickname) LIKE LOWER(CONCAT(:query, '%')))
     ORDER BY u.id ASC
 """)
     Slice<User> searchAccountInFollow(@Param("query") String query,
                                       @Param("cursor") Long cursor,
                                       Pageable pageable,
                                       @Param("loginUserId") Long userId);
+
+
+//    @Query("""
+//    SELECT u FROM User u
+//    WHERE (u.nameId LIKE %:query% OR u.nickname LIKE %:query%)
+//      AND (:cursor IS NULL OR u.id > :cursor)
+//    ORDER BY u.id ASC
+//""")
+//    Slice<User> searchAccountInAll(@Param("query") String query,
+//                                   @Param("cursor") Long cursor, Pageable pageable);
+//
+//
+//    @Query("""
+//    SELECT u
+//    FROM User u
+//    JOIN UserFollow uf ON u.id = uf.targetUser.id
+//    WHERE uf.user.id = :loginUserId
+//      AND (:cursor IS NULL OR u.id > :cursor)
+//      AND (u.nameId LIKE %:query% OR u.nickname LIKE %:query%)
+//    ORDER BY u.id ASC
+//""")
+//    Slice<User> searchAccountInFollow(@Param("query") String query,
+//                                      @Param("cursor") Long cursor,
+//                                      Pageable pageable,
+//                                      @Param("loginUserId") Long userId);
 
 
     @Query("""
