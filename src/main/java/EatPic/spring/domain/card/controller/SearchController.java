@@ -32,7 +32,7 @@ public class SearchController {
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
 
-    @Operation(summary = "검색 범위가 전체인 경우에서 계정 검색", description = "전체 - 계정 검색 api (nameId로 검색합니다.)")
+    @Operation(summary = "검색 범위가 전체인 경우에서 계정 검색", description = "전체 - 계정 검색 api (nickname, nameId으로 검색합니다.)")
     @GetMapping("/all/account")
     public ApiResponse<SearchResponseDTO.GetAccountListResponseDto> searchAccountInAll(
             HttpServletRequest request,
@@ -44,7 +44,7 @@ public class SearchController {
         return ApiResponse.onSuccess(result);    // 리턴 부분 제대로 작동하는지 확인하기!
     }
 
-    @Operation(summary = "검색범위가 유저가 팔로우한 사용자인 경우에서 계정 검색", description = "팔로우 - 계정 검색 api (nickname으로 검색)")
+    @Operation(summary = "검색범위가 유저가 팔로우한 사용자인 경우에서 계정 검색", description = "팔로우 - 계정 검색 api (nickname, nameId으로 검색합니다.)")
     @GetMapping("/user-follow/account")
     public ApiResponse<SearchResponseDTO.GetAccountListResponseDto> searchAccountInFollow(
             HttpServletRequest request,
