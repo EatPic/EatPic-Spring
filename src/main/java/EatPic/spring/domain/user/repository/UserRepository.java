@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     // 비관적 락이 적용된 사용자 조회 메서드
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT u FROM User u WHERE u.email = :email")
-    Optional<User> findByEmail(@Param("email") String email); // 로그인 시, 이메일로 유저 찾기
+    Optional<User> findByEmail(String email); // 로그인 시, 이메일로 유저 찾기
 
     User findUserById(Long id);
 
