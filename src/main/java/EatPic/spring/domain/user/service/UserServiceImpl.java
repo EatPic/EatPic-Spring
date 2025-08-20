@@ -40,6 +40,7 @@ import java.util.*;
 import static EatPic.spring.global.common.code.status.ErrorStatus.*;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
