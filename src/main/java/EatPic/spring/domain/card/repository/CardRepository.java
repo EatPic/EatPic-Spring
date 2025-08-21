@@ -115,6 +115,10 @@ ORDER BY c.id DESC
   Slice<Card> findByUserIdAndIsSharedTrueAndIsDeletedFalseOrderByIdDesc(Long userId, Pageable pageable);
   Slice<Card> findByUserIdAndIsSharedTrueAndIsDeletedFalseAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
 
+  Slice<Card> findByUserIdAndIsDeletedFalseOrderByIdDesc(Long userId, Pageable pageable);
+  Slice<Card> findByUserIdAndIsDeletedFalseAndIdLessThanOrderByIdDesc(Long userId, Long cursor, Pageable pageable);
+
+
   @Query("""
   select count(c)
   from Card c
