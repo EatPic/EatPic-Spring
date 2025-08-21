@@ -124,5 +124,12 @@ ORDER BY c.id DESC
 """)
   Long countByUserIdAndIsDeletedFalseAndIsSharedTrue(@Param("userId") Long userId);
 
+  boolean existsByUserIdAndMealAndCreatedAtBetweenAndIsDeletedFalse(
+      Long userId,
+      Meal meal,
+      LocalDateTime startOfDay,
+      LocalDateTime endOfDay
+  );
+
 
 }
