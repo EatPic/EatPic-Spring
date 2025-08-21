@@ -151,5 +151,13 @@ public class CardController {
     return ApiResponse.onSuccess(cardService.getProfileCardList(userId, size, cursor));
   }
 
+  @GetMapping("/mypage/feeds")
+  @Operation(summary = "내가 작성한 피드 보기", description = "내가 작성한 피드 전체 조회(미리보기)")
+  public ApiResponse<CardResponse.ProfileCardListDTO> getMyCardsList(HttpServletRequest request,
+                                                                          @RequestParam(required = false) Long cursor,
+                                                                          @RequestParam(defaultValue = "15") int size) {
+    return ApiResponse.onSuccess(cardService.getMyProfileCardList(request, size, cursor));
+  }
+
 
 }

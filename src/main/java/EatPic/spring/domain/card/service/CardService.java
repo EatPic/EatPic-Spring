@@ -26,4 +26,5 @@ public interface CardService {
   CardResponse.PagedCardFeedResponseDto getCardFeedByCursor(HttpServletRequest request, Long userId, int size, Long cursor);
   List<RecommendCardResponse> getRecommendedCardPreviews(Long userId);
   CardResponse.ProfileCardListDTO getProfileCardList(Long userId, int size, Long cursor);
+  CardResponse.ProfileCardListDTO getMyProfileCardList(HttpServletRequest request,int size, Long cursor);
 }
