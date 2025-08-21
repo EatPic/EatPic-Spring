@@ -106,7 +106,7 @@ public class CardServiceImpl implements CardService {
         LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
 
         // 같은 날짜, 같은 meal 타입 카드 중복 확인
-        boolean existsSameMealCard = cardRepository.existsByUserIdAndMealAndCreatedAtBetween(
+        boolean existsSameMealCard = cardRepository.existsByUserIdAndMealAndCreatedAtBetweenAndIsDeletedFalse(
                 userId,
                 request.getMeal(),
                 startOfDay,
