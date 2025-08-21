@@ -14,6 +14,14 @@ public class CommentResponseDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class WriteCommentResponseDTO{
+
+        @NotNull
+        private String nameId;
+        @NotNull
+        private String nickname;
+        @NotNull
+        private String profileImageUrl;
+
         @NotNull
         private Long commentId;
         @NotNull
@@ -24,6 +32,7 @@ public class CommentResponseDTO {
         private Long userId;
         @NotNull
         private String content;
+
     }
 
     @Getter
