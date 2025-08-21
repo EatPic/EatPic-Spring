@@ -21,6 +21,9 @@ public class CommentConverter {
 
     public static CommentResponseDTO.WriteCommentResponseDTO CommentToWriteCommentResponseDTO(Comment comment){
         return CommentResponseDTO.WriteCommentResponseDTO.builder()
+                .nameId(comment.getUser().getNameId())
+                .profileImageUrl(comment.getUser().getProfileImageUrl())
+                .nickname(comment.getUser().getNickname())
                 .commentId(comment.getId())
                 .parentCommentId(comment.getParentComment()==null?null:comment.getParentComment().getId())
                 .cardId(comment.getCard().getId())
