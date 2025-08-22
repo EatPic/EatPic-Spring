@@ -24,6 +24,8 @@ public interface CardRepository extends JpaRepository<Card, Long> {
   @Query("""
     SELECT c FROM Card c
     WHERE (:cursor IS NULL OR c.id > :cursor)
+    AND c.isDeleted = false
+    AND c.isShared = true
     ORDER BY c.id ASC
 """)
   Slice<Card> findByCursor(@Param("cursor") Long cursor, Pageable pageable);
